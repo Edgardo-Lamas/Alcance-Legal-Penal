@@ -1,6 +1,6 @@
 -- ============================================
 -- Migración: Crear tabla criterios_juridicos con vectores
--- Alcance Legal - PMV Vector Store
+-- Alcance Legal Penal — CPP PBA / CP
 -- ============================================
 
 -- Habilitar extensión pgvector (ya instalada en Supabase por defecto)
@@ -14,15 +14,15 @@ CREATE TABLE IF NOT EXISTS criterios_juridicos (
     contenido TEXT NOT NULL,  -- Texto completo para vectorizar
     
     -- Metadata obligatoria
-    instituto TEXT NOT NULL,        -- ej: 'responsabilidad_civil'
-    subtipo TEXT NOT NULL,          -- ej: 'extracontractual'
-    jurisdiccion TEXT NOT NULL,     -- ej: 'argentina_nacional'
+    instituto TEXT NOT NULL,        -- ej: 'garantias_procesales'
+    subtipo TEXT NOT NULL,          -- ej: 'testimonio_unico'
+    jurisdiccion TEXT NOT NULL,     -- ej: 'argentina_pba'
     alcance TEXT NOT NULL,          -- FILTRO PRINCIPAL: 'criterios_generales'
     
     -- Metadata adicional
     criterio TEXT NOT NULL,         -- Nombre descriptivo del criterio
     regla_general TEXT NOT NULL,    -- Enunciado de la regla
-    articulos_ccyc TEXT[],          -- Array de artículos relevantes
+    articulos_cpp TEXT[],          -- Array de artículos relevantes
     nivel_autoridad TEXT,           -- 'vinculante', 'orientativo'
     
     -- Datos estructurados completos (JSON original)
@@ -61,7 +61,7 @@ RETURNS TABLE (
     id TEXT,
     criterio TEXT,
     regla_general TEXT,
-    articulos_ccyc TEXT[],
+    articulos_cpp TEXT[],
     similarity FLOAT
 )
 LANGUAGE plpgsql
@@ -72,7 +72,7 @@ BEGIN
         c.id,
         c.criterio,
         c.regla_general,
-        c.articulos_ccyc,
+        c.articulos_cpp,
         1 - (c.embedding <=> query_embedding) AS similarity
     FROM criterios_juridicos c
     WHERE 
@@ -102,7 +102,8 @@ USING (auth.role() = 'authenticated')
 WITH CHECK (auth.role() = 'authenticated');
 
 -- Comentarios de documentación
-COMMENT ON TABLE criterios_juridicos IS 'Almacena criterios jurídicos vectorizados para RAG de Alcance Legal';
+COMMENT ON TABLE criterios_juridicos IS 'Almacena criterios jurídicos vectorizados para RAG de Alcance Legal Penal (CPP PBA / CP)';
 COMMENT ON COLUMN criterios_juridicos.alcance IS 'FILTRO PRINCIPAL: solo se recuperan criterios_generales en producción';
 COMMENT ON COLUMN criterios_juridicos.embedding IS 'Vector de 1536 dimensiones generado con OpenAI text-embedding-ada-002';
-COMMENT ON FUNCTION buscar_criterios IS 'Búsqueda semántica con filtro OBLIGATORIO por alcance';
+COMMENT ON COLUMN criterios_juridicos.articulos_cpp IS 'Array de artículos del CPP PBA, CP, CN y tratados internacionales aplicables';
+COMMENT ON FUNCTION buscar_criterios IS 'Búsqueda semántica con filtro OBLIGATORIO por alcance — Perfil Defensa Penal PBA';
