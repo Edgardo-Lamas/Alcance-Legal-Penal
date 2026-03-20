@@ -1,195 +1,60 @@
 /**
- * Profile Definition - Alcance Legal
+ * Profile Definition - Alcance Legal Penal
  *
- * Define los perfiles jurídicos del sistema (Civil, Comercial, Familiar).
- * Cada perfil actúa como "contrato de configuración" para su fuero.
- * Los tres comparten la misma interfaz → misma base de código, perfiles distintos.
+ * Perfil único: Defensa Penal — Provincia de Buenos Aires
+ * Código procesal: CPP PBA (Ley 11.922, sistema acusatorio)
  */
 
-// ============================================
-// TIPOS
-// ============================================
-
-export type Fuero = 'civil' | 'comercial' | 'penal' | 'laboral' | 'familia';
+export type ProfileId = 'penal_pba';
 
 export type ActoJuridico =
     | 'analizar_caso'
-    | 'auditar_estrategia'
-    | 'redactar_escrito'
-    | 'revisar_documento';
-
-export type ProfileId = 'civil' | 'comercial' | 'familiar';
+    | 'analizar_prueba'
+    | 'detectar_nulidades'
+    | 'contraargumentar_acusacion'
+    | 'revisar_estrategia';
 
 export interface ProfileDefinition {
-    /** Identificador único del perfil */
     readonly id: ProfileId;
-    /** Nombre completo del producto */
     readonly nombre: string;
-    /** Descripción del rol del sistema */
     readonly descripcion: string;
-    /** Fuero jurídico que este perfil atiende */
-    readonly fueroAdmitido: Fuero;
-    /** Fueros que este perfil rechaza explícitamente */
-    readonly fuerosExcluidos: readonly Fuero[];
-    /** Actos jurídicos que este perfil puede realizar */
-    readonly actosAdmitidos: readonly ActoJuridico[];
-    /** Prefijo para numeración de informes (ej: "CIVIL", "COMERCIAL", "FAMILIAR") */
+    readonly jurisdiccion: string;
     readonly codigoInforme: string;
-    /** Mensajes de rechazo específicos para el fuero */
+    readonly actosAdmitidos: readonly ActoJuridico[];
+    readonly fuerosExcluidosKeywords: readonly string[];
     readonly politicaRechazo: {
-        readonly habilitado: boolean;
-        readonly mensajeFueraDeCompetencia: string;
         readonly mensajeHechosInsuficientes: string;
-        readonly mensajeConsultaHibrida: string;
+        readonly mensajeFueraDeCompetencia: string;
     };
 }
 
-// ============================================
-// PERFIL: CIVIL
-// ============================================
-
-export const PROFILE_CIVIL: ProfileDefinition = {
-    id: 'civil',
-    nombre: 'Alcance Legal – Civil',
-    descripcion: 'Asociado Senior Digital especializado exclusivamente en Derecho Civil Argentino',
-
-    fueroAdmitido: 'civil',
-    fuerosExcluidos: ['comercial', 'penal', 'laboral', 'familia'] as const,
+export const PROFILE_PENAL_PBA: ProfileDefinition = {
+    id: 'penal_pba',
+    nombre: 'Alcance Legal Penal — PBA',
+    descripcion: 'Sistema de análisis jurídico penal para defensa en Provincia de Buenos Aires',
+    jurisdiccion: 'provincia_buenos_aires',
+    codigoInforme: 'PENAL-PBA',
 
     actosAdmitidos: [
         'analizar_caso',
-        'auditar_estrategia',
-        'redactar_escrito',
-        'revisar_documento'
+        'analizar_prueba',
+        'detectar_nulidades',
+        'contraargumentar_acusacion',
+        'revisar_estrategia'
     ] as const,
 
-    codigoInforme: 'CIVIL',
+    fuerosExcluidosKeywords: [
+        'divorcio', 'alimentos', 'sociedad anónima', 'quiebra',
+        'contrato de locación', 'sucesión hereditaria', 'despido laboral'
+    ],
 
     politicaRechazo: {
-        habilitado: true,
-        mensajeFueraDeCompetencia:
-            'Esta consulta corresponde a un fuero distinto al Civil. ' +
-            'Alcance Legal – Civil opera exclusivamente dentro del Derecho Civil. ' +
-            'No se admiten consultas de otros fueros ni analogías entre jurisdicciones.',
         mensajeHechosInsuficientes:
-            'La consulta no contiene hechos suficientes para emitir una opinión fundada. ' +
-            'Por favor, proporcione: partes involucradas, hechos relevantes y pretensión.',
-        mensajeConsultaHibrida:
-            'La consulta involucra aspectos de múltiples fueros. ' +
-            'Este sistema solo puede operar sobre cuestiones estrictamente civiles. ' +
-            'Reformule la consulta excluyendo los aspectos no civiles.'
+            'La consulta no contiene hechos suficientes para emitir un análisis fundado. ' +
+            'Proporcione: descripción de los hechos imputados, norma aplicada por la acusación, ' +
+            'prueba invocada, y la pretensión defensiva específica.',
+        mensajeFueraDeCompetencia:
+            'Esta consulta involucra materia ajena al fuero penal. ' +
+            'Este sistema opera exclusivamente en el análisis de causas penales (CPP PBA / CP).'
     }
 } as const;
-
-// ============================================
-// PERFIL: COMERCIAL
-// ============================================
-
-export const PROFILE_COMERCIAL: ProfileDefinition = {
-    id: 'comercial',
-    nombre: 'Alcance Legal – Comercial',
-    descripcion: 'Asociado Senior Digital especializado exclusivamente en Derecho Comercial y Societario Argentino',
-
-    fueroAdmitido: 'comercial',
-    fuerosExcluidos: ['civil', 'penal', 'laboral', 'familia'] as const,
-
-    actosAdmitidos: [
-        'analizar_caso',
-        'auditar_estrategia',
-        'redactar_escrito',
-        'revisar_documento'
-    ] as const,
-
-    codigoInforme: 'COMERCIAL',
-
-    politicaRechazo: {
-        habilitado: true,
-        mensajeFueraDeCompetencia:
-            'Esta consulta corresponde a un fuero distinto al Comercial. ' +
-            'Alcance Legal – Comercial opera exclusivamente dentro del Derecho Comercial y Societario. ' +
-            'No se admiten consultas de otros fueros ni analogías entre jurisdicciones.',
-        mensajeHechosInsuficientes:
-            'La consulta no contiene hechos suficientes para emitir una opinión fundada. ' +
-            'Por favor, proporcione: partes involucradas, hechos relevantes y pretensión.',
-        mensajeConsultaHibrida:
-            'La consulta involucra aspectos de múltiples fueros. ' +
-            'Este sistema solo puede operar sobre cuestiones estrictamente comerciales. ' +
-            'Reformule la consulta excluyendo los aspectos no comerciales.'
-    }
-} as const;
-
-// ============================================
-// PERFIL: FAMILIAR
-// ============================================
-
-export const PROFILE_FAMILIAR: ProfileDefinition = {
-    id: 'familiar',
-    nombre: 'Alcance Legal – Familiar',
-    descripcion: 'Asociado Senior Digital especializado exclusivamente en Derecho de Familia Argentino',
-
-    fueroAdmitido: 'familia',
-    fuerosExcluidos: ['civil', 'comercial', 'penal', 'laboral'] as const,
-
-    actosAdmitidos: [
-        'analizar_caso',
-        'auditar_estrategia',
-        'redactar_escrito',
-        'revisar_documento'
-    ] as const,
-
-    codigoInforme: 'FAMILIAR',
-
-    politicaRechazo: {
-        habilitado: true,
-        mensajeFueraDeCompetencia:
-            'Esta consulta corresponde a un fuero distinto al de Familia. ' +
-            'Alcance Legal – Familiar opera exclusivamente dentro del Derecho de Familia. ' +
-            'No se admiten consultas de otros fueros ni analogías entre jurisdicciones.',
-        mensajeHechosInsuficientes:
-            'La consulta no contiene hechos suficientes para emitir una opinión fundada. ' +
-            'Por favor, proporcione: partes involucradas, hechos relevantes y pretensión.',
-        mensajeConsultaHibrida:
-            'La consulta involucra aspectos de múltiples fueros. ' +
-            'Este sistema solo puede operar sobre cuestiones estrictamente familiares. ' +
-            'Reformule la consulta excluyendo los aspectos ajenos al Derecho de Familia.'
-    }
-} as const;
-
-// ============================================
-// REGISTRO DE PERFILES
-// ============================================
-
-export const PROFILES: Record<ProfileId, ProfileDefinition> = {
-    civil: PROFILE_CIVIL,
-    comercial: PROFILE_COMERCIAL,
-    familiar: PROFILE_FAMILIAR
-} as const;
-
-// ============================================
-// HELPERS
-// ============================================
-
-/**
- * Verifica si un fuero está excluido en el perfil dado.
- * Si no se pasa perfil, usa PROFILE_CIVIL (retrocompatibilidad).
- */
-export function isFueroExcluido(fuero: Fuero, profile: ProfileDefinition = PROFILE_CIVIL): boolean {
-    return profile.fuerosExcluidos.includes(fuero);
-}
-
-/**
- * Verifica si un acto jurídico está admitido en el perfil dado.
- * Si no se pasa perfil, usa PROFILE_CIVIL (retrocompatibilidad).
- */
-export function isActoAdmitido(acto: ActoJuridico, profile: ProfileDefinition = PROFILE_CIVIL): boolean {
-    return profile.actosAdmitidos.includes(acto);
-}
-
-/**
- * Obtiene un perfil por su ID.
- * Si no se pasa ID, retorna PROFILE_CIVIL (retrocompatibilidad).
- */
-export function getActiveProfile(id?: ProfileId): ProfileDefinition {
-    if (!id) return PROFILE_CIVIL;
-    return PROFILES[id];
-}

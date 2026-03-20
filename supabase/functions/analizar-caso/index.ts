@@ -1,17 +1,17 @@
 /**
  * Supabase Edge Function: POST /analizar-caso
  *
- * Endpoint principal de Alcance Legal – Civil.
+ * Alcance Legal Penal — Defensa Penal PBA
  * Orquesta el pipeline completo de 5 fases:
- *   1. Admisibilidad → 2. RAG Civil → 3. Razonamiento LIS → 4. Validación → 5. Respuesta
+ *   1. Admisibilidad → 2. RAG Penal → 3. Razonamiento LIS → 4. Validación → 5. Respuesta
  *
- * Este endpoint representa un ACTO JURÍDICO-INTELECTUAL, no un chat.
+ * Perspectiva: SIEMPRE desde la defensa. Nunca desde la acusación.
  * Toda la configuración del perfil viene de _shared/profile-config.ts.
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { PROFILE_CIVIL_CONFIG } from '../_shared/profile-config.ts'
+import { PROFILE_PENAL_PBA_CONFIG } from '../_shared/profile-config.ts'
 
 // ============================================
 // CONFIGURACIÓN
@@ -29,8 +29,8 @@ const corsHeaders = {
 
 const RAG_CONFIG = {
     TOP_K: 5,
-    SIMILARITY_THRESHOLD: 0.75,
-    MIN_RELEVANT_CRITERIA: 2,
+    SIMILARITY_THRESHOLD: 0.72,  // Levemente más permisivo que Civil por corpus más técnico
+    MIN_RELEVANT_CRITERIA: 1,    // Un criterio sólido puede ser suficiente en defensa
 }
 
 // ============================================
@@ -38,14 +38,16 @@ const RAG_CONFIG = {
 // ============================================
 
 interface AnalizarCasoRequest {
-    /** Descripción de los hechos del caso (requerido) */
+    /** Descripción de los hechos imputados (requerido) */
     hechos: string
-    /** Pretensión del cliente (opcional pero recomendado) */
-    pretension?: string
-    /** Instituto jurídico principal (opcional, se infiere si no se proporciona) */
-    instituto?: string
-    /** Documentación disponible */
-    documentacion?: string[]
+    /** Etapa procesal actual (opcional: IPP, juicio oral, recursos) */
+    etapa_procesal?: string
+    /** Prueba invocada por la acusación (opcional pero recomendado) */
+    prueba_acusacion?: string
+    /** Pretensión defensiva específica (opcional) */
+    pretension_defensiva?: string
+    /** Norma o tipo penal aplicado por la acusación (opcional) */
+    tipo_penal?: string
 }
 
 interface AnalizarCasoResponse {
@@ -54,10 +56,11 @@ interface AnalizarCasoResponse {
     data: {
         numero_informe: string
         fecha_emision: string
-        encuadre: string
-        analisis: string
-        riesgos: string
-        conclusion: string
+        encuadre_procesal: string
+        analisis_prueba_cargo: string
+        nulidades_y_vicios: string
+        contraargumentacion: string
+        conclusion_defensiva: string
         limitaciones: string
     }
     advertencias?: string[]
@@ -71,7 +74,7 @@ interface AnalizarCasoResponse {
 
 interface RechazoResponse {
     success: false
-    fase_rechazo: 'admisibilidad' | 'rag' | 'validacion'
+    fase_rechazo: 'admisibilidad' | 'rag' | 'validacion' | 'sistema'
     codigo: string
     fundamento: string
     recomendacion?: string
@@ -83,11 +86,11 @@ interface RechazoResponse {
 // ============================================
 
 const DISCLAIMER = {
-    version: '1.1',
-    texto: 'Este análisis es un insumo técnico basado en criterios jurídicos verificados. No constituye consejo legal definitivo. La validación y decisión final corresponde exclusivamente al profesional actuante.',
+    version: '1.0',
+    texto: 'Este análisis es un insumo técnico para la defensa técnica. No constituye consejo legal definitivo. La validación y decisión final corresponde exclusivamente al profesional actuante.',
     advertencias: [
         'Este análisis NO constituye opinión legal vinculante.',
-        PROFILE_CIVIL_CONFIG.disclaimerCorpus,
+        PROFILE_PENAL_PBA_CONFIG.disclaimerCorpus,
         'La precisión depende de la completitud de la información proporcionada.',
         'La decisión final corresponde exclusivamente al profesional actuante.'
     ]
@@ -100,7 +103,16 @@ const DISCLAIMER = {
 const CERTEZA_PATTERNS = [
     /sin duda alguna/i, /absolutamente cierto/i, /garantizo que/i,
     /100% seguro/i, /es imposible que/i, /con total certeza/i,
-    /seguramente ganará/i, /nunca podrá/i
+    /seguramente será absuelto/i, /nunca podrá condenar/i,
+    /es culpable/i, /claramente cometió/i,
+]
+
+// Patrones que indican que el LLM razonó desde la acusación (violación de scope)
+const ACUSACION_BIAS_PATTERNS = [
+    /el imputado es culpable/i,
+    /la víctima claramente fue/i,
+    /no hay duda de la culpabilidad/i,
+    /se acredita la responsabilidad/i,
 ]
 
 // ============================================
@@ -140,7 +152,7 @@ async function invocarRazonamiento(context: string): Promise<Record<string, stri
             body: JSON.stringify({
                 model: 'claude-sonnet-4-6',
                 max_tokens: 4096,
-                system: PROFILE_CIVIL_CONFIG.systemPrompt,
+                system: PROFILE_PENAL_PBA_CONFIG.systemPrompt,
                 messages: [{ role: 'user', content: context }]
             }),
         })
@@ -164,7 +176,7 @@ async function invocarRazonamiento(context: string): Promise<Record<string, stri
             model: 'gpt-4-turbo-preview',
             response_format: { type: 'json_object' },
             messages: [
-                { role: 'system', content: PROFILE_CIVIL_CONFIG.systemPrompt },
+                { role: 'system', content: PROFILE_PENAL_PBA_CONFIG.systemPrompt },
                 { role: 'user', content: context }
             ]
         }),
@@ -187,35 +199,24 @@ function checkAdmissibility(body: AnalizarCasoRequest): {
     codigo: string
     fundamento?: string
 } {
-    const textoCompleto = `${body.hechos} ${body.pretension || ''}`.toLowerCase()
-
     if (!body.hechos || body.hechos.trim().length < 20) {
         return {
             admitida: false,
             codigo: 'RECHAZADA_HECHOS_INSUFICIENTES',
-            fundamento: PROFILE_CIVIL_CONFIG.politicaRechazo.mensajeHechosInsuficientes
+            fundamento: PROFILE_PENAL_PBA_CONFIG.politicaRechazo.mensajeHechosInsuficientes
         }
     }
 
-    const tieneFueroExcluido = PROFILE_CIVIL_CONFIG.fuerosExcluidosKeywords
+    const textoCompleto = `${body.hechos} ${body.pretension_defensiva || ''} ${body.tipo_penal || ''}`.toLowerCase()
+
+    const tieneFueroExcluido = PROFILE_PENAL_PBA_CONFIG.fuerosExcluidosKeywords
         .some(kw => textoCompleto.includes(kw.toLowerCase()))
 
-    const tieneFueroCivil = PROFILE_CIVIL_CONFIG.fueroAdmitidoKeywords
-        .some(kw => textoCompleto.includes(kw.toLowerCase()))
-
-    if (tieneFueroExcluido && !tieneFueroCivil) {
+    if (tieneFueroExcluido) {
         return {
             admitida: false,
             codigo: 'RECHAZADA_FUERO_EXCLUIDO',
-            fundamento: PROFILE_CIVIL_CONFIG.politicaRechazo.mensajeFueraDeCompetencia
-        }
-    }
-
-    if (tieneFueroExcluido && tieneFueroCivil) {
-        return {
-            admitida: false,
-            codigo: 'RECHAZADA_CONSULTA_HIBRIDA',
-            fundamento: PROFILE_CIVIL_CONFIG.politicaRechazo.mensajeConsultaHibrida
+            fundamento: PROFILE_PENAL_PBA_CONFIG.politicaRechazo.mensajeFueraDeCompetencia
         }
     }
 
@@ -223,7 +224,7 @@ function checkAdmissibility(body: AnalizarCasoRequest): {
 }
 
 // ============================================
-// FASE 2: RAG CIVIL
+// FASE 2: RAG PENAL
 // ============================================
 
 async function retrieveCriteria(
@@ -232,7 +233,7 @@ async function retrieveCriteria(
 ): Promise<{
     baseSuficiente: boolean
     codigo: string
-    criterios: Array<{ id: string; criterio: string; regla_general: string; articulos_ccyc: string[]; similarity: number }>
+    criterios: Array<{ id: string; criterio: string; regla_general: string; articulos_cpp: string[]; similarity: number }>
     fundamento?: string
 }> {
     const { data: criterios, error } = await supabase.rpc('buscar_criterios', {
@@ -250,7 +251,7 @@ async function retrieveCriteria(
             baseSuficiente: false,
             codigo: 'BASE_INSUFICIENTE_SIN_RESULTADOS',
             criterios: [],
-            fundamento: `No se encontraron criterios en el corpus ${PROFILE_CIVIL_CONFIG.nombre} para esta consulta.`
+            fundamento: `No se encontraron criterios en el corpus ${PROFILE_PENAL_PBA_CONFIG.nombre} para esta consulta.`
         }
     }
 
@@ -264,8 +265,8 @@ async function retrieveCriteria(
             codigo: 'BASE_INSUFICIENTE_BAJA_RELEVANCIA',
             criterios,
             fundamento:
-                `Se encontraron ${criterios.length} criterios, pero solo ${criteriosRelevantes.length} ` +
-                `superan el umbral de relevancia requerido (${RAG_CONFIG.SIMILARITY_THRESHOLD}).`
+                `Se encontraron ${criterios.length} criterios, pero ninguno ` +
+                `supera el umbral de relevancia requerido (${RAG_CONFIG.SIMILARITY_THRESHOLD}).`
         }
     }
 
@@ -294,12 +295,23 @@ function validateOutput(contenido: Record<string, string>): {
         }
     }
 
-    // Detectar violación de scope (el LLM habló de otro fuero)
-    for (const keyword of PROFILE_CIVIL_CONFIG.fuerosExcluidosKeywords.slice(0, 12)) {
+    // Detectar bias hacia la acusación (violación de scope crítica)
+    for (const pattern of ACUSACION_BIAS_PATTERNS) {
+        if (pattern.test(textoCompleto)) {
+            return {
+                status: 'rejected',
+                advertencias: ['Se detectó razonamiento desde la perspectiva de la acusación. El sistema opera exclusivamente desde la defensa.'],
+                esViolacionScope: true
+            }
+        }
+    }
+
+    // Detectar mención a fueros excluidos
+    for (const keyword of PROFILE_PENAL_PBA_CONFIG.fuerosExcluidosKeywords) {
         if (textoCompleto.toLowerCase().includes(keyword.toLowerCase())) {
             return {
                 status: 'rejected',
-                advertencias: [`Se detectó mención a materia fuera del scope ${PROFILE_CIVIL_CONFIG.nombre}: "${keyword}"`],
+                advertencias: [`Se detectó mención a materia fuera del scope penal: "${keyword}"`],
                 esViolacionScope: true
             }
         }
@@ -319,16 +331,16 @@ async function generarNumeroInforme(
 ): Promise<string> {
     const year = new Date().getFullYear()
 
-    const { data, error } = await supabase.rpc('siguiente_numero_informe_civil')
+    const { data, error } = await supabase.rpc('siguiente_numero_informe_penal')
 
     if (error || data === null) {
-        // Fallback si la migración 004 aún no fue aplicada
+        // Fallback si la secuencia aún no fue aplicada
         const fallback = String(Date.now()).slice(-6)
         console.warn('Secuencia no disponible, usando fallback timestamp:', fallback)
-        return `ALC-${PROFILE_CIVIL_CONFIG.codigoInforme}-${year}-${fallback}`
+        return `ALC-${PROFILE_PENAL_PBA_CONFIG.codigoInforme}-${year}-${fallback}`
     }
 
-    return `ALC-${PROFILE_CIVIL_CONFIG.codigoInforme}-${year}-${String(data).padStart(6, '0')}`
+    return `ALC-${PROFILE_PENAL_PBA_CONFIG.codigoInforme}-${year}-${String(data).padStart(6, '0')}`
 }
 
 // ============================================
@@ -358,7 +370,7 @@ serve(async (req: Request) => {
                 fase_rechazo: 'admisibilidad',
                 codigo: admisibilidad.codigo,
                 fundamento: admisibilidad.fundamento!,
-                recomendacion: 'Reformule la consulta limitándola a aspectos estrictamente civiles.',
+                recomendacion: 'Reformule la consulta incluyendo: hechos imputados, norma penal aplicada, prueba invocada, y pretensión defensiva.',
                 disclaimer: DISCLAIMER
             }
             return new Response(JSON.stringify(rechazo), {
@@ -368,9 +380,16 @@ serve(async (req: Request) => {
         }
 
         // ==========================================
-        // FASE 2: RAG CIVIL
+        // FASE 2: RAG PENAL
         // ==========================================
-        const textoConsulta = `${body.hechos}\n\nPretensión: ${body.pretension || 'No especificada'}`
+        const textoConsulta = [
+            body.hechos,
+            body.tipo_penal ? `Tipo penal: ${body.tipo_penal}` : '',
+            body.etapa_procesal ? `Etapa: ${body.etapa_procesal}` : '',
+            body.prueba_acusacion ? `Prueba de cargo: ${body.prueba_acusacion}` : '',
+            body.pretension_defensiva ? `Pretensión: ${body.pretension_defensiva}` : '',
+        ].filter(Boolean).join('\n\n')
+
         const embedding = await generarEmbedding(textoConsulta)
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
@@ -382,7 +401,7 @@ serve(async (req: Request) => {
                 fase_rechazo: 'rag',
                 codigo: rag.codigo,
                 fundamento: rag.fundamento!,
-                recomendacion: `La consulta no tiene base suficiente en el corpus ${PROFILE_CIVIL_CONFIG.nombre} verificado.`,
+                recomendacion: `La consulta no tiene base suficiente en el corpus ${PROFILE_PENAL_PBA_CONFIG.nombre} verificado.`,
                 disclaimer: DISCLAIMER
             }
             return new Response(JSON.stringify(rechazo), {
@@ -395,14 +414,17 @@ serve(async (req: Request) => {
         // FASE 3: RAZONAMIENTO GUIADO (LIS)
         // ==========================================
         const criteriosTexto = rag.criterios.map((c) =>
-            `### Criterio: ${c.criterio} (${c.id})\n**Regla:** ${c.regla_general}\n**Artículos:** ${c.articulos_ccyc?.join(', ') || 'N/A'}`
+            `### Criterio: ${c.criterio} (${c.id})\n**Regla:** ${c.regla_general}\n**Artículos:** ${c.articulos_cpp?.join(', ') || 'N/A'}`
         ).join('\n\n')
 
         const contextReasoning =
-            `## HECHOS DEL CASO\n${body.hechos}\n\n` +
-            `## PRETENSIÓN\n${body.pretension || 'No especificada'}\n\n` +
-            `## CRITERIOS CIVILES APLICABLES\n${criteriosTexto}\n\n` +
-            `---\nResponde en formato JSON con las claves: encuadre, analisis, riesgos, conclusion, limitaciones.`
+            `## HECHOS IMPUTADOS\n${body.hechos}\n\n` +
+            (body.tipo_penal ? `## TIPO PENAL APLICADO POR LA ACUSACIÓN\n${body.tipo_penal}\n\n` : '') +
+            (body.etapa_procesal ? `## ETAPA PROCESAL\n${body.etapa_procesal}\n\n` : '') +
+            (body.prueba_acusacion ? `## PRUEBA INVOCADA POR LA ACUSACIÓN\n${body.prueba_acusacion}\n\n` : '') +
+            (body.pretension_defensiva ? `## PRETENSIÓN DEFENSIVA\n${body.pretension_defensiva}\n\n` : '') +
+            `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
+            `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
 
         const razonamiento = await invocarRazonamiento(contextReasoning)
 
@@ -438,17 +460,18 @@ serve(async (req: Request) => {
             data: {
                 numero_informe: numeroInforme,
                 fecha_emision: new Date().toISOString(),
-                encuadre:      razonamiento.encuadre     || '',
-                analisis:      razonamiento.analisis     || '',
-                riesgos:       razonamiento.riesgos      || '',
-                conclusion:    razonamiento.conclusion   || '',
-                limitaciones:  razonamiento.limitaciones || ''
+                encuadre_procesal:      razonamiento.encuadre_procesal      || '',
+                analisis_prueba_cargo:  razonamiento.analisis_prueba_cargo  || '',
+                nulidades_y_vicios:     razonamiento.nulidades_y_vicios     || '',
+                contraargumentacion:    razonamiento.contraargumentacion     || '',
+                conclusion_defensiva:   razonamiento.conclusion_defensiva   || '',
+                limitaciones:           razonamiento.limitaciones            || ''
             },
             advertencias: validacion.status === 'limited' ? validacion.advertencias : undefined,
             disclaimer: DISCLAIMER,
             meta: {
                 criterios_utilizados: rag.criterios.length,
-                pipeline_version: `2.0-lis-${PROFILE_CIVIL_CONFIG.id}`,
+                pipeline_version: `1.0-lis-${PROFILE_PENAL_PBA_CONFIG.id}`,
                 timestamp: new Date().toISOString()
             }
         }
@@ -459,13 +482,14 @@ serve(async (req: Request) => {
 
     } catch (error) {
         console.error('Error en Edge Function:', error)
+        const mensaje = error instanceof Error ? error.message : 'Error interno del servidor'
 
         return new Response(
             JSON.stringify({
                 success: false,
                 fase_rechazo: 'sistema',
                 codigo: 'ERROR_INTERNO',
-                fundamento: error.message || 'Error interno del servidor',
+                fundamento: mensaje,
                 disclaimer: DISCLAIMER
             }),
             {
