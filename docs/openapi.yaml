@@ -1,0 +1,596 @@
+openapi: 3.0.3
+
+info:
+  title: Alcance Legal – API Multi-Perfil
+  version: 2.1.0
+  description: |
+    API de Inteligencia Jurídica Aplicada para Derecho Argentino.
+    Tres perfiles bajo la misma arquitectura de pipeline:
+
+    | Endpoint | Perfil | Fuero |
+    |---|---|---|
+    | `/analizar-caso` | Civil | Derecho Civil / CCyC |
+    | `/analizar-caso-comercial` | Comercial | Derecho Comercial / LGS / LCQ |
+    | `/analizar-caso-familiar` | Familiar | Derecho de Familia / CCyC Libro II |
+
+    Cada endpoint representa un **acto jurídico-intelectual**, no un chat.
+    El sistema puede rechazar consultas cuando no corresponden, y el rechazo
+    es un output válido y fundado.
+
+    ## Principios de operación
+    - Cada perfil opera exclusivamente dentro de su fuero. Rechaza los demás.
+    - Las respuestas se basan exclusivamente en corpus jurídicos curados por fuero.
+    - No se garantizan respuestas: si no hay base suficiente, el sistema se abstiene.
+    - Un rechazo bien fundado incrementa la confianza del usuario profesional.
+
+    ## Disclaimer
+    Este sistema NO constituye asesoramiento legal profesional, patrocinio letrado
+    ni dictamen jurídico vinculante. La decisión final corresponde exclusivamente
+    al profesional actuante.
+  contact:
+    name: Alcance Legal
+  license:
+    name: Propietaria
+    url: https://alcance-legal.com/terms
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions (Producción)
+    variables:
+      project-ref:
+        default: your-project-ref
+        description: ID del proyecto Supabase
+  - url: http://localhost:54321/functions/v1
+    description: Supabase Local (Desarrollo)
+
+paths:
+  /analizar-caso:
+    post:
+      operationId: analizarCaso
+      summary: Analizar un caso civil
+      description: |
+        Recibe los hechos de un caso y ejecuta el pipeline completo de análisis:
+
+        1. **Admisibilidad** — Valida fuero, perfil y alcance.
+        2. **Recuperación (RAG)** — Busca criterios en el corpus civil curado.
+        3. **Razonamiento guiado (LIS)** — Aplica metodología jurídica estructurada.
+        4. **Validación de salida** — Control senior de coherencia y riesgo.
+        5. **Entrega o rechazo razonado.**
+
+        El sistema NO promete respuestas. Si la consulta es inadmisible, excede
+        el scope civil, o no hay base suficiente en el corpus, el endpoint
+        devuelve un rechazo estructurado y fundado.
+      tags:
+        - Análisis Civil
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalizarCasoRequest'
+            examples:
+              caso_civil_tipico:
+                summary: Caso civil típico (responsabilidad contractual)
+                value:
+                  caso: >
+                    Mi cliente celebró un contrato de locación de inmueble por 3 años.
+                    El locador no realizó las reparaciones urgentes requeridas por escrito
+                    en tres oportunidades (goteras en techo que afectan la habitabilidad).
+                    Transcurrieron 60 días desde la última intimación sin respuesta.
+                    Mi cliente pretende resolver el contrato y reclamar daños.
+              caso_insuficiente:
+                summary: Caso con hechos insuficientes
+                value:
+                  caso: "Tengo un problema con un contrato."
+              caso_fuera_scope:
+                summary: Caso fuera del scope civil
+                value:
+                  caso: "Mi empleador me despidió sin causa y quiero reclamar indemnización laboral."
+      responses:
+        '200':
+          description: |
+            **Análisis aprobado.** El sistema encontró base suficiente y el análisis
+            superó todos los controles de calidad profesional.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisAprobado'
+              example:
+                status: approved
+                perfil: Civil
+                analisis:
+                  encuadre: >
+                    El caso se encuadra en el régimen de locación de inmuebles
+                    (arts. 1187 a 1226 CCyC), específicamente en las obligaciones
+                    del locador respecto a la conservación de la cosa (art. 1201 CCyC)
+                    y la resolución por incumplimiento (art. 1084 CCyC).
+                  analisis_juridico: >
+                    El art. 1201 CCyC establece la obligación del locador de conservar
+                    la cosa locada en estado de servir al uso y goce convenido.
+                    Las reparaciones urgentes que afectan la habitabilidad constituyen
+                    un incumplimiento esencial. La intimación fehaciente previa
+                    y el transcurso de un plazo razonable (60 días) habilitan
+                    la resolución contractual conforme al art. 1084 CCyC.
+                  riesgos: >
+                    Riesgo medio: verificar que las intimaciones hayan sido realizadas
+                    por medio fehaciente (carta documento o acta notarial).
+                    Riesgo bajo: el plazo de 60 días es generalmente considerado
+                    razonable, pero podría ser cuestionado según la magnitud
+                    de las reparaciones. Evaluar si existe cláusula contractual
+                    que modifique el régimen de resolución.
+                  conclusion: >
+                    El caso presenta viabilidad para la resolución contractual
+                    por incumplimiento del locador, condicionada a la acreditación
+                    del carácter fehaciente de las intimaciones. Se recomienda
+                    verificar la documentación antes de iniciar la acción.
+                limitaciones: null
+
+        '422':
+          description: |
+            **Análisis limitado o base insuficiente.** El sistema pudo realizar
+            un análisis parcial pero detectó limitaciones, o no encontró criterios
+            suficientes en el corpus civil curado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisLimitado'
+              example:
+                status: limited
+                perfil: Civil
+                analisis:
+                  encuadre: >
+                    El caso podría encuadrarse en el régimen de responsabilidad
+                    civil por daños (arts. 1716 y ss. CCyC), pero la información
+                    proporcionada no permite un encuadre definitivo.
+                  analisis_juridico: >
+                    Los hechos descriptos sugieren una posible acción de daños,
+                    pero faltan elementos esenciales para un análisis completo:
+                    relación causal, factor de atribución y cuantificación del daño.
+                  riesgos: >
+                    Riesgo alto: la falta de precisión en los hechos impide
+                    una evaluación confiable de la viabilidad de la pretensión.
+                limitaciones: >
+                  El análisis no pudo completarse por insuficiencia de hechos
+                  relevantes. Se recomienda proporcionar: partes involucradas,
+                  hechos cronológicos detallados, documentación disponible
+                  y pretensión concreta.
+
+        '400':
+          description: |
+            **Inadmisible.** La consulta no contiene hechos suficientes para
+            emitir una opinión fundada, o no cumple con los requisitos mínimos
+            de admisibilidad.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+              example:
+                status: rejected
+                perfil: Civil
+                motivo: RECHAZADA_HECHOS_INSUFICIENTES
+                detalle: >
+                  La consulta no contiene hechos suficientes para emitir una
+                  opinión fundada. Por favor, proporcione: partes involucradas,
+                  hechos relevantes y pretensión.
+
+        '403':
+          description: |
+            **Violación de scope Civil.** La consulta corresponde a un fuero
+            distinto al Civil (Penal, Laboral, Comercial, Familia u otro excluido).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+              example:
+                status: rejected
+                perfil: Civil
+                motivo: RECHAZADA_FUERO_EXCLUIDO
+                detalle: >
+                  Esta consulta corresponde a un fuero distinto al Civil
+                  (detectado: "despido", "indemnización laboral").
+                  Alcance Legal – Civil opera exclusivamente dentro del
+                  Derecho Civil.
+
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInterno'
+              example:
+                status: error
+                motivo: ERROR_INTERNO
+                detalle: Error interno del servidor. Intente nuevamente.
+
+components:
+  schemas:
+    # ─────────────────────────────────────
+    # REQUEST
+    # ─────────────────────────────────────
+    AnalizarCasoRequest:
+      type: object
+      required:
+        - caso
+      properties:
+        caso:
+          type: string
+          maxLength: 4000
+          description: |
+            Descripción de los hechos del caso en texto plano.
+            Debe incluir: partes involucradas, hechos relevantes y pretensión.
+            No se aceptan adjuntos, PDFs ni archivos.
+          example: >
+            Mi cliente celebró un contrato de locación de inmueble por 3 años.
+            El locador no realizó las reparaciones urgentes requeridas por escrito.
+      additionalProperties: false
+
+    # ─────────────────────────────────────
+    # RESPONSE: 200 OK
+    # ─────────────────────────────────────
+    AnalisisAprobado:
+      type: object
+      required:
+        - status
+        - perfil
+        - analisis
+        - limitaciones
+      properties:
+        status:
+          type: string
+          enum: [approved]
+          description: Indica que el análisis fue aprobado por todos los controles de calidad.
+        perfil:
+          type: string
+          enum: [Civil]
+          description: Perfil jurídico bajo el cual se realizó el análisis.
+        analisis:
+          $ref: '#/components/schemas/AnalisisCompleto'
+        limitaciones:
+          type: string
+          nullable: true
+          description: Siempre `null` cuando el status es `approved`.
+
+    # ─────────────────────────────────────
+    # RESPONSE: 422 LIMITED
+    # ─────────────────────────────────────
+    AnalisisLimitado:
+      type: object
+      required:
+        - status
+        - perfil
+        - analisis
+        - limitaciones
+      properties:
+        status:
+          type: string
+          enum: [limited]
+          description: Indica que el análisis se realizó con limitaciones.
+        perfil:
+          type: string
+          enum: [Civil]
+        analisis:
+          $ref: '#/components/schemas/AnalisisParcial'
+        limitaciones:
+          type: string
+          description: Explicación de por qué el análisis no pudo completarse.
+
+    # ─────────────────────────────────────
+    # RESPONSE: 400 / 403 REJECTED
+    # ─────────────────────────────────────
+    Rechazo:
+      type: object
+      required:
+        - status
+        - perfil
+        - motivo
+        - detalle
+      properties:
+        status:
+          type: string
+          enum: [rejected]
+          description: Indica que la consulta fue rechazada.
+        perfil:
+          type: string
+          enum: [Civil]
+        motivo:
+          type: string
+          description: |
+            Código de rechazo. Valores posibles:
+            - `RECHAZADA_HECHOS_INSUFICIENTES`
+            - `RECHAZADA_FUERO_EXCLUIDO`
+            - `RECHAZADA_CONSULTA_HIBRIDA`
+            - `RECHAZADA_VALIDACION`
+          enum:
+            - RECHAZADA_HECHOS_INSUFICIENTES
+            - RECHAZADA_FUERO_EXCLUIDO
+            - RECHAZADA_CONSULTA_HIBRIDA
+            - RECHAZADA_VALIDACION
+        detalle:
+          type: string
+          description: Explicación fundada del rechazo.
+
+    # ─────────────────────────────────────
+    # RESPONSE: 500 ERROR
+    # ─────────────────────────────────────
+    ErrorInterno:
+      type: object
+      required:
+        - status
+        - motivo
+        - detalle
+      properties:
+        status:
+          type: string
+          enum: [error]
+        motivo:
+          type: string
+          enum: [ERROR_INTERNO]
+        detalle:
+          type: string
+
+    # ─────────────────────────────────────
+    # SHARED: Bloques de análisis
+    # ─────────────────────────────────────
+    AnalisisCompleto:
+      type: object
+      description: Análisis jurídico completo con las 4 secciones.
+      required:
+        - encuadre
+        - analisis_juridico
+        - riesgos
+        - conclusion
+      properties:
+        encuadre:
+          type: string
+          description: Instituto civil y artículos del CCyC aplicables.
+        analisis_juridico:
+          type: string
+          description: Aplicación de los criterios del corpus al caso concreto.
+        riesgos:
+          type: string
+          description: Advertencias, contingencias y puntos débiles identificados.
+        conclusion:
+          type: string
+          description: Opinión fundada con alcance explícito. Puede ser favorable, parcial, condicionada o abstención.
+
+    AnalisisParcial:
+      type: object
+      description: Análisis jurídico parcial (sin conclusión definitiva).
+      required:
+        - encuadre
+        - analisis_juridico
+        - riesgos
+      properties:
+        encuadre:
+          type: string
+          description: Instituto civil y artículos del CCyC aplicables (puede ser tentativo).
+        analisis_juridico:
+          type: string
+          description: Aplicación parcial de criterios disponibles.
+        riesgos:
+          type: string
+          description: Advertencias y contingencias identificadas.
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT de Supabase Auth.
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: apikey
+      description: Clave pública (anon key) del proyecto Supabase.
+
+security:
+  - ApiKeyAuth: []
+    BearerAuth: []
+
+  /analizar-caso-comercial:
+    post:
+      operationId: analizarCasoComercial
+      summary: Analizar un caso comercial o societario
+      description: |
+        Recibe los hechos de un caso de Derecho Comercial y ejecuta el pipeline completo:
+
+        1. **Admisibilidad** — Valida que sea materia comercial/societaria.
+        2. **Recuperación (RAG)** — Busca criterios en el corpus comercial curado (LGS, LCQ, CCyC comercial).
+        3. **Razonamiento guiado (LIS)** — Aplica metodología jurídica comercial estructurada.
+        4. **Validación de salida** — Control senior de coherencia y riesgo.
+        5. **Entrega o rechazo razonado.**
+
+        **Fueros excluidos:** Civil, Penal, Laboral, Familia.
+        Si la consulta no es estrictamente comercial, el sistema la rechaza con fundamento.
+      tags:
+        - Análisis Comercial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalizarCasoRequest'
+            examples:
+              caso_comercial_tipico:
+                summary: Caso societario típico (exclusión de socio)
+                value:
+                  caso: >
+                    Mi cliente es socio de una SRL con 30% de participación.
+                    Los socios mayoritarios le impidieron el acceso a la documentación
+                    social y no convocaron asamblea en los plazos legales desde hace 18 meses.
+                    Mi cliente pretende ejercer el derecho de receso y recuperar su aporte.
+              caso_fuera_scope:
+                summary: Caso fuera del scope comercial
+                value:
+                  caso: "Mi arrendatario no paga el alquiler. Quiero resolver el contrato."
+      responses:
+        '200':
+          description: Análisis comercial aprobado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisAprobado'
+              example:
+                status: approved
+                perfil: "Alcance Legal – Comercial"
+                analisis:
+                  encuadre: >
+                    El caso se encuadra en el régimen de la SRL (arts. 146-162 LGS)
+                    y el derecho de receso (art. 160 LGS) por falta de convocatoria
+                    a asamblea ordinaria en término (art. 159 LGS).
+                  analisis_juridico: >
+                    El art. 159 LGS establece la obligación de convocar asamblea ordinaria
+                    dentro de los 4 meses del cierre del ejercicio. El incumplimiento por
+                    18 meses configura una causal de receso calificado.
+                    La negativa de acceso a documentación vulnera el art. 55 LGS.
+                  riesgos: >
+                    Riesgo medio: verificar si los estatutos modifican los plazos legales.
+                    Riesgo bajo: el receso está sujeto a valuación patrimonial que puede
+                    ser impugnada por los socios mayoritarios.
+                  conclusion: >
+                    El caso presenta viabilidad para el ejercicio del derecho de receso,
+                    condicionado a la acreditación documental del incumplimiento.
+                limitaciones: null
+        '422':
+          description: Análisis limitado o base insuficiente en corpus comercial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisLimitado'
+        '400':
+          description: Inadmisible — hechos insuficientes o acto no admitido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+        '403':
+          description: Violación de scope — la consulta no es materia comercial.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+              example:
+                status: rejected
+                perfil: "Alcance Legal – Comercial"
+                motivo: RECHAZADA_FUERO_EXCLUIDO
+                detalle: >
+                  Esta consulta corresponde a un fuero distinto al Comercial.
+                  Alcance Legal – Comercial opera exclusivamente dentro del
+                  Derecho Comercial y Societario.
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInterno'
+
+  /analizar-caso-familiar:
+    post:
+      operationId: analizarCasoFamiliar
+      summary: Analizar un caso de Derecho de Familia
+      description: |
+        Recibe los hechos de un caso de Derecho de Familia y ejecuta el pipeline completo:
+
+        1. **Admisibilidad** — Valida que sea materia familiar (divorcio, alimentos, filiación, etc.).
+        2. **Recuperación (RAG)** — Busca criterios en el corpus familiar curado (CCyC Libro II, Ley 26.061, Ley 26.485).
+        3. **Razonamiento guiado (LIS)** — Aplica metodología jurídica familiar estructurada.
+        4. **Validación de salida** — Control senior de coherencia y riesgo.
+        5. **Entrega o rechazo razonado.**
+
+        **Fueros excluidos:** Civil, Comercial, Penal, Laboral.
+        Si la consulta no es estrictamente familiar, el sistema la rechaza con fundamento.
+      tags:
+        - Análisis Familiar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalizarCasoRequest'
+            examples:
+              caso_familiar_tipico:
+                summary: Caso familiar típico (alimentos)
+                value:
+                  caso: >
+                    Mi cliente tiene un hijo de 8 años. El padre paga una cuota alimentaria
+                    fijada en 2019 de $15.000. Dicha cuota no ha sido actualizada y representa
+                    hoy menos del 15% del costo real de vida del menor. Mi cliente pretende
+                    obtener la actualización de la cuota.
+              caso_fuera_scope:
+                summary: Caso fuera del scope familiar
+                value:
+                  caso: "Un empleado me reclama horas extras no pagadas."
+      responses:
+        '200':
+          description: Análisis familiar aprobado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisAprobado'
+              example:
+                status: approved
+                perfil: "Alcance Legal – Familiar"
+                analisis:
+                  encuadre: >
+                    El caso se encuadra en el régimen de alimentos (arts. 537-554 CCyC)
+                    y en la acción de aumento de cuota alimentaria (art. 647 CCyC).
+                  analisis_juridico: >
+                    El art. 658 CCyC establece que ambos progenitores deben contribuir
+                    al mantenimiento del hijo según sus posibilidades. El significativo
+                    desajuste de la cuota frente al costo de vida configura causal
+                    de aumento. Los criterios del corpus indican que la pérdida del
+                    85% del poder adquisitivo es jurisprudencialmente suficiente.
+                  riesgos: >
+                    Riesgo bajo: acreditar la capacidad económica actualizada del
+                    alimentante para justificar el monto pretendido.
+                  conclusion: >
+                    El caso presenta alta viabilidad para la acción de aumento de cuota
+                    alimentaria, sujeto a la acreditación del contexto económico actual
+                    y las necesidades del menor.
+                limitaciones: null
+        '422':
+          description: Análisis limitado o base insuficiente en corpus familiar.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalisisLimitado'
+        '400':
+          description: Inadmisible — hechos insuficientes o acto no admitido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+        '403':
+          description: Violación de scope — la consulta no es materia familiar.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rechazo'
+              example:
+                status: rejected
+                perfil: "Alcance Legal – Familiar"
+                motivo: RECHAZADA_FUERO_EXCLUIDO
+                detalle: >
+                  Esta consulta corresponde a un fuero distinto al de Familia.
+                  Alcance Legal – Familiar opera exclusivamente dentro del
+                  Derecho de Familia.
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorInterno'
+
+tags:
+  - name: Análisis Civil
+    description: |
+      Endpoint de análisis jurídico civil. Cada invocación representa
+      un acto jurídico-intelectual estructurado, no una conversación.
+  - name: Análisis Comercial
+    description: |
+      Endpoint de análisis jurídico comercial y societario.
+      Opera bajo el mismo pipeline que Civil, con corpus y system prompt propios.
+  - name: Análisis Familiar
+    description: |
+      Endpoint de análisis jurídico familiar.
+      Opera bajo el mismo pipeline que Civil, con corpus y system prompt propios.

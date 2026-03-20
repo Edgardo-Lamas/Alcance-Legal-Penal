@@ -1,0 +1,116 @@
+/* Split Layout - Refined for Alignment */
+.split-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    position: relative;
+}
+
+/* On Desktop, create the 2-column grid */
+@media (min-width: 1024px) {
+    .split-layout {
+        display: block;
+        /* Reset the wrapper grid */
+    }
+
+    /* Each section becomes a row in the visual story */
+    .section-grid {
+        display: grid;
+        /* Adjusted from 60/40 to 50/50 to make visuals larger */
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "content visual";
+        gap: var(--space-10);
+        /* Increase gap for breathing room */
+        align-items: start;
+        margin-bottom: var(--space-20);
+    }
+
+    .section-grid__content {
+        grid-area: content;
+    }
+
+    .section-grid__visual {
+        grid-area: visual;
+        position: sticky;
+        top: calc(var(--space-8) + 80px);
+        /* Offset for header + visual alignment */
+        margin-top: var(--space-12);
+        /* Align visual after title */
+        display: flex;
+        justify-content: center;
+        /* Horizontally center the card in the column if smaller */
+    }
+}
+
+.visual-card {
+    width: 100%;
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: var(--space-8);
+    /* Increased padding */
+    box-shadow: var(--shadow-md);
+    /* Make visuals larger: increased min-height from 400px */
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.visual-card__title {
+    font-size: var(--font-size-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+    font-weight: var(--font-weight-bold);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: var(--space-2);
+    display: inline-block;
+    align-self: flex-start;
+}
+
+.visual-card__content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    /* Reduced padding to maximize space for 200% visual */
+    padding: 0;
+    overflow: visible;
+}
+
+/* Target SVGs that are NOT part of Recharts legend or internal Recharts elements */
+.visual-card__content svg:not(.recharts-surface) {
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    /* Ensure it takes up vertical space if needed (mostly for Mermaid) */
+    min-height: 250px;
+}
+
+/* Ensure Recharts container takes full space but manages its own SVGs */
+.visual-card__content .recharts-responsive-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Specific styling for Insights */
+.visual-insight {
+    width: 100%;
+    background-color: #fff1f0;
+    border-left: 4px solid #cf1322;
+    border-radius: 8px;
+    padding: var(--space-6);
+}
+
+.visual-insight h4 {
+    color: #a8071a;
+    margin-bottom: var(--space-2);
+}
+
+.visual-insight p {
+    font-size: 1rem;
+    color: #5c0011;
+    font-weight: 500;
+}
