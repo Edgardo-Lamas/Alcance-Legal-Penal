@@ -1,74 +1,60 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import './Resultado.css'
 
-// Datos de ejemplo para demostración - reflejan estructura de respuesta real del sistema
+// Datos de ejemplo — se muestran cuando se navega a /resultado sin estado (acceso directo)
 const ejemploAnalisis = {
-    // Metadatos del informe
-    numero_informe: 'ALC-2026-001547',
+    numero_informe: 'ALC-PENAL-PBA-2026-001547',
     fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
-    estado: 'INFORME PRELIMINAR',
-    estado_detalle: 'Pendiente de validación por el profesional actuante',
+    estado: 'INFORME APROBADO',
+    estado_detalle: 'Defensa Penal PBA — In dubio pro reo',
 
-    // Evaluación de viabilidad
-    viabilidad: {
-        valor: 75,
-        clasificacion: 'MEDIA-ALTA',
-        explicacion: 'La pretensión presenta fundamentos jurídicos sustentables, aunque existen factores de riesgo que requieren atención estratégica antes de iniciar la acción.',
-        advertencia_metodologica: 'Esta evaluación se basa exclusivamente en la información proporcionada. Factores no declarados pueden alterar sustancialmente el pronóstico.'
-    },
+    encuadre_procesal:
+        'La causa se encuentra en etapa de Investigación Penal Preparatoria (IPP) bajo el CPP PBA (Ley 11.922). ' +
+        'El tipo penal imputado exige la acreditación de todos sus elementos constitutivos por parte de la acusación. ' +
+        'La defensa técnica no tiene obligación de probar inocencia (CN Art. 18; CADH Art. 8.2).',
 
-    // Síntesis ejecutiva
-    sintesis: `La pretensión del cliente presenta fundamentos jurídicos sólidos basados en el incumplimiento contractual documentado. La existencia de contrato escrito y la correspondencia que acredita el reclamo previo fortalecen significativamente la posición del actor.
+    analisis_prueba_cargo:
+        'La prueba de cargo consiste en prueba testimonial de la denunciante. Para que el testimonio único ' +
+        'sea suficiente para destruir la presunción de inocencia, el SCBA exige: persistencia sin contradicciones ' +
+        'relevantes, ausencia de motivación espuria, corroboración periférica objetiva y verosimilitud intrínseca. ' +
+        'La ausencia o debilidad de alguno de estos elementos activa el in dubio pro reo.',
 
-Sin embargo, se identifican aspectos críticos que requieren atención inmediata antes de proceder con la demanda judicial, particularmente en lo relativo a la cuantificación del daño y la acreditación de la relación causal.`,
+    nulidades_y_vicios:
+        'Se recomienda examinar: (1) regularidad de la obtención de prueba y cadena de custodia; ' +
+        '(2) cumplimiento de la intimación de hechos en términos claros y precisos (CPP PBA Art. 308); ' +
+        '(3) vigencia del plazo razonable (CADH Art. 8.1). ' +
+        'Cualquier vicio formal en la obtención o incorporación de prueba puede generar nulidad relativa o absoluta.',
 
-    // Fundamentos identificados
-    fundamentos: [
-        {
-            tipo: 'jurisprudencia',
-            fuente: 'CNCiv, Sala A, 15/03/2023 - "López c/ Gómez"',
-            extracto: '"El incumplimiento parcial de las obligaciones contractuales no libera al deudor de responder por los daños derivados..."',
-            relevancia: 'Aplicable al caso en análisis por tratarse de incumplimiento contractual con pretensión resarcitoria.'
-        },
-        {
-            tipo: 'metodologia',
-            fuente: 'Metodología de Análisis de Contratos Bilaterales',
-            extracto: 'Aplicación del esquema de análisis según criterio metodológico adoptado por el sistema.',
-            relevancia: 'Marco conceptual para la evaluación de las obligaciones recíprocas y sus consecuencias.'
-        }
-    ],
+    contraargumentacion:
+        'Los argumentos acusatorios presentan debilidades en la acreditación de los elementos objetivos del tipo. ' +
+        'La defensa debe señalar las inconsistencias probatorias y los elementos constitutivos no acreditados. ' +
+        'La existencia de duda razonable sobre cualquier elemento constitutivo activa obligatoriamente el in dubio pro reo.',
 
-    // Matriz de riesgos
-    riesgos: [
-        {
-            nivel: 'alto',
-            codigo: 'R-001',
-            descripcion: 'Prescripción cercana',
-            detalle: 'El plazo de prescripción de la acción vence en aproximadamente 6 meses desde la fecha de este informe.',
-            consecuencia: 'La inacción resultaría en la pérdida definitiva del derecho a reclamar judicialmente.',
-            mitigacion: 'Interponer demanda judicial antes de la fecha límite o gestionar reconocimiento de deuda que interrumpa el curso de la prescripción.',
-            urgencia: true
-        },
-        {
-            nivel: 'medio',
-            codigo: 'R-002',
-            descripcion: 'Prueba documental incompleta',
-            detalle: 'No se ha referido documentación que acredite los pagos parciales mencionados en el relato fáctico.',
-            consecuencia: 'Dificultad para acreditar el monto exacto del reclamo en sede judicial.',
-            mitigacion: 'Solicitar exhibición de documentos a la contraparte o producir prueba informativa a entidades bancarias.',
-            urgencia: false
-        }
-    ],
+    conclusion_defensiva:
+        'Se recomienda explorar: sobreseimiento por insuficiencia probatoria (CPP PBA Art. 323 inc. 3) ' +
+        'o por atipicidad de la conducta (inc. 1); en subsidio, nulidad de los actos procesales viciados. ' +
+        'La estrategia definitiva requiere acceso al expediente completo y revisión de todas las actas.',
 
-    // Advertencias institucionales
-    advertencias: {
-        principal: 'Este informe NO constituye consejo legal definitivo. Es un insumo técnico que debe ser validado por el profesional actuante antes de tomar decisiones procesales.',
-        items: [
-            'La evaluación de viabilidad es probabilística, no determinante del resultado judicial.',
-            'Verificar vigencia de jurisprudencia citada antes de su utilización en escritos.',
-            'Los datos proporcionados por el usuario determinan el alcance y precisión del análisis.',
-            'Factores procesales locales pueden afectar la estrategia recomendada.'
+    limitaciones:
+        'El análisis se basa exclusivamente en los hechos informados. El acceso al expediente completo, ' +
+        'actas de procedimiento y prueba documental permitiría un análisis más preciso. ' +
+        'Factores procesales no declarados pueden alterar las conclusiones.',
+
+    _status: 'approved',
+    _advertencias: [],
+    _disclaimer: {
+        version: '1.2-penal',
+        texto: 'Este análisis es un insumo técnico de defensa penal. No constituye consejo legal definitivo.',
+        advertencias: [
+            'Este análisis NO constituye opinión legal ni consejo profesional.',
+            'El sistema opera EXCLUSIVAMENTE desde la perspectiva de la defensa penal.',
+            'La decisión estratégica corresponde exclusivamente al abogado defensor actuante.'
         ]
+    },
+    _meta: {
+        criterios_utilizados: 4,
+        pipeline_version: '1.0-lis-penal_pba',
+        timestamp: new Date().toISOString()
     }
 }
 
@@ -77,54 +63,28 @@ const ejemploAuditoria = {
     fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
     estado: 'DICTAMEN DE AUDITORÍA',
     estado_detalle: 'Requiere revisión de los puntos señalados',
-
-    // Evaluación de consistencia
     consistencia: {
         valor: 'PARCIAL',
-        explicacion: 'La estrategia presenta líneas argumentales sólidas pero contiene supuestos implícitos no validados e inconsistencias que podrían afectar su efectividad.',
+        explicacion: 'La estrategia presenta líneas argumentales sólidas pero contiene supuestos implícitos no validados.',
         advertencia: 'Se recomienda revisar los puntos señalados antes de avanzar con la ejecución de la estrategia.'
     },
-
-    // Observaciones críticas
     observaciones: [
         {
             tipo: 'supuesto_implicito',
             codigo: 'OBS-001',
-            descripcion: 'Se asume que la contraparte no cuestionará la validez del contrato.',
-            impacto: 'Si la validez del instrumento es cuestionada, la estrategia probatoria actual resultaría insuficiente para sostener la pretensión.',
+            descripcion: 'Se asume que la contraparte no cuestionará la validez de los actos procesales.',
+            impacto: 'Si se plantean nulidades, la estrategia probatoria actual podría resultar insuficiente.',
             severidad: 'media'
-        },
-        {
-            tipo: 'inconsistencia',
-            codigo: 'OBS-002',
-            descripcion: 'El objetivo de obtener daños punitivos contradice la etapa procesal declarada.',
-            impacto: 'Los daños punitivos requieren fundamentación diferenciada (art. 52 bis LDC) no contemplada en la estrategia propuesta.',
-            severidad: 'alta'
         }
     ],
-
-    // Recomendaciones
     recomendaciones: [
-        {
-            prioridad: 'alta',
-            accion: 'Incorporar línea argumental subsidiaria para el supuesto de cuestionamiento de validez contractual.'
-        },
-        {
-            prioridad: 'alta',
-            accion: 'Reformular pretensión de daños punitivos o desarrollar fundamentación normativa específica.'
-        },
-        {
-            prioridad: 'media',
-            accion: 'Considerar prueba pericial contable para acreditar cuantificación del daño con mayor precisión.'
-        }
+        { prioridad: 'alta', accion: 'Incorporar línea argumental subsidiaria para el supuesto de nulidades procesales.' }
     ],
-
     advertencias: {
-        principal: 'La auditoría detecta patrones potencialmente problemáticos. La decisión final sobre la estrategia corresponde al profesional actuante.',
+        principal: 'La auditoría detecta patrones potencialmente problemáticos. La decisión final corresponde al profesional actuante.',
         items: [
             'Este dictamen evalúa consistencia lógica, no garantiza resultados procesales.',
-            'Supuestos no declarados pueden contener riesgos adicionales no identificados.',
-            'La validación final de la estrategia requiere conocimiento del contexto judicial específico.'
+            'La validación final requiere conocimiento del expediente completo.'
         ]
     }
 }
@@ -134,56 +94,34 @@ const ejemploRedaccion = {
     fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
     estado: 'BORRADOR ASISTIDO',
     estado_detalle: 'Documento de trabajo - NO PRESENTAR sin revisión profesional',
+    tipo_escrito: 'Escrito de Defensa',
+    contenido: `PLANTEA NULIDAD / SOLICITA SOBRESEIMIENTO
 
-    tipo_escrito: 'Demanda por Incumplimiento Contractual',
+Sr. Juez de Garantías:
 
-    contenido: `PROMUEVE DEMANDA POR INCUMPLIMIENTO CONTRACTUAL
-
-Sr. Juez:
-
-[Nombre del letrado], abogado, T° [...] F° [...] del C.P.A.C.F., constituyendo domicilio electrónico en [...] y domicilio procesal en [...], en representación de [NOMBRE DEL ACTOR], según poder que se adjunta, a V.S. respetuosamente digo:
+[Nombre del letrado], abogado defensor, T° [...] F° [...] del C.P.A.C.P., constituyendo domicilio en [...], en representación de [IMPUTADO], a V.S. respetuosamente digo:
 
 I. OBJETO
-Que vengo a promover formal demanda por incumplimiento contractual contra [NOMBRE DEL DEMANDADO], con domicilio en [...], por la suma de PESOS [MONTO] ($[...]) o lo que en más o en menos resulte de la prueba a producirse, con más sus intereses y costas.
+[SECCIÓN PENDIENTE - Detallar pretensión defensiva]
 
-II. HECHOS
-[SECCIÓN PENDIENTE - Requiere desarrollo según cronología del caso]
+II. HECHOS Y ANTECEDENTES
+[SECCIÓN PENDIENTE - Narrar los hechos desde la perspectiva de la defensa]
 
 III. DERECHO
-[SECCIÓN PENDIENTE - Ajustar fundamentación a jurisdicción específica]
+[SECCIÓN PENDIENTE - Desarrollar fundamentos normativos: CPP PBA + CN + CADH]
 
 ...`,
-
     secciones_pendientes: [
-        {
-            seccion: 'II. HECHOS',
-            motivo: 'Requiere desarrollo detallado según cronología específica del caso',
-            criticidad: 'alta'
-        },
-        {
-            seccion: 'III. DERECHO',
-            motivo: 'Ajustar citas normativas a la jurisdicción y fuero correspondiente',
-            criticidad: 'alta'
-        },
-        {
-            seccion: 'V. PRUEBA',
-            motivo: 'Completar ofrecimiento según documentación efectivamente disponible',
-            criticidad: 'media'
-        },
-        {
-            seccion: 'PETITORIO',
-            motivo: 'Verificar monto reclamado y accesorios solicitados',
-            criticidad: 'alta'
-        }
+        { seccion: 'I. OBJETO', motivo: 'Precisar pretensión (sobreseimiento, nulidad, etc.)', criticidad: 'alta' },
+        { seccion: 'II. HECHOS', motivo: 'Narrar desde la perspectiva de la defensa', criticidad: 'alta' },
+        { seccion: 'III. DERECHO', motivo: 'Ajustar citas normativas (CPP PBA + CN + CADH)', criticidad: 'alta' }
     ],
-
     advertencias: {
-        principal: 'ADVERTENCIA CRÍTICA: Este documento es un BORRADOR DE TRABAJO generado por asistencia automatizada. Su presentación judicial sin revisión profesional completa constituye ejercicio inadecuado de la profesión.',
+        principal: 'ADVERTENCIA CRÍTICA: Este documento es un BORRADOR. Su presentación judicial sin revisión completa del letrado constituye ejercicio inadecuado de la profesión.',
         items: [
             'El letrado firmante asume responsabilidad exclusiva por el contenido presentado.',
-            'Verificar datos de las partes, montos y fechas antes de cualquier uso.',
-            'Las citas legales deben ser validadas contra normativa vigente.',
-            'El estilo y estructura pueden requerir ajustes según práctica del fuero.'
+            'Verificar datos de las partes y fechas antes de cualquier uso.',
+            'Las citas normativas deben ser validadas contra el CPP PBA vigente.'
         ]
     }
 }
@@ -205,13 +143,12 @@ function Resultado() {
         )
     }
 
-    // Usar datos del API si están disponibles, sino fallback a ejemplos
     const informe = data || (capacidad === 'analizar' ? ejemploAnalisis
         : capacidad === 'auditar' ? ejemploAuditoria
             : ejemploRedaccion)
 
     const titulos = {
-        analizar: 'Informe de Análisis Jurídico',
+        analizar: 'Informe de Defensa Penal',
         auditar: 'Dictamen de Auditoría Estratégica',
         redactar: 'Borrador de Escrito Judicial'
     }
@@ -220,7 +157,11 @@ function Resultado() {
         <div className="resultado__encabezado-informe">
             <div className="resultado__encabezado-meta">
                 <span className="resultado__numero-informe">N° {informe.numero_informe}</span>
-                <span className="resultado__fecha-informe">{informe.fecha_emision}</span>
+                <span className="resultado__fecha-informe">
+                    {typeof informe.fecha_emision === 'string' && informe.fecha_emision.includes('T')
+                        ? new Date(informe.fecha_emision).toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' })
+                        : informe.fecha_emision}
+                </span>
             </div>
             <div className={`resultado__estado-badge resultado__estado-badge--${capacidad}`}>
                 <span className="resultado__estado-label">{informe.estado}</span>
@@ -229,129 +170,78 @@ function Resultado() {
         </div>
     )
 
-    const renderAnalisis = () => (
-        <>
-            {renderEncabezado()}
-
-            {/* Indicador de Viabilidad con Contexto Completo */}
-            <section className="resultado__viabilidad-section">
-                <h2 className="resultado__section-title">
-                    <span className="resultado__section-icon">📊</span>
-                    Evaluación de Viabilidad
-                </h2>
-
-                <div className="resultado__viabilidad-card">
-                    <div className="resultado__viabilidad-indicador">
-                        <div className="resultado__viabilidad-visual">
-                            <div className="resultado__viabilidad-bar">
-                                <div
-                                    className="resultado__viabilidad-fill"
-                                    style={{ width: `${informe.viabilidad.valor}%` }}
-                                />
-                            </div>
-                            <span className={`resultado__viabilidad-valor resultado__viabilidad-valor--${informe.viabilidad.valor >= 70 ? 'alta' : informe.viabilidad.valor >= 40 ? 'media' : 'baja'}`}>
-                                {informe.viabilidad.clasificacion}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="resultado__viabilidad-explicacion">
-                        <p className="resultado__viabilidad-texto">{informe.viabilidad.explicacion}</p>
-                    </div>
-
-                    <div className="resultado__viabilidad-advertencia">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                            <line x1="12" y1="9" x2="12" y2="13" />
-                            <line x1="12" y1="17" x2="12.01" y2="17" />
-                        </svg>
-                        <p>{informe.viabilidad.advertencia_metodologica}</p>
-                    </div>
-                </div>
-            </section>
-
-            {/* Síntesis Ejecutiva */}
+    const renderSeccion = (titulo, icono, contenido) => {
+        if (!contenido) return null
+        return (
             <section className="resultado__section">
                 <h2 className="resultado__section-title">
-                    <span className="resultado__section-icon">📋</span>
-                    Síntesis Ejecutiva
+                    <span className="resultado__section-icon">{icono}</span>
+                    {titulo}
                 </h2>
                 <div className="resultado__content">
-                    {informe.sintesis.split('\n\n').map((p, i) => (
+                    {contenido.split('\n\n').map((p, i) => (
                         <p key={i}>{p}</p>
                     ))}
                 </div>
             </section>
+        )
+    }
 
-            {/* Fundamentos */}
-            <section className="resultado__section">
-                <h2 className="resultado__section-title">
-                    <span className="resultado__section-icon">📚</span>
-                    Fundamentos Identificados
-                </h2>
-                <div className="resultado__fundamentos">
-                    {informe.fundamentos.map((f, i) => (
-                        <div key={i} className={`resultado__fundamento resultado__fundamento--${f.tipo}`}>
-                            <div className="resultado__fundamento-header">
-                                <span className="resultado__fundamento-tipo">
-                                    {f.tipo === 'jurisprudencia' ? '⚖️ Jurisprudencia' : '📖 Metodología'}
-                                </span>
-                            </div>
-                            <p className="resultado__fundamento-fuente">{f.fuente}</p>
-                            <blockquote className="resultado__fundamento-extracto">"{f.extracto}"</blockquote>
-                            <p className="resultado__fundamento-relevancia">
-                                <strong>Relevancia:</strong> {f.relevancia}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </section>
+    const renderAnalisis = () => (
+        <>
+            {renderEncabezado()}
 
-            {/* Matriz de Riesgos */}
-            <section className="resultado__section resultado__section--riesgos">
-                <h2 className="resultado__section-title">
-                    <span className="resultado__section-icon">⚠️</span>
-                    Matriz de Riesgos
-                </h2>
-                <div className="resultado__riesgos">
-                    {informe.riesgos.map((r, i) => (
-                        <div key={i} className={`resultado__riesgo resultado__riesgo--${r.nivel}`}>
-                            <div className="resultado__riesgo-header">
-                                <span className="resultado__riesgo-codigo">{r.codigo}</span>
-                                <span className={`resultado__riesgo-badge resultado__riesgo-badge--${r.nivel}`}>
-                                    {r.nivel.toUpperCase()}
-                                    {r.urgencia && ' • URGENTE'}
-                                </span>
-                            </div>
-                            <h4 className="resultado__riesgo-titulo">{r.descripcion}</h4>
-                            <p className="resultado__riesgo-detalle">{r.detalle}</p>
-                            <p className="resultado__riesgo-consecuencia">
-                                <strong>Consecuencia:</strong> {r.consecuencia}
-                            </p>
-                            <p className="resultado__riesgo-mitigacion">
-                                <strong>Mitigación recomendada:</strong> {r.mitigacion}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Advertencias Institucionales */}
-            <section className="resultado__advertencias-section">
-                <div className="resultado__advertencia-principal">
+            {/* Advertencias de validación (status: limited) */}
+            {informe._status === 'limited' && informe._advertencias?.length > 0 && (
+                <div className="resultado__advertencia-validacion">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="8" x2="12" y2="12" />
-                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
-                    <p>{informe.advertencias.principal}</p>
+                    <div>
+                        <strong>Advertencias de validación:</strong>
+                        <ul>
+                            {informe._advertencias.map((a, i) => <li key={i}>{a}</li>)}
+                        </ul>
+                    </div>
                 </div>
-                <ul className="resultado__advertencias-lista">
-                    {informe.advertencias.items.map((a, i) => (
-                        <li key={i}>{a}</li>
-                    ))}
-                </ul>
-            </section>
+            )}
+
+            {/* Secciones del análisis penal */}
+            {renderSeccion('Encuadre Procesal', '⚖️', informe.encuadre_procesal)}
+            {renderSeccion('Análisis de Prueba de Cargo', '🔬', informe.analisis_prueba_cargo)}
+            {renderSeccion('Nulidades y Vicios Procesales', '🚫', informe.nulidades_y_vicios)}
+            {renderSeccion('Contraargumentación de la Acusación', '🛡️', informe.contraargumentacion)}
+            {renderSeccion('Conclusión Defensiva', '📋', informe.conclusion_defensiva)}
+            {renderSeccion('Limitaciones del Análisis', '⚠️', informe.limitaciones)}
+
+            {/* Disclaimer institucional */}
+            {informe._disclaimer && (
+                <section className="resultado__advertencias-section">
+                    <div className="resultado__advertencia-principal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <p>{informe._disclaimer.texto}</p>
+                    </div>
+                    <ul className="resultado__advertencias-lista">
+                        {informe._disclaimer.advertencias.map((a, i) => (
+                            <li key={i}>{a}</li>
+                        ))}
+                    </ul>
+                </section>
+            )}
+
+            {/* Metadata técnica */}
+            {informe._meta && (
+                <div className="resultado__meta-tecnica">
+                    <span>Criterios RAG utilizados: {informe._meta.criterios_utilizados}</span>
+                    <span>Pipeline: {informe._meta.pipeline_version}</span>
+                </div>
+            )}
         </>
     )
 
@@ -359,13 +249,11 @@ function Resultado() {
         <>
             {renderEncabezado()}
 
-            {/* Evaluación de Consistencia */}
             <section className="resultado__consistencia-section">
                 <h2 className="resultado__section-title">
                     <span className="resultado__section-icon">🎯</span>
                     Evaluación de Consistencia Estratégica
                 </h2>
-
                 <div className="resultado__consistencia-card">
                     <span className={`resultado__consistencia-valor resultado__consistencia-valor--${informe.consistencia.valor.toLowerCase()}`}>
                         {informe.consistencia.valor}
@@ -382,7 +270,6 @@ function Resultado() {
                 </div>
             </section>
 
-            {/* Observaciones Críticas */}
             <section className="resultado__section">
                 <h2 className="resultado__section-title">
                     <span className="resultado__section-icon">🔍</span>
@@ -406,7 +293,6 @@ function Resultado() {
                 </div>
             </section>
 
-            {/* Recomendaciones */}
             <section className="resultado__section">
                 <h2 className="resultado__section-title">
                     <span className="resultado__section-icon">✅</span>
@@ -424,7 +310,6 @@ function Resultado() {
                 </div>
             </section>
 
-            {/* Advertencias */}
             <section className="resultado__advertencias-section">
                 <div className="resultado__advertencia-principal">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -435,9 +320,7 @@ function Resultado() {
                     <p>{informe.advertencias.principal}</p>
                 </div>
                 <ul className="resultado__advertencias-lista">
-                    {informe.advertencias.items.map((a, i) => (
-                        <li key={i}>{a}</li>
-                    ))}
+                    {informe.advertencias.items.map((a, i) => <li key={i}>{a}</li>)}
                 </ul>
             </section>
         </>
@@ -447,7 +330,6 @@ function Resultado() {
         <>
             {renderEncabezado()}
 
-            {/* Alerta de Estado Crítico */}
             <div className="resultado__alerta-critica">
                 <div className="resultado__alerta-icono">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -458,17 +340,15 @@ function Resultado() {
                 </div>
                 <div className="resultado__alerta-contenido">
                     <strong>DOCUMENTO DE TRABAJO</strong>
-                    <p>Este borrador requiere revisión profesional completa antes de cualquier uso. El sistema identifica {informe.secciones_pendientes.length} secciones que requieren intervención del letrado.</p>
+                    <p>Este borrador requiere revisión profesional completa. Se identifican {informe.secciones_pendientes.length} secciones que requieren intervención del letrado.</p>
                 </div>
             </div>
 
-            {/* Tipo de Escrito */}
             <div className="resultado__tipo-escrito">
                 <span className="resultado__tipo-escrito-label">Tipo de Escrito:</span>
                 <span className="resultado__tipo-escrito-valor">{informe.tipo_escrito}</span>
             </div>
 
-            {/* Secciones Pendientes de Revisión */}
             <section className="resultado__section resultado__section--pendientes">
                 <h2 className="resultado__section-title">
                     <span className="resultado__section-icon">🔔</span>
@@ -489,7 +369,6 @@ function Resultado() {
                 </div>
             </section>
 
-            {/* Contenido del Borrador */}
             <section className="resultado__section">
                 <h2 className="resultado__section-title">
                     <span className="resultado__section-icon">📝</span>
@@ -497,13 +376,10 @@ function Resultado() {
                 </h2>
                 <div className="resultado__borrador-container">
                     <div className="resultado__borrador-watermark">BORRADOR</div>
-                    <pre className="resultado__borrador-contenido">
-                        {informe.contenido}
-                    </pre>
+                    <pre className="resultado__borrador-contenido">{informe.contenido}</pre>
                 </div>
             </section>
 
-            {/* Advertencias Críticas */}
             <section className="resultado__advertencias-section resultado__advertencias-section--critica">
                 <div className="resultado__advertencia-principal resultado__advertencia-principal--critica">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -514,9 +390,7 @@ function Resultado() {
                     <p>{informe.advertencias.principal}</p>
                 </div>
                 <ul className="resultado__advertencias-lista">
-                    {informe.advertencias.items.map((a, i) => (
-                        <li key={i}>{a}</li>
-                    ))}
+                    {informe.advertencias.items.map((a, i) => <li key={i}>{a}</li>)}
                 </ul>
             </section>
         </>
@@ -532,7 +406,7 @@ function Resultado() {
                     Volver al formulario
                 </button>
                 <h1 className="resultado__title">{titulos[capacidad]}</h1>
-                <p className="resultado__subtitle">Alcance Legal – Inteligencia Jurídica Civil</p>
+                <p className="resultado__subtitle">Alcance Legal Penal — Defensa CPP PBA</p>
             </header>
 
             <main className="resultado__main">
@@ -543,8 +417,8 @@ function Resultado() {
 
             <footer className="resultado__footer">
                 <div className="resultado__footer-disclaimer">
-                    Este documento fue generado por Alcance Legal. Su uso está sujeto a los términos de servicio
-                    y requiere validación profesional antes de cualquier aplicación práctica.
+                    Este documento fue generado por Alcance Legal Penal. Su uso está sujeto a los términos de servicio
+                    y requiere validación del abogado defensor actuante antes de cualquier aplicación práctica.
                 </div>
                 <div className="resultado__actions">
                     <button className="btn btn--secondary" onClick={() => navigate('/')}>

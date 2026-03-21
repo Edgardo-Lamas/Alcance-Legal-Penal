@@ -1,24 +1,24 @@
-# Alcance Legal — Guía para Claude Code
+# Alcance Legal Penal — Guía para Claude Code
 
 ## Qué es este proyecto
 
-Sistema de Inteligencia Jurídica (LIS) para Derecho Argentino. No es un chatbot — es un
-pipeline de análisis estructurado que replica la metodología de un asociado senior de estudio.
-**Objetivo: monetización**. Tres productos bajo la misma base de código:
+Sistema de Inteligencia Jurídica (LIS) especializado en **Defensa Penal** — Buenos Aires Province.
+No es un chatbot — es un pipeline de análisis estructurado que replica la metodología de un asociado
+senior de defensa penal. **Objetivo: monetización**. Producto único:
 
 | Producto | Perfil | ID | Corpus |
 |---|---|---|---|
-| Alcance Legal – Civil | `PROFILE_CIVIL` | `civil` | Derecho Civil / CCyC |
-| Alcance Legal – Comercial | `PROFILE_COMERCIAL` | `comercial` | Derecho Comercial / Societario |
-| Alcance Legal – Familiar | `PROFILE_FAMILIAR` | `familiar` | Derecho de Familia / CCyC Libro II |
+| Alcance Legal Penal | `PROFILE_PENAL_PBA` | `penal_pba` | CPP PBA (Ley 11.922) / Código Penal |
+
+El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro reo, presunción de inocencia).
 
 ## Stack
 
 - **Frontend**: React 19 + Vite 7 + React Router 7
-- **Backend**: Supabase Edge Functions (Deno)
-- **DB**: Supabase PostgreSQL + pgvector (corpus RAG por fuero)
+- **Backend**: Supabase Edge Functions (Deno) — `supabase/functions/analizar-caso/`
+- **DB**: Supabase PostgreSQL + pgvector (tabla `criterios_penales`)
 - **Embeddings**: OpenAI `text-embedding-ada-002`
-- **LLM primario**: Claude (Anthropic) — ver `guidedCivilReasoning.ts`
+- **LLM primario**: Claude (Anthropic) — ver `guidedPenalReasoning.ts`
 - **LLM fallback**: GPT-4 Turbo (OpenAI)
 
 ## Arquitectura del pipeline (5 fases)
@@ -33,17 +33,45 @@ Cada fase puede rechazar. El rechazo fundado es un output válido. **Nunca impro
 
 ```
 src/core/
-├── profile.ts              ← CONTRATO DE CONFIGURACIÓN — toca esto primero
-├── checkAdmissibility.ts   ← Gate del pipeline, agnóstico al perfil
+├── profile.ts                    ← CONTRATO DE CONFIGURACIÓN — toca esto primero
+├── checkAdmissibility.ts         ← Gate del pipeline, agnóstico al perfil
 ├── rag/
-│   └── retrieveCivilCriteria.ts   ← RAG sobre pgvector (pendiente: genericizar por perfil)
+│   └── retrievePenalCriteria.ts  ← RAG sobre pgvector (tabla: criterios_penales)
 ├── reasoning/
-│   └── guidedCivilReasoning.ts    ← LLM con system prompt inmutable
+│   └── guidedPenalReasoning.ts   ← LLM con system prompt penal inmutable
 ├── validation/
-│   └── validateCivilOutput.ts     ← Control senior, detecta certeza excesiva
+│   └── validatePenalOutput.ts    ← Control senior: detecta sesgo acusatorio, certeza excesiva
 └── report/
-    ├── buildCivilReport.ts        ← Genera JSON del informe, agnóstico al perfil
-    └── renderCivilReportPDF.ts    ← HTML → PDF, sin LLM
+    ├── buildPenalReport.ts       ← Genera JSON del informe (PenalReport)
+    └── renderPenalReportPDF.ts   ← HTML → PDF, sin LLM
+```
+
+## Edge Function
+
+```
+supabase/functions/
+└── analizar-caso/index.ts   ← Endpoint activo: POST /analizar-caso
+```
+
+## Estructura de la respuesta API
+
+```json
+{
+  "success": true,
+  "status": "approved | limited | rejected",
+  "data": {
+    "numero_informe": "ALC-PENAL-PBA-2026-000001",
+    "encuadre_procesal": "...",
+    "analisis_prueba_cargo": "...",
+    "nulidades_y_vicios": "...",
+    "contraargumentacion": "...",
+    "conclusion_defensiva": "...",
+    "limitaciones": "..."
+  },
+  "advertencias": [],
+  "disclaimer": { "version": "1.2-penal", ... },
+  "meta": { "criterios_utilizados": 4, "pipeline_version": "1.0-lis-penal_pba" }
+}
 ```
 
 ## Convenciones de código
@@ -51,33 +79,27 @@ src/core/
 - **Todo TypeScript tipado estrictamente** — sin `any`
 - **Exports nombrados** para todos los módulos del core
 - **`_internals`** export en cada módulo para testing sin exponer en API pública
-- **Parámetros opcionales con default** para retrocompatibilidad (ej: `profile = PROFILE_CIVIL`)
-- Numeración de informes: `ALC-{CODIGO}-{YEAR}-{SEQ6}` — ej: `ALC-COMERCIAL-2026-000042`
+- **Parámetros opcionales con default** — `profile = PROFILE_PENAL_PBA`
+- Numeración de informes: `ALC-PENAL-PBA-{YEAR}-{SEQ6}` — ej: `ALC-PENAL-PBA-2026-000042`
 
-## Arquitectura de perfiles (gemelos)
+## Perfil activo
 
-Los tres productos comparten el mismo pipeline. El perfil controla:
-1. `fueroAdmitido` — qué materia analiza
-2. `fuerosExcluidos` — qué rechaza en admisibilidad
-3. `codigoInforme` — prefijo del número de informe
-4. `politicaRechazo` — mensajes de rechazo específicos al fuero
-5. (pendiente) system prompt del razonador — en `guidedCivilReasoning.ts`
-6. (pendiente) tabla del corpus en Supabase — en `retrieveCivilCriteria.ts`
+El perfil `PROFILE_PENAL_PBA` controla:
+1. `fueroAdmitido` — `penal`
+2. `fuerosExcluidos` — civil, comercial, laboral, familia
+3. `codigoInforme` — `PENAL-PBA`
+4. `politicaRechazo` — mensajes específicos al fuero penal
 
-## Pendiente para completar los gemelos
+## Mock vs producción
 
-1. **RAG por fuero**: `retrieveCivilCriteria.ts` → aceptar `profile` y usar tabla/RPC distinta por fuero
-2. **System prompt por perfil**: `guidedCivilReasoning.ts` → prompt específico para Comercial/Familiar
-3. **Validación por perfil**: `validateCivilOutput.ts` → `FUERO_EXCLUIDO_KEYWORDS` dinámico por perfil
-4. **Corpus Supabase**: crear tablas `criterios_comercial` y `criterios_familiar` con sus embeddings
-5. **openapi.yaml**: duplicar spec para `/analizar-caso-comercial` y `/analizar-caso-familiar`
+`src/services/api.js` usa mocks cuando `VITE_USE_MOCKS !== 'false'`.
+Para activar Supabase real: `VITE_USE_MOCKS=false` + corpus cargado (`node scripts/load-criterios.js`).
 
-## Manual de ética
+## Disclaimer institucional
 
-El sistema incluye un disclaimer institucional versionado (`v1.1`) en `buildCivilReport.ts`.
-El manual de ética se está mejorando — cuando esté listo, actualizar:
-- `DISCLAIMER_INSTITUCIONAL` en `buildCivilReport.ts`
-- `SYSTEM_PROMPT` en `guidedCivilReasoning.ts` (sección de prohibiciones absolutas)
+Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
+- `DISCLAIMER_INSTITUCIONAL` en `buildPenalReport.ts`
+- `SYSTEM_PROMPT_LIS_PENAL_PBA` en `guidedPenalReasoning.ts` (sección de prohibiciones absolutas)
 
 ## Comandos útiles
 

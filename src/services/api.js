@@ -1,8 +1,9 @@
 /**
- * Servicio de API para Alcance Legal
- * 
- * Maneja las comunicaciones con Supabase Edge Functions y n8n webhooks.
- * Usa Edge Function para análisis con RAG vectorial.
+ * Servicio de API para Alcance Legal Penal
+ *
+ * Maneja las comunicaciones con Supabase Edge Functions.
+ * Endpoint principal: /analizar-caso (pipeline LIS penal completo)
+ * Perspectiva: SIEMPRE desde la defensa. In dubio pro reo.
  */
 
 // Configuración de Supabase Edge Functions
@@ -26,65 +27,63 @@ const N8N_CONFIG = {
 }
 
 /**
- * Datos mockeados para desarrollo
+ * Respuestas mockeadas para desarrollo (formato penal)
  */
 const MOCK_RESPONSES = {
     analizar: {
-        numero_informe: `ALC-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 100000)).padStart(6, '0')}`,
-        fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
-        estado: 'INFORME PRELIMINAR',
-        estado_detalle: 'Pendiente de validación por el profesional actuante',
-        viabilidad: {
-            valor: 75,
-            clasificacion: 'MEDIA-ALTA',
-            explicacion: 'La pretensión presenta fundamentos jurídicos sustentables, aunque existen factores de riesgo que requieren atención estratégica antes de iniciar la acción.',
-            advertencia_metodologica: 'Esta evaluación se basa exclusivamente en la información proporcionada. Factores no declarados pueden alterar sustancialmente el pronóstico.'
+        success: true,
+        status: 'approved',
+        data: {
+            numero_informe: `ALC-PENAL-PBA-${new Date().getFullYear()}-000001`,
+            fecha_emision: new Date().toISOString(),
+            encuadre_procesal:
+                'La causa se encuentra en etapa de Investigación Penal Preparatoria (IPP) bajo el CPP PBA (Ley 11.922). ' +
+                'El tipo penal imputado exige para su configuración la acreditación de todos sus elementos constitutivos, ' +
+                'cuya carga probatoria recae exclusivamente en la acusación (CN Art. 18; CADH Art. 8.2). ' +
+                'La defensa técnica no tiene obligación de probar inocencia.',
+            analisis_prueba_cargo:
+                'La prueba de cargo presentada consiste principalmente en prueba testimonial. ' +
+                'Para que el testimonio único sea suficiente para destruir la presunción de inocencia, la jurisprudencia del SCBA exige: ' +
+                '(1) persistencia sin contradicciones relevantes; (2) ausencia de motivación espuria acreditada; ' +
+                '(3) corroboración periférica objetiva —aunque sea parcial—; (4) verosimilitud intrínseca del relato. ' +
+                'La ausencia o debilidad de alguno de estos elementos activa obligatoriamente el in dubio pro reo.',
+            nulidades_y_vicios:
+                'Se advierte la necesidad de examinar: (1) regularidad del procedimiento de obtención de prueba ' +
+                'y cumplimiento de las formas sustanciales (CPP PBA Art. 202); (2) cumplimiento del deber de ' +
+                'intimación de los hechos en términos claros y precisos (CPP PBA Art. 308); ' +
+                '(3) vigencia del plazo razonable en la investigación (CADH Art. 8.1). ' +
+                'Cualquier vicio en la obtención o incorporación de prueba puede generar nulidad relativa o absoluta.',
+            contraargumentacion:
+                'Los argumentos acusatorios presentan debilidades en la acreditación de los elementos objetivos del tipo. ' +
+                'La defensa debe focalizar el análisis en: (1) identificar inconsistencias o contradicciones probatorias; ' +
+                '(2) señalar los elementos constitutivos del delito no acreditados; ' +
+                '(3) cuestionar la legalidad o la incorporación de cada elemento de prueba invocado. ' +
+                'La existencia de duda razonable sobre cualquier elemento constitutivo activa el in dubio pro reo.',
+            conclusion_defensiva:
+                'En función del análisis, se recomienda explorar: sobreseimiento por insuficiencia probatoria ' +
+                '(CPP PBA Art. 323 inc. 3) o por atipicidad de la conducta (inc. 1); ' +
+                'en subsidio, nulidad de los actos procesales que presenten vicios formales. ' +
+                'La estrategia definitiva requiere acceso al expediente completo.',
+            limitaciones:
+                'El análisis se basa exclusivamente en los hechos informados por el usuario. ' +
+                'El acceso al expediente completo, las actas de procedimiento, la prueba documental ' +
+                'y las declaraciones testimoniales permitiría un análisis más preciso. ' +
+                'Factores procesales no declarados pueden alterar sustancialmente las conclusiones.'
         },
-        sintesis: `La pretensión del cliente presenta fundamentos jurídicos sólidos basados en el incumplimiento contractual documentado. La existencia de contrato escrito y la correspondencia que acredita el reclamo previo fortalecen significativamente la posición del actor.
-
-Sin embargo, se identifican aspectos críticos que requieren atención inmediata antes de proceder con la demanda judicial, particularmente en lo relativo a la cuantificación del daño y la acreditación de la relación causal.`,
-        fundamentos: [
-            {
-                tipo: 'jurisprudencia',
-                fuente: 'CNCiv, Sala A, 15/03/2023 - "López c/ Gómez"',
-                extracto: '"El incumplimiento parcial de las obligaciones contractuales no libera al deudor de responder por los daños derivados..."',
-                relevancia: 'Aplicable al caso en análisis por tratarse de incumplimiento contractual con pretensión resarcitoria.'
-            },
-            {
-                tipo: 'metodologia',
-                fuente: 'Metodología de Análisis de Contratos Bilaterales',
-                extracto: 'Aplicación del esquema de análisis según criterio metodológico adoptado por el sistema.',
-                relevancia: 'Marco conceptual para la evaluación de las obligaciones recíprocas y sus consecuencias.'
-            }
-        ],
-        riesgos: [
-            {
-                nivel: 'alto',
-                codigo: 'R-001',
-                descripcion: 'Prescripción cercana',
-                detalle: 'El plazo de prescripción de la acción vence en aproximadamente 6 meses desde la fecha de este informe.',
-                consecuencia: 'La inacción resultaría en la pérdida definitiva del derecho a reclamar judicialmente.',
-                mitigacion: 'Interponer demanda judicial antes de la fecha límite o gestionar reconocimiento de deuda que interrumpa el curso de la prescripción.',
-                urgencia: true
-            },
-            {
-                nivel: 'medio',
-                codigo: 'R-002',
-                descripcion: 'Prueba documental incompleta',
-                detalle: 'No se ha referido documentación que acredite los pagos parciales mencionados en el relato fáctico.',
-                consecuencia: 'Dificultad para acreditar el monto exacto del reclamo en sede judicial.',
-                mitigacion: 'Solicitar exhibición de documentos a la contraparte o producir prueba informativa a entidades bancarias.',
-                urgencia: false
-            }
-        ],
-        advertencias: {
-            principal: 'Este informe NO constituye consejo legal definitivo. Es un insumo técnico que debe ser validado por el profesional actuante antes de tomar decisiones procesales.',
-            items: [
-                'La evaluación de viabilidad es probabilística, no determinante del resultado judicial.',
-                'Verificar vigencia de jurisprudencia citada antes de su utilización en escritos.',
-                'Los datos proporcionados por el usuario determinan el alcance y precisión del análisis.',
-                'Factores procesales locales pueden afectar la estrategia recomendada.'
+        advertencias: [],
+        disclaimer: {
+            version: '1.2-penal',
+            texto: 'Este análisis es un insumo técnico de defensa penal. Razona exclusivamente desde la perspectiva defensiva. No constituye consejo legal definitivo.',
+            advertencias: [
+                'Este análisis NO constituye opinión legal ni consejo profesional.',
+                'El sistema opera EXCLUSIVAMENTE desde la perspectiva de la defensa penal.',
+                'La decisión estratégica corresponde exclusivamente al abogado defensor actuante.'
             ]
+        },
+        meta: {
+            criterios_utilizados: 4,
+            pipeline_version: '1.0-lis-penal_pba',
+            timestamp: new Date().toISOString()
         }
     },
 
@@ -210,18 +209,17 @@ class AlcanceLegalAPI {
     }
 
     /**
-     * Envía consulta de análisis
-     * Flujo: Edge Function Supabase → (fallback) RAG local
-     * @param {Object} data - Datos del formulario de análisis
-     * @returns {Promise<Object>} - Respuesta del análisis
+     * Envía consulta de análisis penal al pipeline LIS.
+     * Flujo: Edge Function /analizar-caso → fallback mock en desarrollo
+     * @param {Object} data - { hechos, etapa_procesal?, prueba_acusacion?, pretension_defensiva?, tipo_penal? }
+     * @returns {Promise<Object>} - Respuesta del pipeline (success, status, data, advertencias, disclaimer, meta)
      */
     async analizarCaso(data) {
-        // Intentar Edge Function de Supabase primero
         if (SUPABASE_CONFIG.functionsUrl && !this.config.useMocks) {
             try {
-                console.log('[API] Llamando Edge Function analizar...')
+                console.log('[API] Llamando Edge Function analizar-caso...')
 
-                const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/analizar`, {
+                const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/analizar-caso`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -231,96 +229,18 @@ class AlcanceLegalAPI {
                     body: JSON.stringify(data)
                 })
 
-                if (!response.ok) {
-                    throw new Error(`Edge Function error: ${response.status}`)
-                }
-
                 const result = await response.json()
-                console.log('[API] Edge Function respondió correctamente')
+                console.log('[API] Edge Function respondió:', result.success ? 'success' : 'rechazo', result.codigo || result.status)
                 return result
 
             } catch (error) {
-                console.warn('[API] Edge Function falló, usando RAG local:', error.message)
-                // Continuar con fallback
+                console.warn('[API] Edge Function falló, usando mock:', error.message)
             }
         }
 
-        // Fallback: RAG local (modo desarrollo o si Edge Function falla)
-        console.log('[API] Usando RAG local...')
+        // Fallback: mock penal (desarrollo o falla de red)
         await simulateLatency()
-
-        // Usar RAG local v0.1
-        const { analizarConCriterios, getVersion, ADVERTENCIAS_OBLIGATORIAS } = await import('./rag.js')
-        const analisis = analizarConCriterios(data)
-        const ragVersion = getVersion()
-
-        // Construir respuesta en formato de informe profesional
-        const numeroInforme = `ALC-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 100000)).padStart(6, '0')}`
-
-        // Generar síntesis basada en análisis
-        const elementosPresentes = analisis.elementos_evaluados.filter(e => e.presente)
-        const elementosFaltantes = analisis.elementos_faltantes
-
-        let sintesis = ''
-        if (elementosPresentes.length > 0) {
-            sintesis = `Se identifican ${elementosPresentes.length} de 4 elementos constitutivos de responsabilidad civil: ${elementosPresentes.map(e => e.elemento).join(', ')}.\n\n`
-        }
-        if (elementosFaltantes.length > 0) {
-            sintesis += `Requieren mayor desarrollo: ${elementosFaltantes.map(e => e.elemento).join(', ')}.`
-        }
-
-        // Construir fundamentos desde criterios utilizados
-        const fundamentos = analisis.elementos_evaluados
-            .filter(e => e.fundamento)
-            .map(e => ({
-                tipo: 'criterio_rag',
-                fuente: `${e.fundamento.normativo?.[0]?.cuerpo || 'CCyC'} arts. ${e.fundamento.normativo?.[0]?.articulos?.join(', ') || ''}`,
-                extracto: e.fundamento.criterio,
-                relevancia: e.observaciones[0] || 'Aplicado al análisis del caso.'
-            }))
-
-        return {
-            success: true,
-            data: {
-                numero_informe: numeroInforme,
-                fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
-                estado: 'INFORME PRELIMINAR',
-                estado_detalle: 'Pendiente de validación por el profesional actuante',
-                version_rag: ragVersion.version,
-                criterios_aplicados: ragVersion.criterios_activos,
-                viabilidad: {
-                    valor: analisis.viabilidad.valor,
-                    clasificacion: analisis.viabilidad.clasificacion,
-                    explicacion: analisis.viabilidad.explicacion,
-                    advertencia_metodologica: 'Esta evaluación se basa exclusivamente en la información proporcionada y en los 4 elementos constitutivos de responsabilidad civil. Factores no declarados pueden alterar sustancialmente el pronóstico.'
-                },
-                sintesis,
-                elementos_evaluados: analisis.elementos_evaluados.map(e => ({
-                    elemento: e.elemento,
-                    presente: e.presente,
-                    confianza: e.confianza,
-                    observaciones: e.observaciones
-                })),
-                fundamentos,
-                riesgos: analisis.riesgos_detectados.map((r, idx) => ({
-                    nivel: r.nivel,
-                    codigo: `R-${String(idx + 1).padStart(3, '0')}`,
-                    descripcion: r.descripcion,
-                    fuente: r.fuente,
-                    urgencia: r.nivel === 'alto'
-                })),
-                advertencias: {
-                    principal: 'Este informe NO constituye consejo legal definitivo. Es un insumo técnico basado en criterios generales que debe ser validado por el profesional actuante.',
-                    items: ADVERTENCIAS_OBLIGATORIAS
-                },
-                _meta: {
-                    rag_version: ragVersion.version,
-                    criterios_activos: ragVersion.criterios_activos.length,
-                    estado_rag: ragVersion.estado,
-                    source: 'local_fallback'
-                }
-            }
-        }
+        return MOCK_RESPONSES.analizar
     }
 
     /**

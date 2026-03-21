@@ -88,9 +88,9 @@ function Redactar() {
                     </svg>
                     Volver
                 </button>
-                <h1 className="analizar__title">Redactar Escrito Civil</h1>
+                <h1 className="analizar__title">Redactar Escrito de Defensa</h1>
                 <p className="analizar__subtitle">
-                    Asistencia para redacción de escritos con jurisprudencia curada y metodología profesional.
+                    Asistencia para redacción de escritos penales con criterios del CPP PBA y metodología profesional.
                 </p>
             </header>
 

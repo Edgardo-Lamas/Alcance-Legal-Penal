@@ -5,29 +5,30 @@
  * validado del razonamiento LIS. Este módulo NO genera contenido nuevo,
  * solo organiza y formaliza el output existente.
  *
- * Es agnóstico al perfil: funciona igual para Civil, Comercial y Familiar.
+ * Específico para el perfil penal PBA (CPP PBA / CP / garantías constitucionales).
  * El perfil controla el código de informe (ALC-CIVIL / ALC-COMERCIAL / ALC-FAMILIAR)
  * y las etiquetas de sección.
  *
- * Flujo: ValidationResult → buildCivilReport() → CivilReport (JSON)
+ * Flujo: ValidationResult → buildPenalReport() → PenalReport (JSON)
  */
 
-import { PROFILE_CIVIL, ProfileDefinition } from '../profile';
-import type { ValidationResult } from '../validation/validateCivilOutput';
+import { PROFILE_PENAL_PBA, ProfileDefinition } from '../profile';
+import type { ValidationResult } from '../validation/validatePenalOutput';
 
 // ============================================
 // DISCLAIMER INSTITUCIONAL (fijo e inmutable)
 // ============================================
 
 const DISCLAIMER_INSTITUCIONAL = {
-    version: '1.1',
-    texto: 'Este análisis es un insumo técnico basado en criterios jurídicos verificados. No constituye consejo legal definitivo. La validación y decisión final corresponde exclusivamente al profesional actuante.',
+    version: '1.2-penal',
+    texto: 'Este análisis es un insumo técnico de defensa penal basado en criterios jurídicos verificados del CPP PBA. Razona exclusivamente desde la perspectiva defensiva (in dubio pro reo, presunción de inocencia). No constituye consejo legal definitivo. La estrategia de defensa y la decisión final corresponden exclusivamente al abogado defensor actuante.',
     advertencias: [
         'Este análisis NO constituye opinión legal ni consejo profesional.',
-        'Los criterios citados corresponden al corpus jurídico verificado del perfil activo.',
-        'La precisión depende de la completitud de la información proporcionada.',
-        'Factores no declarados pueden alterar sustancialmente las conclusiones.',
-        'La decisión final corresponde exclusivamente al profesional actuante.'
+        'El sistema opera EXCLUSIVAMENTE desde la perspectiva de la defensa penal.',
+        'Los criterios corresponden al corpus penal verificado (CPP PBA / CP / garantías constitucionales).',
+        'La precisión depende de la completitud de los hechos y prueba proporcionados.',
+        'Factores procesales no declarados pueden alterar sustancialmente las conclusiones.',
+        'La estrategia de defensa y la decisión final corresponden exclusivamente al abogado actuante.'
     ]
 } as const;
 
@@ -35,7 +36,7 @@ const DISCLAIMER_INSTITUCIONAL = {
 // TIPOS DEL INFORME
 // ============================================
 
-export interface CivilReport {
+export interface PenalReport {
     /** Metadatos del informe */
     informe: InformeHeader;
     /** Cuerpo del análisis jurídico */
@@ -109,20 +110,20 @@ function generarNumeroInforme(profileCode: string): string {
  * @param validationResult   - Resultado de la validación senior
  * @param criteriosUtilizados - Cantidad de criterios RAG que alimentaron el razonamiento
  * @param profile            - Perfil jurídico activo (por defecto: PROFILE_CIVIL)
- * @returns CivilReport - Informe JSON estructurado listo para render
+ * @returns PenalReport - Informe JSON estructurado listo para render
  */
-export function buildCivilReport(
+export function buildPenalReport(
     validationResult: ValidationResult,
     criteriosUtilizados: number = 0,
-    profile: ProfileDefinition = PROFILE_CIVIL
-): CivilReport {
+    profile: ProfileDefinition = PROFILE_PENAL_PBA
+): PenalReport {
     const now = new Date().toISOString();
     const { output, status, advertencias, metadata } = validationResult;
     const contenido = output.contenido;
 
     const titulo = buildTitulo(status, profile.nombre);
 
-    const report: CivilReport = {
+    const report: PenalReport = {
         informe: {
             numero: generarNumeroInforme(profile.codigoInforme),
             fecha_emision: now,

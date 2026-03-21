@@ -1,20 +1,18 @@
 /**
  * RAG Module - Retrieve Legal Criteria
  *
- * Búsqueda semántica en corpus jurídico con control de suficiencia.
+ * Búsqueda semántica en corpus jurídico penal con control de suficiencia.
  * Es agnóstico al perfil: el perfil determina qué RPC de Supabase invocar.
  * Este módulo NO razona, solo recupera y evalúa cobertura.
  *
- * Tabla de corpus por perfil (Supabase):
- *   civil      → RPC: buscar_criterios         (tabla: criterios_civil)
- *   comercial  → RPC: buscar_criterios_comercial (tabla: criterios_comercial)
- *   familiar   → RPC: buscar_criterios_familiar  (tabla: criterios_familiar)
+ * Tabla del corpus (Supabase):
+ *   penal_pba → RPC: buscar_criterios (tabla: criterios_juridicos)
  */
 
-import { PROFILE_CIVIL, ProfileDefinition, ProfileId } from '../profile';
+import { PROFILE_PENAL_PBA, ProfileDefinition, ProfileId } from '../profile';
 
 // ============================================
-// CONFIGURACIÓN
+// CONFIGURACIÓN (ajustada para fuero penal)
 // ============================================
 
 /** Cantidad máxima de resultados a recuperar. */
@@ -22,15 +20,17 @@ export const TOP_K = 5;
 
 /**
  * Umbral mínimo de similitud coseno (0-1).
- * 0.75 = alta relevancia semántica requerida.
+ * 0.72 = alta relevancia semántica, ligeramente más permisivo que civil
+ * porque el lenguaje procesal penal es más técnico y homogéneo.
  */
-export const SIMILARITY_THRESHOLD = 0.75;
+export const SIMILARITY_THRESHOLD = 0.72;
 
 /**
  * Cantidad mínima de criterios que deben superar el threshold
  * para considerar que existe "base suficiente".
+ * Penal: 1 criterio verificado es suficiente para iniciar el razonamiento.
  */
-export const MIN_RELEVANT_CRITERIA = 2;
+export const MIN_RELEVANT_CRITERIA = 1;
 
 // ============================================
 // MAPEO DE RPC POR PERFIL
@@ -38,14 +38,10 @@ export const MIN_RELEVANT_CRITERIA = 2;
 
 /**
  * Nombre del RPC de Supabase para cada perfil.
- * Arquitectura "Un repo, tres Supabase": cada producto tiene su propio
- * proyecto Supabase con la misma función 'buscar_criterios'.
- * El aislamiento de datos lo provee el proyecto Supabase, no el nombre del RPC.
+ * En el proyecto penal hay un único perfil y una única tabla.
  */
 const CORPUS_RPC_BY_PROFILE: Record<ProfileId, string> = {
-    civil:      'buscar_criterios',
-    comercial:  'buscar_criterios',
-    familiar:   'buscar_criterios'
+    penal_pba: 'buscar_criterios'
 } as const;
 
 // ============================================
@@ -53,14 +49,14 @@ const CORPUS_RPC_BY_PROFILE: Record<ProfileId, string> = {
 // ============================================
 
 export interface CriterioRecuperado {
-    /** ID único del criterio (ej: RC-EXT-001) */
+    /** ID único del criterio (ej: PENAL-GAR-001) */
     id: string;
     /** Nombre descriptivo del criterio */
     criterio: string;
     /** Enunciado de la regla general */
     reglaGeneral: string;
-    /** Artículos del código aplicable (CCyC u otro según fuero) */
-    articulosCcyc: string[];
+    /** Artículos del CPP PBA / Código Penal aplicables */
+    articulosCpp: string[];
     /** Similitud coseno con la consulta (0-1) */
     similarity: number;
 }
@@ -98,9 +94,9 @@ export interface QueryEmbedding {
 }
 
 export interface RetrieveOptions {
-    /** Filtro opcional por instituto jurídico */
+    /** Filtro opcional por instituto jurídico (ej: 'garantias_procesales') */
     filterInstituto?: string;
-    /** Filtro opcional por subtipo */
+    /** Filtro opcional por subtipo (ej: 'in_dubio_pro_reo') */
     filterSubtipo?: string;
 }
 
@@ -122,7 +118,7 @@ interface SupabaseRPCResult {
     id: string;
     criterio: string;
     regla_general: string;
-    articulos_ccyc: string[];
+    articulos_cpp: string[];
     similarity: number;
 }
 
@@ -131,24 +127,24 @@ interface SupabaseRPCResult {
 // ============================================
 
 /**
- * Recupera criterios jurídicos del corpus del perfil activo mediante búsqueda semántica.
+ * Recupera criterios jurídicos penales del corpus mediante búsqueda semántica.
  *
  * Reglas de suficiencia:
  * 1. Debe haber al menos MIN_RELEVANT_CRITERIA criterios
  * 2. Cada criterio debe superar SIMILARITY_THRESHOLD
- * 3. Si no hay base suficiente, el sistema puede rechazar SIN razonar
+ * 3. Si no hay base suficiente, el sistema rechaza SIN razonar
  *
  * @param supabase - Cliente de Supabase inicializado
  * @param query    - Embedding de la consulta del usuario
  * @param options  - Filtros opcionales por instituto/subtipo
- * @param profile  - Perfil jurídico activo (por defecto: PROFILE_CIVIL)
+ * @param profile  - Perfil jurídico activo (por defecto: PROFILE_PENAL_PBA)
  * @returns Resultado estructurado con criterios o indicador de insuficiencia
  */
 export async function retrieveCivilCriteria(
     supabase: SupabaseClient,
     query: QueryEmbedding,
     options: RetrieveOptions = {},
-    profile: ProfileDefinition = PROFILE_CIVIL
+    profile: ProfileDefinition = PROFILE_PENAL_PBA
 ): Promise<RAGResult> {
     const timestamp = new Date().toISOString();
     const rpcName = CORPUS_RPC_BY_PROFILE[profile.id];
@@ -162,7 +158,7 @@ export async function retrieveCivilCriteria(
         timestamp
     };
 
-    // Llamar a la función RPC del corpus correspondiente al perfil
+    // Llamar a la función RPC del corpus
     const { data, error } = await supabase.rpc(rpcName, {
         query_embedding: query.embedding,
         match_count: TOP_K,
@@ -183,7 +179,7 @@ export async function retrieveCivilCriteria(
             criteriosRelevantes: 0,
             fundamento:
                 `No se encontraron criterios jurídicos en el corpus ${profile.nombre} para esta consulta. ` +
-                'El sistema no puede emitir opinión sin base normativa o jurisprudencial verificada.',
+                'El sistema no puede emitir opinión defensiva sin base normativa o jurisprudencial verificada.',
             metadata: baseMetadata
         };
     }
@@ -193,7 +189,7 @@ export async function retrieveCivilCriteria(
         id: row.id,
         criterio: row.criterio,
         reglaGeneral: row.regla_general,
-        articulosCcyc: row.articulos_ccyc ?? [],
+        articulosCpp: row.articulos_cpp ?? [],
         similarity: row.similarity
     }));
 
@@ -210,9 +206,9 @@ export async function retrieveCivilCriteria(
             criterios: criteriosTransformados, // Retornar todos para debugging
             criteriosRelevantes: criteriosRelevantes.length,
             fundamento:
-                `Se encontraron ${data.length} criterios, pero solo ${criteriosRelevantes.length} ` +
-                `superan el umbral de relevancia requerido (${SIMILARITY_THRESHOLD}). ` +
-                'El sistema requiere al menos 2 criterios verificados para emitir una opinión fundada.',
+                `Se encontraron ${data.length} criterios, pero ninguno supera ` +
+                `el umbral de relevancia requerido (${SIMILARITY_THRESHOLD}). ` +
+                'El sistema requiere al menos un criterio verificado para emitir una opinión fundada.',
             metadata: baseMetadata
         };
     }

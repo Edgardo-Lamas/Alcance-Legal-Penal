@@ -1,16 +1,16 @@
 /**
- * Render Civil Report PDF Module
- * 
- * Renderiza un informe jurídico civil (CivilReport JSON) a PDF
+ * Render Penal Report PDF Module
+ *
+ * Renderiza un informe jurídico penal (PenalReport JSON) a PDF
  * utilizando un template HTML controlado. NO usa LLM ni genera
  * contenido nuevo; solo transforma el JSON en un documento visual.
  * 
- * Flujo: CivilReport (JSON) → HTML Template → PDF (Buffer)
+ * Flujo: PenalReport (JSON) → HTML Template → PDF (Buffer)
  * 
  * Dependencia: jspdf (generación PDF sin servidor headless)
  */
 
-import type { CivilReport } from './buildCivilReport';
+import type { PenalReport } from './buildPenalReport';
 
 // ============================================
 // TIPOS
@@ -35,7 +35,7 @@ export interface PDFRenderResult {
  * Genera el HTML completo del informe a partir del JSON.
  * Este HTML es el template de referencia para el render PDF.
  */
-function buildReportHTML(report: CivilReport): string {
+function buildReportHTML(report: PenalReport): string {
     const { informe, analisis, disclaimer, meta } = report;
 
     const statusLabel = getStatusLabel(informe.status);
@@ -248,7 +248,7 @@ function buildReportHTML(report: CivilReport): string {
     <!-- Header Institucional -->
     <div class="header">
         <div class="header-brand">Alcance Legal</div>
-        <div class="header-subtitle">Inteligencia Jurídica Civil · Asociado Senior Digital</div>
+        <div class="header-subtitle">Defensa Penal PBA · Inteligencia Jurídica</div>
     </div>
 
     <!-- Datos del Informe -->
@@ -380,17 +380,17 @@ function formatFecha(isoDate: string): string {
 // ============================================
 
 /**
- * Renderiza un CivilReport a HTML listo para conversión a PDF.
+ * Renderiza un PenalReport a HTML listo para conversión a PDF.
  * 
  * El HTML generado puede ser:
  * 1. Convertido a PDF via window.print() en el navegador
  * 2. Convertido server-side con puppeteer, wkhtmltopdf u otra herramienta
  * 3. Usado directamente como vista previa
  * 
- * @param report - CivilReport JSON estructurado
+ * @param report - PenalReport JSON estructurado
  * @returns PDFRenderResult con el HTML y metadatos
  */
-export function renderCivilReportPDF(report: CivilReport): PDFRenderResult {
+export function renderPenalReportPDF(report: PenalReport): PDFRenderResult {
     try {
         const html = buildReportHTML(report);
         const filename = `${report.informe.numero}.pdf`;
@@ -418,8 +418,8 @@ export function renderCivilReportPDF(report: CivilReport): PDFRenderResult {
  *   const { dataUrl } = getReportDataUrl(report);
  *   window.open(dataUrl, '_blank');
  */
-export function getReportDataUrl(report: CivilReport): { dataUrl: string; filename: string } {
-    const { html, filename } = renderCivilReportPDF(report);
+export function getReportDataUrl(report: PenalReport): { dataUrl: string; filename: string } {
+    const { html, filename } = renderPenalReportPDF(report);
     const dataUrl = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
     return { dataUrl, filename };
 }

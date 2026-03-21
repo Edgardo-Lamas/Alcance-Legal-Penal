@@ -3,39 +3,21 @@ import { useNavigate } from 'react-router-dom'
 import { api } from '../../../services/api'
 import './Analizar.css'
 
-const tiposConsulta = [
-    { value: 'contrato', label: 'Contratos Civiles' },
-    { value: 'daños', label: 'Responsabilidad Civil y Daños' },
-    { value: 'sucesion', label: 'Sucesiones' },
-    { value: 'ejecucion', label: 'Ejecuciones Civiles' },
-    { value: 'obligaciones', label: 'Obligaciones' },
-]
-
-const jurisdicciones = [
-    'Buenos Aires', 'CABA', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba',
-    'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja',
-    'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan',
-    'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero',
-    'Tierra del Fuego', 'Tucumán'
-]
-
-const documentacionOpciones = [
-    { value: 'contrato_escrito', label: 'Contrato escrito' },
-    { value: 'emails', label: 'Intercambio de emails/mensajes' },
-    { value: 'facturas', label: 'Facturas o recibos' },
-    { value: 'actuaciones', label: 'Actuaciones judiciales previas' },
-    { value: 'otros', label: 'Otros documentos' },
+const etapasProcesales = [
+    { value: 'ipp', label: 'Investigación Penal Preparatoria (IPP)' },
+    { value: 'juicio_oral', label: 'Juicio Oral' },
+    { value: 'recursos', label: 'Recursos / Casación' },
+    { value: 'ejecucion', label: 'Ejecución de Sentencia' },
 ]
 
 function Analizar() {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        tipo_consulta: '',
-        situacion_factica: '',
-        pretension_cliente: '',
-        documentacion_disponible: [],
-        jurisdiccion: '',
-        urgencia: 'normal'
+        hechos: '',
+        tipo_penal: '',
+        etapa_procesal: '',
+        prueba_acusacion: '',
+        pretension_defensiva: '',
     })
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -48,28 +30,10 @@ function Analizar() {
         }
     }
 
-    const handleDocumentacion = (value) => {
-        setFormData(prev => ({
-            ...prev,
-            documentacion_disponible: prev.documentacion_disponible.includes(value)
-                ? prev.documentacion_disponible.filter(d => d !== value)
-                : [...prev.documentacion_disponible, value]
-        }))
-    }
-
     const validate = () => {
         const newErrors = {}
-        if (!formData.tipo_consulta) {
-            newErrors.tipo_consulta = 'Seleccione el tipo de materia'
-        }
-        if (!formData.situacion_factica || formData.situacion_factica.length < 100) {
-            newErrors.situacion_factica = 'Describa la situación fáctica (mínimo 100 caracteres)'
-        }
-        if (!formData.pretension_cliente) {
-            newErrors.pretension_cliente = 'Indique la pretensión del cliente'
-        }
-        if (!formData.jurisdiccion) {
-            newErrors.jurisdiccion = 'Seleccione la jurisdicción'
+        if (!formData.hechos || formData.hechos.trim().length < 20) {
+            newErrors.hechos = 'Describa los hechos imputados (mínimo 20 caracteres)'
         }
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -77,32 +41,49 @@ function Analizar() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (validate()) {
-            setIsLoading(true)
-            setErrors({})
+        if (!validate()) return
 
-            try {
-                const response = await api.analizarCaso(formData)
+        setIsLoading(true)
+        setErrors({})
 
-                if (response.success) {
-                    navigate('/resultado', {
-                        state: {
-                            capacidad: 'analizar',
-                            data: response.data
-                        }
-                    })
-                } else {
-                    setErrors({ api: response.error || 'Error al procesar la consulta' })
+        try {
+            const response = await api.analizarCaso(formData)
+
+            if (response.success) {
+                // Aplanar la respuesta para Resultado.jsx
+                const estadoLabels = {
+                    approved: 'INFORME APROBADO',
+                    limited: 'INFORME CON LIMITACIONES',
+                    rejected: 'NO ENTREGABLE',
                 }
-            } catch (error) {
-                setErrors({ api: 'Error de conexión. Intente nuevamente.' })
-            } finally {
-                setIsLoading(false)
+                navigate('/resultado', {
+                    state: {
+                        capacidad: 'analizar',
+                        data: {
+                            ...response.data,
+                            estado: estadoLabels[response.status] || 'INFORME',
+                            estado_detalle: 'Defensa Penal PBA — In dubio pro reo',
+                            _status: response.status,
+                            _advertencias: response.advertencias || [],
+                            _disclaimer: response.disclaimer,
+                            _meta: response.meta,
+                        }
+                    }
+                })
+            } else {
+                // Rechazo fundado del pipeline (admisibilidad, RAG, validación)
+                setErrors({
+                    api: response.fundamento || response.recomendacion || 'La consulta no pudo ser procesada.'
+                })
             }
+        } catch {
+            setErrors({ api: 'Error de conexión. Intente nuevamente.' })
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    const charCount = formData.situacion_factica.length
+    const charCount = formData.hechos.length
 
     return (
         <div className="analizar">
@@ -113,163 +94,154 @@ function Analizar() {
                     </svg>
                     Volver
                 </button>
-                <h1 className="analizar__title">Analizar Caso Civil</h1>
+                <h1 className="analizar__title">Analizar Causa Penal</h1>
                 <p className="analizar__subtitle">
-                    Complete los datos del caso para obtener un análisis jurídico con evaluación de viabilidad y riesgos.
+                    Ingrese los datos de la causa para obtener un análisis de defensa penal basado en el CPP PBA.
+                    El sistema razona exclusivamente desde la perspectiva defensiva.
                 </p>
             </header>
 
             <form className="analizar__form" onSubmit={handleSubmit}>
-                {/* Tipo de Consulta */}
+
+                {/* Hechos Imputados — campo principal, requerido */}
                 <div className="form-group">
-                    <label className="form-label">
-                        Tipo de Materia <span className="required">*</span>
+                    <label className="form-label" htmlFor="hechos">
+                        Hechos Imputados <span className="required">*</span>
                     </label>
+                    <p className="form-hint">
+                        Describa los hechos tal como los plantea la acusación. Incluya: conducta atribuida,
+                        víctima/damnificado, fecha aproximada, y norma penal invocada si la conoce.
+                    </p>
+                    <textarea
+                        id="hechos"
+                        name="hechos"
+                        className={`form-textarea ${errors.hechos ? 'form-textarea--error' : ''}`}
+                        rows="6"
+                        value={formData.hechos}
+                        onChange={handleChange}
+                        placeholder="Ej: Se imputa al defendido haber..., en fecha aproximada..., en perjuicio de..., encuadrando la acusación la conducta en el art. ... del Código Penal."
+                        disabled={isLoading}
+                    />
+                    <div className="form-textarea-footer">
+                        <span className={`char-count ${charCount < 20 ? 'char-count--warning' : 'char-count--ok'}`}>
+                            {charCount}/20 mínimo
+                        </span>
+                    </div>
+                    {errors.hechos && <span className="form-error">{errors.hechos}</span>}
+                </div>
+
+                {/* Tipo Penal */}
+                <div className="form-group">
+                    <label className="form-label" htmlFor="tipo_penal">
+                        Tipo Penal / Calificación Provisional
+                    </label>
+                    <p className="form-hint">
+                        Artículo del Código Penal invocado por la acusación (opcional pero recomendado).
+                    </p>
+                    <input
+                        type="text"
+                        id="tipo_penal"
+                        name="tipo_penal"
+                        className="form-input"
+                        value={formData.tipo_penal}
+                        onChange={handleChange}
+                        placeholder="Ej: Art. 119 CP — Abuso sexual con acceso carnal"
+                        disabled={isLoading}
+                    />
+                </div>
+
+                {/* Etapa Procesal */}
+                <div className="form-group">
+                    <label className="form-label">Etapa Procesal</label>
+                    <p className="form-hint">Etapa actual de la causa (opcional).</p>
                     <div className="form-options">
-                        {tiposConsulta.map(tipo => (
+                        {etapasProcesales.map(etapa => (
                             <label
-                                key={tipo.value}
-                                className={`form-option ${formData.tipo_consulta === tipo.value ? 'form-option--selected' : ''}`}
+                                key={etapa.value}
+                                className={`form-option ${formData.etapa_procesal === etapa.value ? 'form-option--selected' : ''}`}
                             >
                                 <input
                                     type="radio"
-                                    name="tipo_consulta"
-                                    value={tipo.value}
-                                    checked={formData.tipo_consulta === tipo.value}
+                                    name="etapa_procesal"
+                                    value={etapa.value}
+                                    checked={formData.etapa_procesal === etapa.value}
                                     onChange={handleChange}
+                                    disabled={isLoading}
                                 />
-                                <span>{tipo.label}</span>
+                                <span>{etapa.label}</span>
                             </label>
                         ))}
                     </div>
-                    {errors.tipo_consulta && <span className="form-error">{errors.tipo_consulta}</span>}
                 </div>
 
-                {/* Situación Fáctica */}
+                {/* Prueba de la Acusación */}
                 <div className="form-group">
-                    <label className="form-label" htmlFor="situacion_factica">
-                        Situación Fáctica <span className="required">*</span>
+                    <label className="form-label" htmlFor="prueba_acusacion">
+                        Prueba Invocada por la Acusación
                     </label>
                     <p className="form-hint">
-                        Describa los hechos relevantes del caso de manera clara y ordenada.
+                        ¿Qué pruebas presenta la acusación? Testimonio, pericias, documentos, registros digitales, etc.
                     </p>
                     <textarea
-                        id="situacion_factica"
-                        name="situacion_factica"
-                        className={`form-textarea ${errors.situacion_factica ? 'form-textarea--error' : ''}`}
-                        rows="6"
-                        value={formData.situacion_factica}
+                        id="prueba_acusacion"
+                        name="prueba_acusacion"
+                        className="form-textarea"
+                        rows="4"
+                        value={formData.prueba_acusacion}
                         onChange={handleChange}
-                        placeholder="Relate los hechos cronológicamente, identificando partes involucradas, fechas relevantes y circunstancias clave..."
+                        placeholder="Ej: Testimonio de la denunciante, pericia médico-forense, capturas de pantalla de mensajes..."
+                        disabled={isLoading}
                     />
-                    <div className="form-textarea-footer">
-                        <span className={`char-count ${charCount < 100 ? 'char-count--warning' : 'char-count--ok'}`}>
-                            {charCount}/100 mínimo
-                        </span>
-                    </div>
-                    {errors.situacion_factica && <span className="form-error">{errors.situacion_factica}</span>}
                 </div>
 
-                {/* Pretensión */}
+                {/* Pretensión Defensiva */}
                 <div className="form-group">
-                    <label className="form-label" htmlFor="pretension_cliente">
-                        Pretensión del Cliente <span className="required">*</span>
+                    <label className="form-label" htmlFor="pretension_defensiva">
+                        Pretensión Defensiva
                     </label>
                     <p className="form-hint">
-                        ¿Qué busca obtener el cliente? Sea específico.
+                        ¿Qué busca obtener la defensa? Sobreseimiento, nulidad, absolución, reducción del tipo, etc.
                     </p>
                     <textarea
-                        id="pretension_cliente"
-                        name="pretension_cliente"
-                        className={`form-textarea ${errors.pretension_cliente ? 'form-textarea--error' : ''}`}
+                        id="pretension_defensiva"
+                        name="pretension_defensiva"
+                        className="form-textarea"
                         rows="3"
-                        value={formData.pretension_cliente}
+                        value={formData.pretension_defensiva}
                         onChange={handleChange}
-                        placeholder="Ej: Obtener la resolución del contrato y el resarcimiento de daños..."
+                        placeholder="Ej: Sobreseimiento por insuficiencia probatoria, o en subsidio nulidad del allanamiento..."
+                        disabled={isLoading}
                     />
-                    {errors.pretension_cliente && <span className="form-error">{errors.pretension_cliente}</span>}
                 </div>
 
-                {/* Documentación */}
-                <div className="form-group">
-                    <label className="form-label">Documentación Disponible</label>
-                    <p className="form-hint">Seleccione la documentación con la que cuenta.</p>
-                    <div className="form-checkboxes">
-                        {documentacionOpciones.map(doc => (
-                            <label
-                                key={doc.value}
-                                className={`form-checkbox ${formData.documentacion_disponible.includes(doc.value) ? 'form-checkbox--checked' : ''}`}
-                            >
-                                <input
-                                    type="checkbox"
-                                    checked={formData.documentacion_disponible.includes(doc.value)}
-                                    onChange={() => handleDocumentacion(doc.value)}
-                                />
-                                <span className="form-checkbox__box">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                                        <polyline points="20 6 9 17 4 12" />
-                                    </svg>
-                                </span>
-                                <span>{doc.label}</span>
-                            </label>
-                        ))}
+                {/* Error general */}
+                {errors.api && (
+                    <div className="form-error-block">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <p>{errors.api}</p>
                     </div>
-                </div>
-
-                {/* Jurisdicción */}
-                <div className="form-group form-group--half">
-                    <label className="form-label" htmlFor="jurisdiccion">
-                        Jurisdicción <span className="required">*</span>
-                    </label>
-                    <select
-                        id="jurisdiccion"
-                        name="jurisdiccion"
-                        className={`form-select ${errors.jurisdiccion ? 'form-select--error' : ''}`}
-                        value={formData.jurisdiccion}
-                        onChange={handleChange}
-                    >
-                        <option value="">Seleccione provincia</option>
-                        {jurisdicciones.map(j => (
-                            <option key={j} value={j}>{j}</option>
-                        ))}
-                    </select>
-                    {errors.jurisdiccion && <span className="form-error">{errors.jurisdiccion}</span>}
-                </div>
-
-                {/* Urgencia */}
-                <div className="form-group form-group--half">
-                    <label className="form-label">Urgencia</label>
-                    <div className="form-radio-group">
-                        <label className={`form-radio ${formData.urgencia === 'normal' ? 'form-radio--selected' : ''}`}>
-                            <input
-                                type="radio"
-                                name="urgencia"
-                                value="normal"
-                                checked={formData.urgencia === 'normal'}
-                                onChange={handleChange}
-                            />
-                            <span>Normal</span>
-                        </label>
-                        <label className={`form-radio ${formData.urgencia === 'alta' ? 'form-radio--selected' : ''}`}>
-                            <input
-                                type="radio"
-                                name="urgencia"
-                                value="alta"
-                                checked={formData.urgencia === 'alta'}
-                                onChange={handleChange}
-                            />
-                            <span>Alta</span>
-                        </label>
-                    </div>
-                </div>
+                )}
 
                 {/* Submit */}
                 <div className="form-actions">
-                    <button type="button" className="btn btn--secondary" onClick={() => navigate('/')}>
+                    <button
+                        type="button"
+                        className="btn btn--secondary"
+                        onClick={() => navigate('/')}
+                        disabled={isLoading}
+                    >
                         Cancelar
                     </button>
-                    <button type="submit" className="btn btn--primary">
-                        Solicitar Análisis
+                    <button
+                        type="submit"
+                        className="btn btn--primary"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? 'Analizando...' : 'Solicitar Análisis'}
                     </button>
                 </div>
             </form>
@@ -277,7 +249,8 @@ function Analizar() {
             <footer className="analizar__footer">
                 <p>
                     <strong>Nota:</strong> La consulta será evaluada por admisibilidad antes de procesarse.
-                    Si excede el alcance del fuero civil, será rechazada con fundamentación.
+                    Si involucra materia ajena al fuero penal, será rechazada con fundamentación.
+                    El sistema opera exclusivamente en causas penales bajo el CPP PBA.
                 </p>
             </footer>
         </div>

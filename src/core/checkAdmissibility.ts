@@ -7,7 +7,7 @@
  */
 
 import {
-    PROFILE_CIVIL,
+    PROFILE_PENAL_PBA,
     ProfileDefinition,
     Fuero,
     ActoJuridico,
@@ -137,7 +137,7 @@ function validarHechosMinimos(input: ConsultaInput): boolean {
  */
 export function checkAdmissibility(
     input: ConsultaInput,
-    profile: ProfileDefinition = PROFILE_CIVIL
+    profile: ProfileDefinition = PROFILE_PENAL_PBA
 ): AdmissibilityResult {
     const timestamp = new Date().toISOString();
     const fuerosDetectados = detectarFueros(input.texto);

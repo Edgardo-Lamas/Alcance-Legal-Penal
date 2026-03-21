@@ -294,12 +294,63 @@
     color: #92400e;
 }
 
-/* Error */
+/* Input de texto */
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    line-height: 1.5;
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #c9a227;
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+.form-input:disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+/* Error inline */
 .form-error {
     display: block;
     margin-top: 0.5rem;
     font-size: 0.8rem;
     color: #dc2626;
+}
+
+/* Error de API — bloque visible */
+.form-error-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.form-error-block svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    color: #dc2626;
+}
+
+.form-error-block p {
+    font-size: 0.875rem;
+    color: #991b1b;
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* Actions */
@@ -347,6 +398,20 @@
 .btn--secondary:hover {
     background: #f8fafc;
     color: #1a2744;
+}
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.form-textarea:disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+    resize: none;
 }
 
 /* Footer */

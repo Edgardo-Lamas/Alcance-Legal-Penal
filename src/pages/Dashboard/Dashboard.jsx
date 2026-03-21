@@ -4,28 +4,55 @@ import './Dashboard.css'
 const capacidades = [
     {
         id: 'analizar',
-        titulo: 'Analizar Caso',
-        descripcion: 'Análisis jurídico de situaciones civiles con evaluación de viabilidad y riesgos.',
+        titulo: 'Analizar Causa Penal',
+        descripcion: 'Análisis defensivo integral del caso: encuadre procesal, prueba de cargo, nulidades y conclusión fundada.',
         icon: 'analyze',
-        materias: ['Contratos', 'Daños', 'Sucesiones', 'Ejecuciones', 'Obligaciones'],
+        materias: ['Prisión Preventiva', 'Nulidades', 'Prueba de Cargo', 'Sobreseimiento', 'Calificación'],
         ruta: '/analizar'
     },
     {
         id: 'auditar',
         titulo: 'Auditar Estrategia',
-        descripcion: 'Evaluación de estrategias procesales, detección de inconsistencias y supuestos implícitos.',
+        descripcion: 'Evaluación de la estrategia defensiva, detección de inconsistencias y puntos débiles ante la acusación.',
         icon: 'audit',
-        materias: ['Demanda', 'Contestación', 'Prueba', 'Alegatos', 'Ejecución'],
+        materias: ['IPP', 'Juicio Oral', 'Apelación', 'Casación', 'Ejecución'],
         ruta: '/auditar'
     },
     {
         id: 'redactar',
-        titulo: 'Redactar Escrito',
-        descripcion: 'Asistencia para redacción de escritos civiles con jurisprudencia y metodología curada.',
+        titulo: 'Redactar Escrito de Defensa',
+        descripcion: 'Asistencia para redacción de escritos penales con criterios del CPP PBA y metodología defensiva curada.',
         icon: 'draft',
-        materias: ['Demanda', 'Contestación', 'Apelación', 'Incidente', 'Memorial'],
+        materias: ['Apelación', 'Excepción', 'Nulidad', 'Excarcelación', 'Alegato'],
         ruta: '/redactar',
         badge: 'Borrador Asistido'
+    }
+]
+
+const principios = [
+    {
+        id: 'indubio',
+        simbolo: 'I',
+        nombre: 'In dubio pro reo',
+        descripcion: 'La duda razonable beneficia al imputado. Siempre.'
+    },
+    {
+        id: 'inocencia',
+        simbolo: 'II',
+        nombre: 'Presunción de inocencia',
+        descripcion: 'El imputado es inocente hasta sentencia firme.'
+    },
+    {
+        id: 'carga',
+        simbolo: 'III',
+        nombre: 'Carga de la prueba',
+        descripcion: 'Corresponde exclusivamente a la acusación.'
+    },
+    {
+        id: 'proceso',
+        simbolo: 'IV',
+        nombre: 'Debido proceso',
+        descripcion: 'Toda violación a garantías procesales es argumento defensivo.'
     }
 ]
 
@@ -51,13 +78,6 @@ const icons = {
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
         </svg>
-    ),
-    warning: (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-        </svg>
     )
 }
 
@@ -67,16 +87,38 @@ function Dashboard() {
     return (
         <div className="dashboard">
             <header className="dashboard__header">
+                <div className="dashboard__perfil-badge">CPP PBA · Defensa Penal</div>
                 <h1 className="dashboard__title">Consola de Criterio Jurídico</h1>
                 <p className="dashboard__subtitle">
-                    Seleccione la capacidad profesional que requiere
+                    Sistema de inteligencia jurídica — perspectiva exclusivamente defensiva
                 </p>
             </header>
 
+            <section className="dashboard__principios">
+                <p className="dashboard__principios-label">Principios rectores irrenunciables</p>
+                <div className="dashboard__principios-grid">
+                    {principios.map((p) => (
+                        <div key={p.id} className="principio-item">
+                            <span className="principio-item__simbolo">{p.simbolo}</span>
+                            <div className="principio-item__texto">
+                                <strong>{p.nombre}</strong>
+                                <span>{p.descripcion}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
             <div className="dashboard__aviso">
-                <span className="dashboard__aviso-icon">{icons.warning}</span>
+                <span className="dashboard__aviso-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                </span>
                 <p>
-                    Este sistema opera exclusivamente en el <strong>Fuero Civil</strong>.
+                    Este sistema opera exclusivamente en el <strong>Fuero Penal (CPP PBA)</strong>.
                     Consultas de otros fueros serán rechazadas.
                 </p>
             </div>
@@ -120,10 +162,20 @@ function Dashboard() {
 
             <footer className="dashboard__footer">
                 <p>
-                    Alcance Legal prioriza <strong>criterio jurídico</strong> sobre velocidad de respuesta.
+                    Alcance Legal Penal prioriza <strong>criterio defensivo</strong> sobre velocidad de respuesta.
                     Un rechazo fundado es siempre preferible a una respuesta improvisada.
                 </p>
             </footer>
+
+            <div className="dashboard__aviso-legal">
+                <p className="dashboard__aviso-legal-titulo">Aviso Legal</p>
+                <p>
+                    Este sistema es un <strong>insumo técnico de asistencia profesional</strong>, no un consejo legal definitivo.
+                    Opera exclusivamente desde la perspectiva de la defensa penal en el fuero provincial de Buenos Aires
+                    (CPP PBA — Ley 11.922 / Código Penal de la Nación). La estrategia procesal y la decisión final
+                    corresponden exclusivamente al abogado defensor actuante.
+                </p>
+            </div>
         </div>
     )
 }

@@ -9,8 +9,8 @@
  * dinámicamente de los fuerosExcluidos del perfil activo.
  */
 
-import type { ReasoningOutput, ContenidoReasoning } from '../reasoning/guidedCivilReasoning';
-import { PROFILE_CIVIL, ProfileDefinition, Fuero } from '../profile';
+import type { ReasoningOutput, ContenidoReasoning } from '../reasoning/guidedPenalReasoning';
+import { PROFILE_PENAL_PBA, ProfileDefinition, Fuero } from '../profile';
 
 // ============================================
 // CONFIGURACIÓN DE VALIDACIÓN
@@ -29,6 +29,24 @@ const CERTEZA_EXCESIVA_PATTERNS = [
     /es imposible que/i,
     /nunca podrá/i,
     /siempre será/i
+] as const;
+
+/**
+ * Patrones que indican sesgo acusatorio en el análisis penal.
+ * El sistema opera EXCLUSIVAMENTE desde la defensa: si el output
+ * valida la acusación o presume culpabilidad, es un error crítico.
+ */
+const SESGO_ACUSATORIO_PATTERNS = [
+    /el imputado es culpable/i,
+    /claramente cometió/i,
+    /la prueba acredita su responsabilidad/i,
+    /no hay dudas de su participación/i,
+    /queda demostrada la culpabilidad/i,
+    /la acusación tiene razón/i,
+    /el fiscal tiene razón/i,
+    /merece ser condenado/i,
+    /se probó que realizó el hecho/i,
+    /seguramente será condenado/i
 ] as const;
 
 /** Patrones que indican extrapolación no fundada */
@@ -101,6 +119,27 @@ export interface ValidationMetadata {
 // ============================================
 // FUNCIONES DE DETECCIÓN
 // ============================================
+
+/**
+ * Detecta sesgo acusatorio en el output penal.
+ * El análisis debe ser defensivo: cualquier validación de la culpabilidad
+ * del imputado es un error crítico del sistema.
+ */
+function detectarSesgosAcusatorios(texto: string): ValidationIssue[] {
+    const issues: ValidationIssue[] = [];
+    for (const pattern of SESGO_ACUSATORIO_PATTERNS) {
+        const match = texto.match(pattern);
+        if (match) {
+            issues.push({
+                tipo: 'RIESGO_PROFESIONAL',
+                severidad: 'critical',
+                descripcion: 'El análisis adopta la perspectiva de la acusación o presume culpabilidad del imputado. El sistema opera exclusivamente desde la defensa.',
+                fragmento: match[0]
+            });
+        }
+    }
+    return issues;
+}
 
 function detectarCertezaExcesiva(texto: string): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
@@ -205,15 +244,16 @@ function detectarContradicciones(contenido: ContenidoReasoning): ValidationIssue
  * @param profile         - Perfil jurídico activo (por defecto: PROFILE_CIVIL)
  * @returns Resultado de validación con status y advertencias si aplica
  */
-export function validateCivilOutput(
+export function validatePenalOutput(
     reasoningOutput: ReasoningOutput,
-    profile: ProfileDefinition = PROFILE_CIVIL
+    profile: ProfileDefinition = PROFILE_PENAL_PBA
 ): ValidationResult {
     const timestamp = new Date().toISOString();
     const allIssues: ValidationIssue[] = [];
 
     const textoCompleto = Object.values(reasoningOutput.contenido).join(' ');
 
+    allIssues.push(...detectarSesgosAcusatorios(textoCompleto));
     allIssues.push(...detectarCertezaExcesiva(textoCompleto));
     allIssues.push(...detectarExtrapolaciones(textoCompleto));
     allIssues.push(...detectarViolacionScope(textoCompleto, profile));
@@ -229,7 +269,7 @@ export function validateCivilOutput(
         output: reasoningOutput,
         advertencias: status === 'limited' ? advertencias : undefined,
         metadata: {
-            checksRealizados: 4,
+            checksRealizados: 5,
             issuesDetectados: allIssues.length,
             timestamp
         }
@@ -271,7 +311,7 @@ function generarAdvertencias(issues: ValidationIssue[], status: ValidationStatus
 
 export function generarRechazoFundado(
     result: ValidationResult,
-    profile: ProfileDefinition = PROFILE_CIVIL
+    profile: ProfileDefinition = PROFILE_PENAL_PBA
 ): {
     mensaje: string;
     detalles: string[];
@@ -299,12 +339,14 @@ export function generarRechazoFundado(
 // ============================================
 
 export const _internals = {
+    detectarSesgosAcusatorios,
     detectarCertezaExcesiva,
     detectarExtrapolaciones,
     detectarViolacionScope,
     detectarContradicciones,
     determinarStatus,
     generarAdvertencias,
+    SESGO_ACUSATORIO_PATTERNS,
     CERTEZA_EXCESIVA_PATTERNS,
     EXTRAPOLACION_PATTERNS,
     SCOPE_KEYWORDS_BY_FUERO
