@@ -1,0 +1,221 @@
+[
+  {
+    "id": "PDN-001",
+    "nombre_corto": "Prueba digital no autenticada",
+    "descripcion": "Se utilizaron como prueba de cargo capturas de pantalla, mensajes de WhatsApp, correos electrónicos o imágenes sin que se acreditara la cadena de custodia, la integridad del soporte original ni la autoría de los mensajes mediante pericia informática independiente.",
+    "dimensiones": ["prueba", "debido_proceso"],
+    "indicadores": [
+      "captura de pantalla",
+      "mensaje de WhatsApp",
+      "chat",
+      "imagen enviada",
+      "correo electrónico",
+      "impresión de pantalla",
+      "peritaje informático"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Las capturas o mensajes que presentaron como prueba eran copias impresas o el teléfono/dispositivo original?",
+      "¿Algún perito revisó el celular o la computadora original para verificar que esos mensajes no fueron modificados?",
+      "¿La defensa pudo ver el dispositivo original o solo les mostraron impresiones?",
+      "¿Saben quién tomó esas capturas y cuándo, antes o después de la denuncia?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["analisis_prueba_cargo", "nulidades_y_vicios", "contraargumentacion"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Examinar si la prueba digital fue incorporada con pericia informática que acredite integridad y autoría. Identificar si existe posibilidad de nulidad por violación a la cadena de custodia. Señalar que la sola impresión de pantalla no tiene valor probatorio autónomo sin autenticación técnica."
+    }
+  },
+  {
+    "id": "PIM-002",
+    "nombre_corto": "Prueba de imposibilidad material ignorada",
+    "descripcion": "El imputado aportó o intentó aportar prueba que demostraba que físicamente no podía haber cometido el hecho en el tiempo y lugar indicados (coartada, registros de acceso, tickets, testigos de descargo), y dicha prueba fue ignorada, minimizada o no incorporada correctamente.",
+    "dimensiones": ["prueba", "debido_proceso"],
+    "indicadores": [
+      "coartada",
+      "testigo de descargo",
+      "imposibilidad material",
+      "no podía estar",
+      "estaba en otro lugar",
+      "registro de ingreso",
+      "cámara de seguridad",
+      "salón no construido",
+      "obra en construcción"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Tenés alguna prueba concreta de que estabas en otro lugar cuando dicen que ocurrió el hecho?",
+      "¿Hay personas que puedan confirmar dónde estabas en ese momento?",
+      "¿Existen registros (cámara, ticket, tarjeta de acceso, celular con GPS) que muestren tu ubicación?",
+      "¿Esa prueba fue presentada en el juicio? ¿El juez o fiscal explicaron por qué no la tuvieron en cuenta?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["encuadre_procesal", "analisis_prueba_cargo", "contraargumentacion"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Analizar si la prueba de descargo sobre imposibilidad material fue adecuadamente incorporada y valorada. Si fue ignorada sin fundamentación expresa, identificar como posible arbitrariedad probatoria. Evaluar si la omisión constituye violación al derecho de defensa (art. 18 CN) y al principio in dubio pro reo cuando la prueba de imposibilidad genera, como mínimo, duda razonable."
+    }
+  },
+  {
+    "id": "CPF-003",
+    "nombre_corto": "Cambio en la plataforma fáctica",
+    "descripcion": "Los hechos imputados cambiaron durante el proceso: se modificaron fechas, lugares, modalidades o se agregaron nuevos hechos sin que se respetara el principio de congruencia entre acusación y sentencia, afectando el derecho de defensa.",
+    "dimensiones": ["debido_proceso"],
+    "indicadores": [
+      "cambio de fecha",
+      "ampliación de la imputación",
+      "hechos indeterminados",
+      "período indeterminado",
+      "entre los años",
+      "en reiteradas oportunidades",
+      "modificó la acusación"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Los hechos que te acusan hoy son exactamente los mismos que te dijeron al principio, o fueron cambiando?",
+      "¿Cambió la fecha, el lugar o la forma en que dicen que ocurrió?",
+      "¿Te acusan de un solo hecho o de muchos hechos en un período largo de tiempo?",
+      "¿Se agregaron nuevas acusaciones después de que ya habías declarado o te habías defendido?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["encuadre_procesal", "nulidades_y_vicios", "contraargumentacion"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Verificar congruencia estricta entre el hecho descripto en la requisitoria fiscal y el hecho por el que se condenó. Identificar si la indeterminación temporal o fáctica impidió ejercer defensa concreta. Examinar si la plataforma fáctica indeterminada ('en reiteradas oportunidades') encubre la imposibilidad de probar hechos específicos."
+    }
+  },
+  {
+    "id": "RIM-004",
+    "nombre_corto": "Riesgo de imparcialidad del tribunal",
+    "descripcion": "Existen elementos que comprometen la imparcialidad del juez o jurado: alegatos con fuerte carga emocional o ideológica, presión mediática previa, activismo en la causa, o perspectiva de género aplicada como presunción de culpabilidad en lugar de como herramienta interpretativa.",
+    "dimensiones": ["imparcialidad", "debido_proceso"],
+    "indicadores": [
+      "perspectiva de género",
+      "jurado popular",
+      "cobertura mediática",
+      "redes sociales",
+      "alegato emocional",
+      "campaña",
+      "activista",
+      "manifestación"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿El juicio tuvo cobertura en medios de comunicación o fue comentado en redes sociales?",
+      "¿Hubo manifestaciones o concentraciones de personas relacionadas con el caso antes o durante el juicio?",
+      "¿El fiscal usó frases muy emotivas o habló de 'creerle a la víctima' como argumento central?",
+      "¿El juicio fue con jurado popular o con jueces profesionales?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["encuadre_procesal", "contraargumentacion", "conclusion_defensiva"],
+      "nivel_alerta": "medio",
+      "instruccion_llm": "Evaluar si la perspectiva de género fue utilizada como herramienta hermenéutica válida o como inversión de la carga de la prueba. Identificar si el contexto mediático o emocional pudo comprometer la imparcialidad objetiva del tribunal. No presumir parcialidad, pero señalar los elementos que la habilitan como argumento recursivo."
+    }
+  },
+  {
+    "id": "PDP-005",
+    "nombre_corto": "Pena desproporcionada / doble valoración de agravantes",
+    "descripcion": "La pena impuesta resulta desproporcionada porque se valoraron doblemente circunstancias que ya integran el tipo penal agravado (ej: vínculo, convivencia, edad de la víctima), o se acumularon agravantes genéricas sobre agravantes específicas ya contempladas en la figura.",
+    "dimensiones": ["pena"],
+    "indicadores": [
+      "pena máxima",
+      "agravante",
+      "vínculo de convivencia",
+      "acceso carnal",
+      "menor de edad",
+      "abuso de autoridad",
+      "reiteración",
+      "doble agravante"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Sabés cuántos años de pena te dieron? ¿Te explicaron por qué fue esa cantidad?",
+      "¿Mencionaron varias veces las mismas características (tu vínculo con la víctima, que vivían juntos, la edad) para justificar más pena?",
+      "¿La pena que te dieron está cerca del máximo previsto por la ley para ese delito?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["encuadre_procesal", "contraargumentacion", "conclusion_defensiva"],
+      "nivel_alerta": "medio",
+      "instruccion_llm": "Analizar si las agravantes aplicadas al momento de mensurar la pena ya estaban contempladas en la figura típica aplicada (non bis in idem). Evaluar proporcionalidad de la pena en relación al mínimo y máximo legal. Identificar si la acumulación de agravantes genéricas sobre el tipo agravado constituye doble valoración prohibida."
+    }
+  },
+  {
+    "id": "ARE-006",
+    "nombre_corto": "Ausencia de revisión efectiva en la cadena recursiva",
+    "descripcion": "Los tribunales de alzada confirmaron la condena sin revisar efectivamente la prueba, limitándose a control formal de la sentencia. Se viola el derecho al recurso amplio (art. 8.2.h CADH, Machain, Casal) cuando los agravios sobre la valoración probatoria no reciben respuesta sustancial.",
+    "dimensiones": ["recurso", "debido_proceso"],
+    "indicadores": [
+      "confirma la sentencia",
+      "ratifica",
+      "cuestión de hecho",
+      "valoración probatoria del a quo",
+      "no hay mérito para modificar",
+      "casación",
+      "recurso rechazado"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Apelaron la condena? ¿Qué dijeron los jueces de la apelación?",
+      "¿En la apelación revisaron las pruebas o solo dijeron que el juicio estuvo bien hecho?",
+      "¿Algún tribunal explicó en detalle por qué las pruebas alcanzaban para condenar?",
+      "¿Los recursos fueron rechazados sin responder los argumentos que planteó la defensa?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["encuadre_procesal", "nulidades_y_vicios", "conclusion_defensiva"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Identificar si los tribunales revisores realizaron control sustancial de la prueba o se limitaron a revisar vicios formales. Evaluar si se garantizó el recurso amplio conforme doctrina Casal (CSJN). Si la revisión fue meramente formal, señalar como agravio autónomo ante instancias superiores (SCBA, CSJN, órganos internacionales)."
+    }
+  },
+  {
+    "id": "PPM-007",
+    "nombre_corto": "Pericia psicológica oficial de baja calidad con alto peso probatorio",
+    "descripcion": "Una pericia psicológica oficial de metodología cuestionable (criterios de credibilidad no validados, ausencia de test específicos, entrevistador no especializado) fue utilizada como prueba central o determinante de la condena, sin que la defensa pudiera contrarrestarla eficazmente.",
+    "dimensiones": ["pericia", "prueba", "debido_proceso"],
+    "indicadores": [
+      "pericia psicológica",
+      "credibilidad del testimonio",
+      "daño psíquico",
+      "EPAN",
+      "evaluación psicológica",
+      "síndrome",
+      "indicadores de abuso",
+      "relato verosímil",
+      "camara_gesell"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿Hubo una psicóloga o psicólogo que evaluó a la víctima y declaró en el juicio?",
+      "¿La defensa pudo presentar su propio perito psicológico?",
+      "¿El juez mencionó la pericia psicológica como prueba importante para condenar?",
+      "¿La psicóloga dijo que el relato era 'creíble' o que había 'indicadores de abuso'?",
+      "¿Saben qué métodos o tests usó esa psicóloga para llegar a esa conclusión?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["analisis_prueba_cargo", "nulidades_y_vicios", "contraargumentacion"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Examinar si la pericia psicológica utilizó metodología validada (SVA/CBCA, NICHD o similar) o se limitó a impresiones clínicas. Identificar si la conclusión de 'credibilidad' excede la competencia del perito (usurpando función del juez). Evaluar si la defensa tuvo acceso a contrapericia. Señalar que 'indicadores de abuso' no equivalen a prueba de abuso. Detectar si la sentencia acepta acríticamente la pericia sin confrontarla con otras pruebas (contradicciones, pericias de parte, testimonios de contexto)."
+    }
+  },
+  {
+    "id": "CGP-008",
+    "nombre_corto": "Uso problemático de Cámara Gesell",
+    "descripcion": "La declaración del menor fue tomada mediante Cámara Gesell con deficiencias graves: preguntas sugestivas del entrevistador, múltiples declaraciones previas que contaminaron el relato, técnica no validada (no NICHD), impedimento a la defensa de controlar o proponer preguntas, o video no conservado íntegramente.",
+    "dimensiones": ["prueba", "debido_proceso", "pericia"],
+    "indicadores": [
+      "Cámara Gesell",
+      "entrevista forense",
+      "declaración del menor",
+      "entrevista previa",
+      "relato espontáneo",
+      "NICHD",
+      "preguntas sugestivas",
+      "video de la entrevista",
+      "transcripción de la entrevista",
+      "número de declaraciones"
+    ],
+    "preguntas_para_el_sistema": [
+      "¿La declaración de la víctima se tomó en Cámara Gesell?",
+      "¿La defensa pudo ver la entrevista en ese momento o proponer preguntas?",
+      "¿Antes de la Cámara Gesell la víctima ya había hablado con psicólogos, médicos o policías sobre los hechos?",
+      "¿Cuántas veces declaró la víctima en total durante todo el proceso?",
+      "¿Existe el video completo de la entrevista? ¿La defensa lo pudo ver?",
+      "¿La persona que hizo la entrevista era especialista en entrevistas forenses a niños?"
+    ],
+    "salida_esperada": {
+      "secciones_afectadas": ["analisis_prueba_cargo", "nulidades_y_vicios", "contraargumentacion"],
+      "nivel_alerta": "alto",
+      "instruccion_llm": "Analizar si la entrevista en Cámara Gesell respetó protocolo NICHD o equivalente validado. Identificar declaraciones previas que pudieron contaminar el relato (efecto de contaminación del testimonio). Examinar si la defensa tuvo control efectivo del acto. Señalar que el número de declaraciones previas es inversamente proporcional a la confiabilidad del relato. Verificar integridad y disponibilidad del video. Evaluar si la sentencia analiza críticamente la forma en que se tomó la Cámara Gesell o solo cita las conclusiones del informe psicológico."
+    }
+  }
+]

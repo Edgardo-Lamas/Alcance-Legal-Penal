@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-PRUEBA-001",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "estandar_prueba",
+    "criterio": "Certeza apodíctica como requisito de la condena — la probabilidad es insuficiente",
+    "regla_general": "La condena penal requiere que el juzgador alcance un estado de certeza positiva sobre la culpabilidad del imputado: no basta la probabilidad, ni siquiera la alta probabilidad. La duda en cualquier grado, incluyendo la duda leve o residual, impone la absolución por aplicación del in dubio pro reo. La sentencia condenatoria debe expresar de manera explícita los fundamentos que permiten descartar toda hipótesis alternativa razonable de inocencia.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 2 y 373",
+        "CN, art. 18",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) art. 2 (in dubio pro reo) y art. 373 (fundamentación de la sentencia); CN art. 18; CADH art. 8.2; estándar 'beyond a reasonable doubt' del common law (receptado en doctrina argentina como 'certeza apodíctica')",
+        "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 (2005); CSJN, 'Slezack', Fallos 311:512 (1988); SCBA, P. 99.613 (2009) — diferencia entre probabilidad y certeza en el fallo condenatorio",
+        "doctrina": "Maier, 'DPP', T. I, § 6.h; Cafferata Nores, 'La prueba en el proceso penal', pp. 5-20 (los grados de conocimiento); Taruffo, 'La prueba de los hechos', pp. 275-310 (estándares de prueba)"
+    },
+    "aplicacion_practica": "La defensa debe señalar cuando la sentencia condena expresando 'probabilidad', 'verosimilitud', 'mayor credibilidad del relato de la víctima' sin alcanzar la certeza. Los indicadores de ausencia de certeza son: (a) el tribunal no descarta expresamente la hipótesis de inocencia planteada por la defensa; (b) la sentencia reconoce dudas pero aplica 'perspectiva de género' o 'contexto' para suplirlas; (c) el fallo afirma que la víctima fue 'creída' sin analizar la evidencia objetiva que respalda esa creencia.",
+    "condiciones_aplicacion": [
+        "Toda sentencia condenatoria que deba ser revisada en casación",
+        "Análisis del grado de convicción alcanzado por el tribunal en el fallo"
+    ],
+    "riesgos_procesales": [
+        "No señalar explícitamente en el recurso cuál era la hipótesis alternativa razonable que el tribunal omitió descartar",
+        "Omitir identificar las expresiones del fallo que revelan probabilidad en lugar de certeza",
+        "No vincular el agravio de arbitrariedad con la violación al in dubio pro reo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "certeza_apodíctica",
+        "estandar_prueba",
+        "duda_razonable",
+        "in_dubio_pro_reo",
+        "sentencia_condenatoria",
+        "arbitrariedad"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-NUL-003",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "exceso_acusatorio",
+    "criterio": "Exceso acusatorio — prohibición de condenar por hechos o agravantes no contenidos en la acusación",
+    "regla_general": "El tribunal no puede condenar por hechos distintos a los descriptos en el requerimiento de citación a juicio, ni por agravantes no descriptos en la acusación, aunque surjan del debate. La ampliación de la acusación durante el juicio es posible pero requiere un procedimiento formal que garantice el derecho del imputado a preparar su defensa respecto del nuevo hecho o agravante. La sentencia que condena más allá de la acusación viola la garantía de defensa y es nula.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, arts. 8.2.b y 8.2.c",
+        "CPP PBA (Ley 11.922), arts. 334, 335 y 371",
+        "CP, art. 41 y ss. (agravantes genéricos)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH arts. 8.2.b (información previa y detallada de la acusación) y 8.2.c (tiempo para preparar la defensa); CPP PBA (Ley 11.922) arts. 334 (requerimiento), 335 (contenido mínimo) y 371 (congruencia en la sentencia); CP arts. 40 y 41 (agravantes)",
+        "jurisprudencia_referente": "CSJN, 'Tarifeño', Fallos 325:2019 (2002) — prohibición de condena sin acusación previa; CSJN, 'Mostaccio', Fallos 327:120 (2004) — correlación acusación-sentencia; SCBA, P. 103.696 (2010) — exceso acusatorio en agravantes",
+        "doctrina": "Maier, 'DPP', T. I, § 6.d (principio de congruencia); Binder, 'Introducción al DPP', pp. 190-200"
+    },
+    "aplicacion_practica": "La defensa debe controlar: (a) que el requerimiento de elevación identifique con precisión los hechos y todas las circunstancias agravantes; (b) que el alegato acusatorio en el debate no introduzca nuevas circunstancias agravantes no discutidas durante el juicio; (c) que la sentencia no condene por una modalidad de ejecución distinta a la descripta en la acusación (ej: acusado de coautor y condenado como autor directo, si eso afecta la defensa). Si el fiscal amplía la acusación durante el debate, la defensa debe solicitar suspensión del juicio para preparar la defensa respecto del nuevo hecho.",
+    "condiciones_aplicacion": [
+        "Toda sentencia que condena por hechos, modalidades o agravantes distintos a los del requerimiento",
+        "Casos donde la calificación final del fiscal en el alegato varía sustancialmente del requerimiento"
+    ],
+    "riesgos_procesales": [
+        "No oponerse al alegato fiscal que introduce agravantes no contenidas en el requerimiento",
+        "Omitir solicitar suspensión del debate ante ampliación de la acusación",
+        "No plantear en casación la incongruencia entre acusación y sentencia cuando el imputado fue sorprendido con una agravante nueva"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "exceso_acusatorio",
+        "correlacion_acusacion_sentencia",
+        "congruencia",
+        "agravantes",
+        "nulidad",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

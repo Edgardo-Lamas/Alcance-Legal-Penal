@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-AS-004",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "perspectiva_genero",
+    "criterio": "Perspectiva de género en la valoración probatoria — alcance y límites constitucionales",
+    "regla_general": "La perspectiva de género es una herramienta analítica que permite identificar y neutralizar los estereotipos que distorsionan la valoración de la prueba (ej: el estereotipo de que la mujer víctima siempre dice la verdad, o de que el hombre acusado siempre miente). No es, en cambio, un estándar probatorio diferenciado que habilite condenar con menor prueba en razón del género del acusado. La perspectiva de género correctamente aplicada favorece también al imputado cuando su inocencia es denegada por estereotipos de género.",
+    "articulos_cpp": [
+        "CN, arts. 16 y 18",
+        "CADH, arts. 8.2 y 24",
+        "Ley 26.485, arts. 3 y 16",
+        "Convención de Belém do Pará, art. 7"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CN arts. 16 (igualdad) y 18 (garantías procesales); CADH arts. 8.2 (presunción de inocencia) y 24 (igualdad ante la ley); Ley 26.485 (protección integral para prevenir y sancionar la violencia contra las mujeres); Convención de Belém do Pará art. 7 (deberes de los Estados); Reglas de Brasilia sobre acceso a la justicia de personas en condición de vulnerabilidad",
+        "jurisprudencia_referente": "CSJN, 'Góngora', Fallos 336:392 (2013) — aplicación de Belém do Pará; SCBA, P. 125.010 (2018) — perspectiva de género y estándar probatorio; CSJN, 'R., C.J.' (CSJ 614/2014) — límites de la perspectiva de género en valoración de prueba",
+        "doctrina": "Piqué, 'La perspectiva de género en el proceso penal', pp. 45-80; Falcone, 'Garantías del imputado en los delitos de abuso sexual', pp. 30-55; CIDH, 'Estándares jurídicos vinculados a la igualdad de género' (2011)"
+    },
+    "aplicacion_practica": "La perspectiva de género legítimamente permite: (a) admitir que la demora en la denuncia puede responder a dinámicas de violencia y no constituye señal de falsedad; (b) considerar la asimetría de poder en la relación entre imputado y víctima. No es válido usarla para: (a) invertir la carga de la prueba; (b) presumir la culpabilidad del acusado por su condición de varón; (c) sustituir la exigencia de corroboración objetiva por consideraciones ideológicas; (d) descalificar la hipótesis de inocencia sin análisis racional de la evidencia. La defensa debe señalar cuando el tribunal apela a la perspectiva de género para suplir deficiencias probatorias.",
+    "condiciones_aplicacion": [
+        "Casos donde la sentencia invoca la perspectiva de género para fundar la condena ante ausencia de prueba objetiva",
+        "Supuestos donde el tribunal descalifica la hipótesis defensiva por considerarla contraria a la perspectiva de género"
+    ],
+    "riesgos_procesales": [
+        "No impugnar el uso de la perspectiva de género como sustituto del análisis probatorio objetivo",
+        "Omitir señalar que la perspectiva de género es herramienta analítica, no estándar probatorio diferenciado",
+        "No demostrar que la perspectiva de género, correctamente aplicada, favorece también al imputado en el caso concreto"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "perspectiva_genero",
+        "abuso_sexual",
+        "presuncion_inocencia",
+        "carga_prueba",
+        "estereotipos",
+        "valoracion_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

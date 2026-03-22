@@ -1,0 +1,44 @@
+{
+    "id": "PENAL-GAR-010",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "prision_preventiva",
+    "criterio": "Prisión preventiva — carácter excepcional, cautelar y no punitivo",
+    "regla_general": "La prisión preventiva es una medida cautelar de carácter excepcional, no una sanción anticipada. Solo procede cuando concurren simultáneamente: (a) elementos de convicción suficientes para imputar un delito; y (b) riesgo procesal concreto de fuga o entorpecimiento de la investigación. La gravedad del hecho imputado no es, por sí sola, fundamento suficiente para disponer o mantener la detención.",
+    "articulos_cpp": [
+        "CN, arts. 18 y 75 inc. 22",
+        "CADH, arts. 7.3, 7.5 y 8.2",
+        "PIDCP, art. 9.3",
+        "CPP PBA (Ley 11.922), arts. 148 y 158 y ss."
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH arts. 7.3 (nadie puede ser detenido arbitrariamente) y 7.5 (toda persona detenida debe ser juzgada en plazo razonable o liberada); PIDCP art. 9.3; Principios y Buenas Prácticas CIDH sobre PPL; CPP PBA (Ley 11.922) arts. 148, 157, 158 y ss.",
+        "jurisprudencia_referente": "CSJN, 'Verbitsky', Fallos 328:1146 (2005); CIDH, 'Informe 35/07' (principios sobre PPL); SCBA, P. 94.751 — criterios para el riesgo procesal; CSJN, 'Loyo Fraire', Fallos 337:434 (2014)",
+        "doctrina": "Llobet Rodríguez, 'La prisión preventiva', pp. 45-90; CIDH, 'Informe sobre el uso de la prisión preventiva en las Américas' (2013)"
+    },
+    "aplicacion_practica": "Para resistir o cesar la prisión preventiva la defensa debe demostrar: (a) ausencia de riesgo de fuga (arraigo familiar, laboral, domiciliar; sin antecedentes de rebeldía; sin posibilidad real de evasión); (b) ausencia de riesgo de entorpecimiento (testigos ya declarados, evidencia ya preservada, imputado sin capacidad de influir en la investigación). La mera gravedad del hecho, la alarma social o el clamor mediático no constituyen riesgo procesal y son consideraciones constitucionalmente vedadas.",
+    "condiciones_aplicacion": [
+        "Toda audiencia de prisión preventiva o revisión de la medida cautelar",
+        "Solicitudes de cese o morigeración de la detención"
+    ],
+    "riesgos_procesales": [
+        "No ofrecer prueba de arraigo en la audiencia cautelar inicial",
+        "No impugnar la resolución que funda la prisión preventiva en la gravedad del hecho",
+        "Omitir solicitar revisión periódica de la medida conforme art. 168 CPP PBA",
+        "No acreditar que los testigos ya declararon y la prueba ya fue preservada"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "prision_preventiva",
+        "riesgo_procesal",
+        "fuga",
+        "entorpecimiento",
+        "arraigo",
+        "cautelar",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

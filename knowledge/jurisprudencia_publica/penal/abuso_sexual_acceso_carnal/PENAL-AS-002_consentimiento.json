@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-002",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "consentimiento",
+    "criterio": "Consentimiento en delitos sexuales — ausencia como elemento normativo del tipo",
+    "regla_general": "En delitos sexuales con víctimas mayores de trece años, la ausencia de consentimiento libre y válido es un elemento constitutivo del tipo penal que debe ser acreditado por la acusación. El consentimiento es inválido únicamente cuando es obtenido mediante: violencia, amenaza, abuso coactivo de una relación de dependencia o aprovechamiento de incapacidad de consentir. La mera falta de resistencia activa no equivale a ausencia de consentimiento.",
+    "articulos_cpp": [
+        "CP, art. 119, párrafo 1",
+        "CN, art. 19 (autonomía personal)",
+        "CADH, art. 11 (vida privada)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CP art. 119 párr. 1 (circunstancias que anulan el consentimiento: violencia, amenaza, abuso coactivo, incapacidad); CN art. 19 (autonomía de la voluntad); CEDAW (para el análisis de la coerción en contextos de género)",
+        "jurisprudencia_referente": "CSJN, 'Góngora', Fallos 336:392 (2013); SCBA, P. 99.530 (2009) — análisis del consentimiento; Cámara Nacional Criminal, 'V., G.A. s/ abuso', LL 2015-B, p. 245 — consentimiento e invalidez",
+        "doctrina": "De Luca y López Casariego, 'Delitos sexuales', pp. 95-130; Donna, 'Delitos contra la integridad sexual', pp. 100-135; Tenca, 'Delitos sexuales', pp. 45-70"
+    },
+    "aplicacion_practica": "La defensa debe señalar: (a) si existe prueba objetiva de la coerción alegada (lesiones, amenaza documentada, relación de dependencia demostrada) o si la ausencia de consentimiento reposa únicamente en el relato de la víctima; (b) si la víctima mayor de 13 años tenía plena capacidad cognitiva y volitiva al momento del hecho; (c) si el contexto previo de la relación entre las partes es relevante para evaluar el consentimiento. El consentimiento posterior no valida el acto, pero la existencia de relación previa consensual es elemento de contexto relevante para el análisis del tipo subjetivo.",
+    "condiciones_aplicacion": [
+        "Víctima mayor de trece años al momento del hecho",
+        "Casos donde la coerción no dejó evidencia física y el relato es la prueba central"
+    ],
+    "riesgos_procesales": [
+        "No cuestionar si la coerción descrita por la víctima se encuadra en alguna de las modalidades taxativas del tipo",
+        "Omitir producir prueba sobre la capacidad de la víctima para consentir libremente",
+        "No examinar el contexto relacional previo como elemento de análisis del tipo subjetivo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "consentimiento",
+        "abuso_sexual",
+        "art_119_cp",
+        "coercion",
+        "autonomia",
+        "tipo_penal"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

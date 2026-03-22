@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-PRUEBA-007",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "coimputado_colaborador",
+    "criterio": "Testimonio de coimputado o imputado colaborador — valoración restrictiva y necesidad de corroboración",
+    "regla_general": "El testimonio del coimputado que declara contra el acusado, especialmente si obtuvo o espera obtener beneficios procesales (acuerdo de colaboración, reducción de pena, libertad), tiene valor probatorio reducido y requiere corroboración objetiva. Una condena basada exclusivamente o de manera determinante en el testimonio de un coimputado colaborador viola el estándar probatorio exigido.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "Ley 27.304 (arrepentidos), art. 6 (corroboración)",
+        "CN, art. 18 (in dubio pro reo)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 y 373; Ley 27.304 (imputados colaboradores — 'arrepentidos') art. 6 (la declaración del colaborador no puede ser la única prueba de la condena y debe ser corroborada); CN art. 18; CADH art. 8.2",
+        "jurisprudencia_referente": "CSJN, 'Quiroga', Fallos 327:5863 (2004); CSJN doctrina sobre testimonios de imputados en causas de crimen organizado; SCBA sobre valoración de testimonios de coimputados; TEDH, 'Luca vs. Italy' (comparado)",
+        "doctrina": "Cafferata Nores, 'La prueba', pp. 160-175 (testimonio de coimputado); Maier, 'DPP', T. II-B, §§ 2 y 3 (testigo impropio)"
+    },
+    "aplicacion_practica": "La defensa debe: (a) demostrar el beneficio procesal que el coimputado recibió o espera recibir por su declaración (esto crea el incentivo para mentir); (b) identificar contradicciones entre su declaración en la causa propia y la declaración en la causa del imputado; (c) señalar la ausencia de corroboración objetiva para cada punto central de su testimonio; (d) exigir que el testigo sea interrogado en el debate sobre los beneficios obtenidos. Conforme Ley 27.304, la sola declaración del colaborador no puede fundar condena.",
+    "condiciones_aplicacion": [
+        "Causas donde la acusación se apoya en declaraciones de coimputados que negociaron con la fiscalía",
+        "Casos de crimen organizado, tráfico de drogas o asociación ilícita con imputados colaboradores"
+    ],
+    "riesgos_procesales": [
+        "No identificar y probar el beneficio procesal que motivó la declaración del coimputado",
+        "Omitir contrainterrogar al coimputado sobre las inconsistencias entre sus distintas declaraciones",
+        "No señalar que la Ley 27.304 exige corroboración autónoma de la declaración del colaborador"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "coimputado",
+        "colaborador",
+        "arrepentido",
+        "corroboracion",
+        "valoracion_prueba",
+        "beneficio_procesal"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

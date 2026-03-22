@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-007",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "retractacion_victima",
+    "criterio": "Retractación o cambio de versión de la denunciante — efectos sobre la prueba de cargo",
+    "regla_general": "Cuando la presunta víctima se retracta de la denuncia original o introduce modificaciones sustanciales en su relato en declaraciones posteriores, este cambio afecta la credibilidad de la acusación y debe ser evaluado conforme al principio de in dubio pro reo. El tribunal no puede ignorar la retractación ni descartarla automáticamente como producto de presión externa sin prueba de esa presión.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (in dubio pro reo)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 (sana crítica) y 373 (motivación de sentencia); CN art. 18 (garantías); principio in dubio pro reo",
+        "jurisprudencia_referente": "SCBA, P. 107.618 (2011) — retractación y su incidencia en la condena; Cámara de Apelaciones de San Nicolás, 'P., V.M.' (2015) — análisis de retractación en contexto de conflicto de pareja; SCBA, P. 120.445 (2017) — motivación de rechazo de retractación",
+        "doctrina": "Cafferata Nores, 'La prueba en el proceso penal', pp. 155-165 (testimonio variable); Falcone, 'Garantías del imputado', pp. 65-80"
+    },
+    "aplicacion_practica": "Ante una retractación, la defensa debe: (a) documentarla formalmente en el proceso (incorporar la nueva declaración o comunicación fehaciente de la víctima); (b) señalar al tribunal que no puede descartarla sin prueba concreta de la presión alegada; (c) analizar si las contradicciones son en aspectos centrales del hecho (lo que afecta la credibilidad del relato inicial) o en detalles accesorios. La retractación parcial (cambio de detalles relevantes como fecha, lugar, modo) también afecta la solidez probatoria aunque no sea una negación total del hecho.",
+    "condiciones_aplicacion": [
+        "Casos donde la víctima modifica, minimiza o niega la denuncia original en alguna declaración posterior",
+        "Supuestos donde la víctima envía comunicaciones al imputado inconsistentes con el relato acusatorio"
+    ],
+    "riesgos_procesales": [
+        "No incorporar formalmente la retractación al proceso si se produce antes del debate",
+        "Omitir señalar en el alegato final las contradicciones entre la denuncia y la declaración en juicio",
+        "No impugnar la sentencia que descarta la retractación sin fundar la existencia de presión externa"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "retractacion",
+        "cambio_version",
+        "abuso_sexual",
+        "credibilidad",
+        "in_dubio_pro_reo",
+        "valoracion_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

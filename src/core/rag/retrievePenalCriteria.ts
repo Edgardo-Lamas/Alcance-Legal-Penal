@@ -162,6 +162,7 @@ export async function retrieveCivilCriteria(
     const { data, error } = await supabase.rpc(rpcName, {
         query_embedding: query.embedding,
         match_count: TOP_K,
+        filter_fuero: 'penal',
         filter_instituto: options.filterInstituto ?? null,
         filter_subtipo: options.filterSubtipo ?? null
     });

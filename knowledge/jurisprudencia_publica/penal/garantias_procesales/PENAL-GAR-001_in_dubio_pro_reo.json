@@ -1,0 +1,44 @@
+{
+    "id": "PENAL-GAR-001",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "in_dubio_pro_reo",
+    "criterio": "In dubio pro reo — absolución ante duda razonable",
+    "regla_general": "En caso de duda razonable sobre la existencia del hecho imputado, la participación del imputado o cualquier elemento del tipo penal, el tribunal debe absolver. La condena exige certeza positiva apodíctica, nunca mera probabilidad. La duda, aunque sea menor, beneficia siempre al imputado.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.2",
+        "PIDCP, art. 14.2",
+        "CPP PBA (Ley 11.922), art. 2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH art. 8.2; PIDCP art. 14.2; CPP PBA (Ley 11.922) art. 2",
+        "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 (2005); CSJN, 'Slezack', Fallos 311:512 (1988); SCBA, P. 99.613 (2009)",
+        "doctrina": "Maier, 'Derecho Procesal Penal', T. I, § 6.h, pp. 490-500; Binder, 'Introducción al Derecho Procesal Penal', pp. 124-130; Cafferata Nores, 'La prueba en el proceso penal', pp. 8-15"
+    },
+    "aplicacion_practica": "Resulta ilegítimo condenar cuando: (a) la pericia médica no es concluyente o admite hipótesis alternativas; (b) el testimonio único carece de corroboración objetiva periférica; (c) la evidencia digital no tiene trazabilidad verificada y puede haber sido alterada; (d) subsisten versiones contradictorias sin elementos objetivos que permitan dirimir cuál es verdadera. La defensa debe señalar expresamente qué hipótesis alternativa razonable subsiste y el tribunal debe hacerse cargo de ella en la sentencia.",
+    "condiciones_aplicacion": [
+        "Existencia de prueba de cargo que genera al menos probabilidad de culpabilidad",
+        "Subsistencia de hipótesis alternativa razonable de inocencia no refutada por la acusación",
+        "Imposibilidad de alcanzar certeza apodíctica en base a la prueba producida"
+    ],
+    "riesgos_procesales": [
+        "Condenar sobre probabilidad sin declarar expresamente la certeza alcanzada",
+        "Omitir tratar la hipótesis alternativa de inocencia planteada por la defensa",
+        "Invertir la carga de la prueba exigiendo al imputado demostrar su inocencia",
+        "Tomar el silencio del imputado como indicio de culpabilidad"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "in_dubio_pro_reo",
+        "presuncion_inocencia",
+        "duda_razonable",
+        "absolucion",
+        "certeza",
+        "carga_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

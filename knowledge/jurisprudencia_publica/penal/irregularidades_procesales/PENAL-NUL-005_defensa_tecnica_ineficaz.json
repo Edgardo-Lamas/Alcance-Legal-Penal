@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-NUL-005",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "defensa_tecnica_ineficaz",
+    "criterio": "Defensa técnica ineficaz — nulidad de las actuaciones y derecho a nuevo juicio",
+    "regla_general": "La garantía de defensa en juicio exige no sólo la presencia formal de un abogado, sino su actuación efectiva, diligente y técnicamente razonada. Cuando la actuación del defensor fue tan deficiente que privó al imputado de una defensa real, las actuaciones son nulas. El estándar de ineficacia requiere demostrar: (a) que el desempeño del defensor fue manifiestamente deficiente; y (b) que esa deficiencia tuvo incidencia concreta en el resultado desfavorable para el imputado.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, arts. 8.2.d y 8.2.e",
+        "CPP PBA (Ley 11.922), arts. 89 y 90",
+        "PIDCP, art. 14.3.d"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CN art. 18; CADH arts. 8.2.d (defensa por abogado de su elección) y 8.2.e (asistencia letrada irrenunciable); CPP PBA (Ley 11.922) arts. 89 (nulidad por violación a garantías constitucionales) y 90; PIDCP art. 14.3.d; estándar de 'Strickland vs. Washington' (SCOTUS, 1984) adaptado a la doctrina argentina",
+        "jurisprudencia_referente": "CSJN, 'Scilingo', Fallos 323:929 (2000); CSJN, 'Núñez', Fallos 327:5095 (2004) — defensa técnica real; SCBA, P. 81.615 (2004) — defensa ineficaz como causal de nulidad; SCBA, P. 112.537 (2013) — estándar de deficiencia manifiesta",
+        "doctrina": "Binder, 'El incumplimiento de las formas procesales', pp. 90-115; Maier, 'DPP', T. I, § 6.c; Falcone, 'La defensa técnica y sus garantías'"
+    },
+    "aplicacion_practica": "Conductas que pueden configurar defensa ineficaz: (a) no interrogar a testigos clave de la acusación o no ofrecer testigos de descargo disponibles; (b) no impugnar prueba obtenida ilícitamente cuando era manifiesta la ilicitud; (c) no plantear nulidades evidentes que beneficiaban al imputado; (d) no apelar resoluciones claramente desfavorables sin explicación técnica; (e) no ofrecer peritos de parte en causas con prueba técnica central. Para plantear la ineficacia del defensor anterior, la defensa actual debe demostrar concretamente qué habría ocurrido si se hubiera actuado con diligencia (el 'perjuicio concreto').",
+    "condiciones_aplicacion": [
+        "Casos donde el imputado fue asistido por defensor oficial con carga de trabajo excesiva",
+        "Supuestos donde el defensor no ofreció prueba de descargo disponible o no impugnó prueba ilícita manifiesta"
+    ],
+    "riesgos_procesales": [
+        "No documentar durante el proceso las instrucciones dadas al defensor anterior y su incumplimiento",
+        "Omitir demostrar el perjuicio concreto causado por la ineficacia (no basta la deficiencia abstracta)",
+        "Plantear la ineficacia sin precisar qué prueba o qué planteo habría cambiado el resultado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "defensa_tecnica_ineficaz",
+        "asistencia_letrada",
+        "nulidad",
+        "perjuicio_concreto",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

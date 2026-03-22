@@ -1,0 +1,376 @@
+[
+  {
+    "id": "PENAL_CRITERIO_001",
+    "fuero": "penal_pba",
+    "tema": "presuncion_inocencia",
+    "etiquetas": ["garantias", "presuncion_inocencia", "carga_de_la_prueba"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.2 CADH; art. 14.2 PIDCP; art. 1 CPP PBA (Ley 11.922)",
+      "jurisprudencia_referente": "CSJN 'Casal, Matías Eugenio' (2005), Fallos 328:3399; CSJN 'Mattei' (1968); a completar por el abogado con fallos SCBA relevantes",
+      "doctrina": "Maier, Julio B.J., 'Derecho Procesal Penal', Tomo I; Zaffaroni, Eugenio R., 'Tratado de Derecho Penal'"
+    },
+    "texto_regla": "Toda persona imputada de un delito es inocente hasta que una sentencia firme demuestre lo contrario mediante prueba suficiente producida legalmente. La carga de probar la culpabilidad corresponde exclusivamente a la acusación. El imputado no tiene que probar su inocencia.",
+    "aplicacion_practica": "En casos de abuso sexual donde la única prueba es el testimonio de la víctima, la presunción de inocencia exige que ese testimonio sea evaluado con los mismos criterios de cualquier otra prueba, sin presunción previa de veracidad. Frases del tipo 'hay que creerle a la víctima' invierten la carga probatoria y violan esta garantía.",
+    "referencias": [
+      "Art. 18 Constitución Nacional Argentina",
+      "Art. 8.2 Convención Americana sobre Derechos Humanos",
+      "Art. 14.2 Pacto Internacional de Derechos Civiles y Políticos",
+      "Art. 1 CPP PBA (Ley 11.922)",
+      "CSJN Fallos 328:3399 ('Casal')"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_002",
+    "fuero": "penal_pba",
+    "tema": "in_dubio_pro_reo",
+    "etiquetas": ["garantias", "duda_razonable", "in_dubio_pro_reo"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 1 CPP PBA (Ley 11.922); art. 8.2 CADH",
+      "jurisprudencia_referente": "CSJN 'Acosta' (a completar número de fallo); SCBA fallos sobre aplicación del in dubio (a completar por el abogado)",
+      "doctrina": "Maier, Julio B.J., 'Derecho Procesal Penal', Tomo I, Fundamentos; Binder, Alberto, 'Introducción al Derecho Procesal Penal'"
+    },
+    "texto_regla": "Cuando después de valorar toda la prueba subsiste una duda razonable sobre la culpabilidad del imputado, el juez debe resolver a favor del acusado. La duda no es indecisión del juez: es el estado en que se encuentra cuando la prueba no alcanza el estándar de certeza exigido para condenar. No puede condenarse a quien se duda.",
+    "aplicacion_practica": "Si en un caso de abuso sexual el relato de la víctima presenta inconsistencias cronológicas, contradicciones con otras pruebas o fue precedido de múltiples declaraciones que pudieron contaminarlo, esas circunstancias generan duda razonable que impide condena. El juez que condena 'por si acaso' viola el in dubio pro reo.",
+    "referencias": [
+      "Art. 18 CN",
+      "Art. 1 CPP PBA",
+      "Art. 8.2 CADH",
+      "Maier, 'Derecho Procesal Penal', Tomo I"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_003",
+    "fuero": "penal_pba",
+    "tema": "estandar_probatorio_condena",
+    "etiquetas": ["garantias", "certeza", "estandar_probatorio", "condena"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8 CADH; art. 371 CPP PBA",
+      "jurisprudencia_referente": "CSJN 'Casal' (2005) Fallos 328:3399; a completar con fallos de SCBA sobre estándar de condena",
+      "doctrina": "Ferrer Beltrán, Jordi, 'La valoración racional de la prueba'; Maier, Julio B.J., Tomo I"
+    },
+    "texto_regla": "Para condenar se requiere certeza moral sobre la culpabilidad, no mera probabilidad. La certeza se alcanza cuando la hipótesis acusatoria es la única compatible con la totalidad de la prueba disponible y todas las hipótesis alternativas razonables han sido descartadas. La probabilidad, verosimilitud o convicción subjetiva del juez no alcanzan para condenar.",
+    "aplicacion_practica": "En casos de abuso sexual basados en testimonio único sin prueba material, la condena requiere que el juez explique por qué la hipótesis de que el hecho ocurrió es la única compatible con toda la evidencia, incluyendo la hipótesis de denuncia falsa o relato distorsionado. Si no se descarta explícitamente la hipótesis alternativa, la certeza no está acreditada.",
+    "referencias": [
+      "Art. 371 CPP PBA",
+      "CSJN Fallos 328:3399",
+      "Ferrer Beltrán, 'La valoración racional de la prueba', Marcial Pons"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_004",
+    "fuero": "penal_pba",
+    "tema": "recurso_efectivo_revision_amplia",
+    "etiquetas": ["garantias", "recurso", "revision_amplia", "doble_instancia"],
+    "fuente": {
+      "norma": "Art. 8.2.h CADH; art. 14.5 PIDCP; art. 18 CN; arts. 417 y ss. CPP PBA",
+      "jurisprudencia_referente": "CSJN 'Casal, Matías Eugenio' (2005) Fallos 328:3399 — doctrina del máximo rendimiento revisorio; CIDH 'Mohamed c. Argentina' (2012)",
+      "doctrina": "Maier, Julio B.J.; Pastor, Daniel R., 'La nueva imagen de la casación penal'"
+    },
+    "texto_regla": "El condenado tiene derecho a que un tribunal superior revise íntegramente la sentencia, incluyendo la valoración de los hechos y la prueba. No basta la revisión formal de errores de derecho. El tribunal revisor debe agotar el máximo rendimiento posible del control de la sentencia, limitado solo por lo que es imposible reproducir (inmediación).",
+    "aplicacion_practica": "Si la Cámara de Apelaciones o la Sala de Casación confirma la condena diciendo solo 'comparto la valoración probatoria del juez de juicio' sin analizar en detalle cada prueba cuestionada, incumple la doctrina Casal y viola el art. 8.2.h CADH. Esto habilita recurso extraordinario ante SCBA y eventualmente ante organismos internacionales.",
+    "referencias": [
+      "Art. 8.2.h CADH",
+      "Art. 14.5 PIDCP",
+      "CSJN Fallos 328:3399 ('Casal')",
+      "CIDH 'Mohamed c. Argentina', sentencia 23/11/2012"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_005",
+    "fuero": "penal_pba",
+    "tema": "congruencia_factica",
+    "etiquetas": ["debido_proceso", "congruencia", "nulidad", "derecho_defensa"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.2.b CADH; arts. 335 y 371 CPP PBA",
+      "jurisprudencia_referente": "CSJN 'Quiroga' (a completar número); SCBA fallos sobre congruencia (a completar por el abogado)",
+      "doctrina": "Maier, Julio B.J., 'Derecho Procesal Penal', Tomo II; Palazzi, Pablo"
+    },
+    "texto_regla": "La sentencia solo puede condenar por los hechos descriptos en la acusación. Si el juez condena por hechos distintos, más graves, en fechas diferentes o con modalidades no acusadas, viola el principio de congruencia y el derecho de defensa: el imputado no pudo defenderse de algo que no sabía que se le imputaba.",
+    "aplicacion_practica": "En abusos sexuales con imputación de hechos 'en período indeterminado' o 'en reiteradas oportunidades', la defensa debe exigir que la acusación especifique al menos un hecho concreto con fecha aproximada. Una condena por hechos indeterminados impide preparar la defensa y viola el art. 8.2.b CADH (derecho a conocer la imputación).",
+    "referencias": [
+      "Art. 18 CN",
+      "Art. 8.2.b CADH",
+      "Arts. 335 y 371 CPP PBA",
+      "Maier, 'Derecho Procesal Penal', Tomo II, Parte General"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_006",
+    "fuero": "penal_pba",
+    "tema": "testimonio_unico_victima",
+    "etiquetas": ["prueba", "testimonio", "victima", "valoracion_probatoria"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.2 CADH; art. 210 y ss. CPP PBA",
+      "jurisprudencia_referente": "SCBA fallos sobre testimonio único en abuso sexual (a completar por el abogado); CSJN fallos sobre arbitrariedad probatoria",
+      "doctrina": "Gorphe, François, 'La crítica del testimonio'; Undeutsch, Udo (creador del SVA); Manzanero, Antonio L., 'Psicología del Testimonio'"
+    },
+    "texto_regla": "El testimonio de la víctima puede ser prueba suficiente para condenar, pero solo cuando supera un análisis riguroso de credibilidad que incluya: ausencia de motivo de falsedad, persistencia en la incriminación, coherencia interna del relato, y corroboración con otros elementos periféricos. Ninguno de estos factores es suficiente solo; deben concurrir y ser fundamentados.",
+    "aplicacion_practica": "Cuando la denuncia de abuso sexual surge en el contexto de un conflicto de familia (separación, disputa de tenencia), el motivo de falsedad está presente y debe ser analizado explícitamente. La condena que omite tratar la posibilidad de denuncia instrumentalizada adolece de arbitrariedad probatoria. El tribunal debe explicar por qué descartó esa hipótesis.",
+    "referencias": [
+      "Art. 210 CPP PBA y siguientes",
+      "Gorphe, 'La crítica del testimonio', EJEA",
+      "Manzanero, 'Psicología del Testimonio', Pirámide",
+      "A completar con fallos SCBA sobre testimonio único en abuso sexual"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_007",
+    "fuero": "penal_pba",
+    "tema": "contexto_conflicto_familiar_denuncia",
+    "etiquetas": ["prueba", "denuncia_falsa", "conflicto_familiar", "motivo_falsedad"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.2 CADH; arts. 119, 120 CP",
+      "jurisprudencia_referente": "A completar por el abogado con fallos de Cámaras penales de PBA sobre denuncias en contexto de separación",
+      "doctrina": "Vaccaro, Selva y Barea, Consuelo, 'El pretendido síndrome de alienación parental'; Intebi, Irene V., 'Abuso sexual intrafamiliar'; Landeira, Raúl (crítica al uso del SAP)"
+    },
+    "texto_regla": "Cuando una denuncia de abuso sexual surge durante o inmediatamente después de una separación conyugal, un conflicto de tenencia o visitas, o cuando el denunciante tiene interés directo en el resultado del proceso penal, el contexto de conflicto es un indicador de posible motivo de falsedad que el tribunal debe analizar obligatoriamente antes de condenar.",
+    "aplicacion_practica": "Si la denuncia fue presentada días después de una separación conflictiva, o si el adulto que realizó la denuncia disputa la tenencia del menor, la defensa debe documentar la secuencia temporal (primero el conflicto, después la denuncia) y exigir que el tribunal explique expresamente por qué descartó la hipótesis de uso instrumental del proceso penal.",
+    "referencias": [
+      "Arts. 119 y 120 Código Penal",
+      "Intebi, Irene V., 'Abuso sexual intrafamiliar', Granica",
+      "A completar con jurisprudencia local sobre conflicto familiar y valoración del testimonio"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_008",
+    "fuero": "penal_pba",
+    "tema": "corroboracion_periferica",
+    "etiquetas": ["prueba", "corroboracion", "testimonio", "valoracion_probatoria"],
+    "fuente": {
+      "norma": "Art. 210 CPP PBA; art. 18 CN",
+      "jurisprudencia_referente": "A completar con fallos SCBA que exigen corroboración en abuso sexual",
+      "doctrina": "Nieva Fenoll, Jordi, 'La valoración de la prueba'; Ferrer Beltrán, Jordi"
+    },
+    "texto_regla": "La corroboración periférica del testimonio único no requiere que haya otra prueba directa del hecho (eso lo convertiría en prueba principal). Consiste en elementos externos que confirman aspectos del relato que la víctima no pudo conocer por otra fuente, que son verificables objetivamente, y que son consistentes con lo declarado. La ausencia de signos físicos no equivale a corroboración negativa en todos los casos.",
+    "aplicacion_practica": "En abuso sexual sin lesiones físicas, la ausencia de evidencia médica no prueba ni descarta el hecho. Pero tampoco la sola declaración de la víctima, sin ningún elemento corroborante, puede sostener una condena sin análisis exhaustivo de credibilidad. La defensa debe señalar qué elementos corroborantes exigió y no encontró la acusación.",
+    "referencias": [
+      "Art. 210 CPP PBA",
+      "Ferrer Beltrán, 'La valoración racional de la prueba'",
+      "Nieva Fenoll, 'La valoración de la prueba', Marcial Pons"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_009",
+    "fuero": "penal_pba",
+    "tema": "pericia_psicologica_metodologia",
+    "etiquetas": ["pericia", "psicologia", "metodologia", "SVA", "CBCA", "credibilidad"],
+    "fuente": {
+      "norma": "Art. 244 y ss. CPP PBA; art. 18 CN",
+      "jurisprudencia_referente": "A completar con fallos que exigen metodología validada en pericia psicológica forense",
+      "doctrina": "Steller, Max y Köhnken, Günter (creadores del SVA/CBCA); Lamb, Michael E. (Protocolo NICHD); Manzanero, Antonio L.; Intebi, Irene V."
+    },
+    "texto_regla": "Una pericia psicológica forense sobre la víctima de abuso sexual tiene valor probatorio solo si utilizó metodología científicamente validada para el análisis de credibilidad del testimonio (ej: SVA/CBCA — Statement Validity Analysis / Criteria Based Content Analysis) o protocolos internacionales equivalentes. Una pericia basada solo en la impresión clínica del perito, sin metodología explicitada, carece de sustento científico suficiente.",
+    "aplicacion_practica": "Si la pericia psicológica oficial dice que el relato es 'verosímil' o 'creíble' sin detallar qué metodología usó, cuántas entrevistas realizó, qué instrumentos aplicó y qué criterios evaluó, la defensa puede impugnarla por falta de sustento técnico. El perito debe explicar su método, no solo su conclusión.",
+    "referencias": [
+      "Arts. 244 y siguientes CPP PBA",
+      "Steller y Köhnken, 'Criteria-Based Content Analysis', en Raskin (ed.)",
+      "Lamb et al., 'Tell Me What Happened', Wiley (Protocolo NICHD)",
+      "Intebi, 'Abuso sexual intrafamiliar', Granica"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_010",
+    "fuero": "penal_pba",
+    "tema": "limites_perito_psicologo_credibilidad",
+    "etiquetas": ["pericia", "psicologia", "usurpacion_funcion_judicial", "credibilidad"],
+    "fuente": {
+      "norma": "Art. 244 y ss. CPP PBA; art. 18 CN",
+      "jurisprudencia_referente": "A completar con fallos que limitan la competencia del perito psicólogo en declaración de credibilidad",
+      "doctrina": "Nieva Fenoll, Jordi, 'La valoración de la prueba'; Manzanero, Antonio L.; Gorphe, François"
+    },
+    "texto_regla": "El perito psicólogo puede aportar datos sobre las condiciones del testimoniante (madurez, sugestionabilidad, estado emocional, coherencia del relato) pero NO puede concluir que 'el hecho ocurrió', que 'el imputado es culpable' o que 'el relato es verdadero'. Esas conclusiones corresponden exclusivamente al juez. Cuando el perito invade la función del juez, su dictamen excede el objeto de la pericia y debe ser valorado con ese límite.",
+    "aplicacion_practica": "Si en el juicio el perito psicólogo declaró que 'los indicadores confirman el abuso' o que 'el relato es genuino', la defensa debe señalar que esa es una conclusión jurídica, no psicológica, y que el perito excedió su competencia. El juez que adopta esa conclusión como propia renuncia a su función de valoración y delega indebidamente en el perito.",
+    "referencias": [
+      "Arts. 244 y siguientes CPP PBA",
+      "Nieva Fenoll, 'La valoración de la prueba', Marcial Pons",
+      "Gorphe, 'La crítica del testimonio', EJEA"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_011",
+    "fuero": "penal_pba",
+    "tema": "camara_gesell_protocolo",
+    "etiquetas": ["prueba", "camara_gesell", "entrevista_forense", "NICHD", "menor"],
+    "fuente": {
+      "norma": "Art. 102 bis CPP PBA; Ley 13.298 PBA; Resolución PGN a completar",
+      "jurisprudencia_referente": "A completar con fallos de Cámaras PBA sobre nulidad por Gesell sin protocolo; CSJN fallos sobre declaración de menores",
+      "doctrina": "Lamb, Michael E. et al., 'Tell Me What Happened' (Protocolo NICHD); Intebi, Irene V.; Ceci, Stephen J. y Bruck, Maggie, 'Jeopardy in the Courtroom'"
+    },
+    "texto_regla": "La entrevista en Cámara Gesell debe realizarse por profesional especializado en entrevistas forenses a menores, siguiendo protocolo validado (NICHD o equivalente), en una sola entrevista o el mínimo necesario, sin preguntas sugestivas ni cerradas, con registro audiovisual íntegro. La defensa tiene derecho a proponer preguntas antes de la entrevista y a controlar el acto.",
+    "aplicacion_practica": "Si antes de la Cámara Gesell el menor ya declaró ante la policía, médicos, psicólogos de guardia o familiares, esas declaraciones previas pueden haber contaminado el relato. La defensa debe documentar todas las declaraciones anteriores y evaluar si el relato en Gesell reproduce información obtenida por sugestión. Si el video no está disponible en su totalidad, existe fundamento para impugnar la prueba.",
+    "referencias": [
+      "Art. 102 bis CPP PBA",
+      "Lamb et al., 'Tell Me What Happened', Wiley",
+      "Ceci y Bruck, 'Jeopardy in the Courtroom', APA",
+      "Intebi, 'Abuso sexual intrafamiliar', Granica"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_012",
+    "fuero": "penal_pba",
+    "tema": "contaminacion_testimonio_declaraciones_previas",
+    "etiquetas": ["prueba", "testimonio", "contaminacion", "sugestionabilidad", "menor"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 102 bis CPP PBA",
+      "jurisprudencia_referente": "A completar con fallos sobre contaminación del relato del menor por entrevistas repetidas",
+      "doctrina": "Ceci, Stephen J. y Bruck, Maggie, 'Jeopardy in the Courtroom'; Manzanero, Antonio L.; Poole, Debra y Lamb, Michael"
+    },
+    "texto_regla": "Cada declaración que un menor realiza sobre hechos de abuso antes de la entrevista forense oficial aumenta el riesgo de contaminación del relato: el menor puede incorporar información sugerida por el adulto entrevistador, consolidar un relato que fue construido progresivamente, o perder la distinción entre lo vivido y lo que le contaron. El número de entrevistas previas es inversamente proporcional a la confiabilidad del relato final.",
+    "aplicacion_practica": "La defensa debe solicitar y obtener registro de todas las conversaciones y entrevistas que tuvo el menor antes de la Cámara Gesell: con el adulto que realizó la denuncia, con pediatras, psicólogos de guardia, asistentes sociales y policías. Si hubo múltiples entrevistas previas sin protocolo, el relato en Gesell puede ser el producto de esa contaminación acumulada.",
+    "referencias": [
+      "Ceci y Bruck, 'Jeopardy in the Courtroom', APA",
+      "Poole y Lamb, 'Investigative Interviews of Children', APA",
+      "Art. 102 bis CPP PBA"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_013",
+    "fuero": "penal_pba",
+    "tema": "prueba_digital_cadena_custodia",
+    "etiquetas": ["prueba", "digital", "cadena_custodia", "autenticidad", "pericia_informatica"],
+    "fuente": {
+      "norma": "Ley 26.388 (delitos informáticos); art. 210 y ss. CPP PBA; Ley 25.506 (firma digital)",
+      "jurisprudencia_referente": "A completar con fallos sobre valor probatorio de capturas de pantalla y mensajes digitales",
+      "doctrina": "Palazzi, Pablo, 'Los delitos informáticos en el Código Penal'; Correa, Carlos M."
+    },
+    "texto_regla": "Los mensajes digitales (WhatsApp, SMS, correos, redes sociales) y capturas de pantalla no tienen valor probatorio autónomo si no se acreditó: (1) autenticidad del soporte mediante pericia informática sobre el dispositivo original, (2) integridad del contenido (no fue alterado), (3) autoría del mensaje (que fue enviado por quien se dice). Una impresión de pantalla sin pericia técnica es un documento de valor indiciario únicamente.",
+    "aplicacion_practica": "Si la acusación presentó capturas de pantalla de conversaciones como prueba de contacto inapropiado o amenazas, la defensa debe exigir la presentación del dispositivo original y la realización de pericia informática. Si la pericia no se realizó, o si no se verificó que los mensajes no fueron manipulados, corresponde impugnar el valor probatorio de esa prueba.",
+    "referencias": [
+      "Ley 26.388",
+      "Art. 210 CPP PBA y siguientes",
+      "Palazzi, 'Los delitos informáticos en el Código Penal', Abeledo Perrot"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_014",
+    "fuero": "penal_pba",
+    "tema": "imparcialidad_tribunal",
+    "etiquetas": ["imparcialidad", "garantias", "jurado", "debido_proceso"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.1 CADH; art. 14.1 PIDCP; arts. 47 y ss. CPP PBA",
+      "jurisprudencia_referente": "TEDH 'Piersack c. Bélgica' (1982); CSJN fallos sobre imparcialidad objetiva (a completar por el abogado); CIDH fallos sobre imparcialidad",
+      "doctrina": "Maier, Julio B.J.; Ferrajoli, Luigi, 'Derecho y Razón'"
+    },
+    "texto_regla": "La imparcialidad del tribunal tiene una dimensión subjetiva (el juez no tiene prejuicio personal) y una objetiva (el tribunal no ofrece garantías suficientes para excluir toda duda legítima sobre su imparcialidad). En casos de alta exposición mediática o con fuerte carga emocional, la dimensión objetiva puede estar comprometida aunque el juez no tenga prejuicio subjetivo consciente.",
+    "aplicacion_practica": "Si el juicio tuvo cobertura mediática intensa previa a la sentencia, si el fiscal utilizó en su alegato argumentos ideológicos ('creerle siempre a la víctima', 'perspectiva de género como presunción de culpabilidad') y el tribunal no hizo reservas, o si el jurado fue expuesto a esa presión, corresponde señalar el riesgo de parcialidad objetiva como agravio recursivo.",
+    "referencias": [
+      "Art. 8.1 CADH",
+      "Arts. 47 y siguientes CPP PBA",
+      "TEDH 'Piersack c. Bélgica', 01/10/1982",
+      "Ferrajoli, 'Derecho y Razón', Trotta"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_015",
+    "fuero": "penal_pba",
+    "tema": "doble_valoracion_agravantes",
+    "etiquetas": ["pena", "agravantes", "non_bis_in_idem", "proporcionalidad"],
+    "fuente": {
+      "norma": "Art. 18 CN (non bis in idem); arts. 40, 41 y 119 CP; art. 8 CADH",
+      "jurisprudencia_referente": "CSJN fallos sobre doble valoración de agravantes (a completar por el abogado); SCBA fallos sobre mensuración de la pena",
+      "doctrina": "Zaffaroni, Eugenio R., Alagia, Alejandro y Slokar, Alejandro, 'Manual de Derecho Penal. Parte General'"
+    },
+    "texto_regla": "Cuando el legislador ya incorporó una circunstancia como agravante específica del tipo penal (ej: en el art. 119 CP el vínculo de convivencia, la edad de la víctima, o el uso de autoridad), el juez no puede volver a valorar esa misma circunstancia al momento de fijar la pena dentro de la escala. Hacerlo viola el principio de non bis in idem en su dimensión punitiva.",
+    "aplicacion_practica": "Si el imputado fue condenado por abuso sexual agravado por convivencia (art. 119 inc. f CP) y al mensurar la pena el juez agravó la escala mencionando nuevamente 'la convivencia con la víctima' como circunstancia negativa del art. 41 CP, existe doble valoración prohibida. La pena podría reducirse en revisión.",
+    "referencias": [
+      "Arts. 40 y 41 Código Penal",
+      "Art. 119 Código Penal (incisos de agravación)",
+      "Art. 18 CN",
+      "Zaffaroni, Alagia y Slokar, 'Manual de Derecho Penal. Parte General', Ediar"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_016",
+    "fuero": "penal_pba",
+    "tema": "arbitrariedad_probatoria_omision_descargo",
+    "etiquetas": ["prueba", "arbitrariedad", "prueba_descargo", "defensa"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.2.f CADH; art. 210 CPP PBA",
+      "jurisprudencia_referente": "CSJN doctrina de arbitrariedad de sentencias (Fallos 'in re' a completar); CSJN 'Storani de Boidanich' y otros sobre prueba ignorada",
+      "doctrina": "Sagüés, Néstor P., 'El recurso extraordinario federal'; Maier, Julio B.J."
+    },
+    "texto_regla": "La sentencia que omite tratar, valora en forma aparente o descarta sin fundamentación la prueba de descargo ofrecida por la defensa incurre en arbitrariedad probatoria. El juez tiene obligación de pronunciarse sobre cada elemento probatorio incorporado, especialmente cuando contradice la hipótesis acusatoria. La omisión convierte a la sentencia en arbitraria y habilita el recurso extraordinario.",
+    "aplicacion_practica": "Si la defensa presentó testigos de coartada, documentación de imposibilidad material, pericia psicológica propia o historial de conflicto familiar previo a la denuncia, y la sentencia no menciona esa prueba o la descarta con una frase genérica ('no se le otorga credibilidad'), existe arbitrariedad probatoria que funda recurso.",
+    "referencias": [
+      "Art. 18 CN",
+      "Art. 8.2.f CADH (derecho a interrogar testigos y presentar prueba)",
+      "Art. 210 CPP PBA",
+      "Sagüés, 'El recurso extraordinario federal', Astrea"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_017",
+    "fuero": "penal_pba",
+    "tema": "nulidad_acto_procesal_defensa_afectada",
+    "etiquetas": ["nulidad", "debido_proceso", "defensa", "acto_procesal"],
+    "fuente": {
+      "norma": "Arts. 201 y ss. CPP PBA; art. 18 CN; art. 8 CADH",
+      "jurisprudencia_referente": "A completar con fallos SCBA sobre nulidades procesales en abuso sexual",
+      "doctrina": "Clariá Olmedo, Jorge A., 'Tratado de Derecho Procesal Penal'; D'Albora, Francisco J."
+    },
+    "texto_regla": "Los actos procesales son nulos cuando su realización violó una forma establecida bajo sanción de nulidad y esa violación afectó el derecho de defensa. En materia de nulidades, no hay nulidad sin perjuicio: la defensa debe demostrar qué garantía concreta fue lesionada y qué hubiera podido hacer de no mediar la violación. La nulidad no es un recurso formal sino una herramienta de tutela sustancial.",
+    "aplicacion_practica": "Si la Cámara Gesell se realizó sin notificar a la defensa, si el acusado no pudo proponer preguntas, si la pericia psicológica fue producida sin posibilidad de contrapericia, o si se incorporó documentación sin vista a la defensa, existe nulidad por violación al derecho de defensa. Debe acreditarse el perjuicio concreto sufrido.",
+    "referencias": [
+      "Arts. 201 y siguientes CPP PBA",
+      "Art. 18 CN",
+      "Art. 8 CADH",
+      "D'Albora, 'Código Procesal Penal de la Nación anotado', Abeledo Perrot"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_018",
+    "fuero": "penal_pba",
+    "tema": "perspectiva_genero_limites_proceso_penal",
+    "etiquetas": ["perspectiva_genero", "imparcialidad", "garantias", "debido_proceso"],
+    "fuente": {
+      "norma": "Convención de Belém do Pará; CEDAW; Ley 27.499 (Ley Micaela); art. 18 CN",
+      "jurisprudencia_referente": "CSJN fallos sobre perspectiva de género (a completar por el abogado); CIDH 'González y otras c. México' (Campo Algodonero)",
+      "doctrina": "Pitch, Tamar; Larrauri, Elena, 'Mujeres, Derecho Penal y Criminología'"
+    },
+    "texto_regla": "La perspectiva de género es una herramienta interpretativa válida y obligatoria para contextualizar situaciones de poder y vulnerabilidad en casos de violencia. Sin embargo, no puede funcionar como presunción de culpabilidad del imputado ni como inversión de la carga de la prueba. Aplicar perspectiva de género significa garantizar que la víctima no sea prejuzgada negativamente, no que el imputado sea prejuzgado positivamente como culpable.",
+    "aplicacion_practica": "Si la sentencia aplica 'perspectiva de género' como razón para dar por acreditado el hecho sin analizar la prueba con los estándares habituales, o si el fiscal argumentó que 'no hay razón para dudar de la víctima' como sustituto del análisis probatorio, corresponde señalar que la perspectiva de género no deroga la presunción de inocencia ni el in dubio pro reo.",
+    "referencias": [
+      "Convención de Belém do Pará (Ley 24.632)",
+      "Art. 18 CN",
+      "Art. 8.2 CADH",
+      "Larrauri, 'Mujeres, Derecho Penal y Criminología', Siglo XXI"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_019",
+    "fuero": "penal_pba",
+    "tema": "indicadores_relato_no_espontaneo",
+    "etiquetas": ["prueba", "testimonio", "relato_inducido", "menor", "sugestionabilidad"],
+    "fuente": {
+      "norma": "Art. 102 bis CPP PBA; art. 18 CN",
+      "jurisprudencia_referente": "A completar con fallos sobre relato inducido o contaminado en menores",
+      "doctrina": "Ceci, Stephen J. y Bruck, Maggie, 'Jeopardy in the Courtroom'; Poole y Lamb; Lamb et al. (NICHD)"
+    },
+    "texto_regla": "Un relato de abuso sexual en un menor puede no ser espontáneo sino inducido cuando presenta: (1) lenguaje adulto o terminología no acorde a la edad, (2) nivel de detalle inusualmente alto o inusualmente bajo sin variación, (3) incorporación de elementos sugeridos en entrevistas previas documentadas, (4) ausencia de detalles periféricos del evento (contexto, sensaciones), (5) resistencia inicial y posterior 'revelación' ante presión del entrevistador.",
+    "aplicacion_practica": "Si en la transcripción de la Cámara Gesell aparecen preguntas cerradas o sugestivas ('¿Te tocó ahí?', '¿Lo hizo muchas veces?') seguidas de confirmaciones del menor, esas respuestas no tienen valor como relato espontáneo. La defensa debe solicitar la transcripción íntegra y analizar la estructura de la entrevista, no solo el contenido del relato.",
+    "referencias": [
+      "Ceci y Bruck, 'Jeopardy in the Courtroom', APA",
+      "Lamb et al., 'Tell Me What Happened', Wiley",
+      "Art. 102 bis CPP PBA"
+    ]
+  },
+  {
+    "id": "PENAL_CRITERIO_020",
+    "fuero": "penal_pba",
+    "tema": "revision_efectiva_hechos_casacion",
+    "etiquetas": ["recurso", "casacion", "revision_amplia", "hechos", "Casal"],
+    "fuente": {
+      "norma": "Art. 8.2.h CADH; art. 14.5 PIDCP; arts. 417 y ss. CPP PBA",
+      "jurisprudencia_referente": "CSJN 'Casal, Matías Eugenio' (2005) Fallos 328:3399; CIDH 'Mohamed c. Argentina' (2012); SCBA fallos post-Casal (a completar por el abogado)",
+      "doctrina": "Pastor, Daniel R., 'La nueva imagen de la casación penal'; Maier, Julio B.J."
+    },
+    "texto_regla": "La doctrina del 'máximo rendimiento' (Casal) exige que el tribunal de casación revise todo lo que sea susceptible de revisión en la sentencia condenatoria, sin limitarse a cuestiones de derecho. Solo queda fuera de la revisión lo que es material y absolutamente imposible de controlar sin la inmediación: las impresiones subjetivas del juez de juicio sobre la actitud del testigo al declarar. Todo lo demás — la lógica del razonamiento, la valoración de la prueba documental, pericial y de las reglas de la experiencia — es revisable.",
+    "aplicacion_practica": "Si la Sala de Casación rechazó el recurso diciendo que 'la valoración de la prueba es facultad privativa del tribunal de juicio', sin analizar si esa valoración fue lógica y conforme a reglas de la experiencia, incurrió en una restricción indebida del recurso que viola el art. 8.2.h CADH. Ese fundamento es impugnable ante SCBA y CSJN.",
+    "referencias": [
+      "Art. 8.2.h CADH",
+      "CSJN Fallos 328:3399 ('Casal')",
+      "CIDH 'Mohamed c. Argentina', 23/11/2012",
+      "Pastor, 'La nueva imagen de la casación penal', Ad-Hoc"
+    ]
+  }
+]

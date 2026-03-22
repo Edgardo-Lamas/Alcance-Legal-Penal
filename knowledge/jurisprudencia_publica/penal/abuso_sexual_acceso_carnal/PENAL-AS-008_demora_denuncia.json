@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-008",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "demora_denuncia",
+    "criterio": "Demora en la denuncia — neutralidad interpretativa y necesidad de corroboración",
+    "regla_general": "La demora entre el supuesto hecho delictivo y la formulación de la denuncia no puede ser interpretada automáticamente como confirmación de la veracidad del relato, ni como señal de falsedad. La tardanza puede tener múltiples explicaciones (temor, vergüenza, dependencia emocional, manipulación). En causas donde media una demora significativa, la exigencia de corroboración objetiva se intensifica porque la investigación técnica (pericias, secuestros, testimonios contemporáneos) queda comprometida.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (in dubio pro reo)",
+        "Ley 26.485, art. 16 inc. i (no penalización de la no denuncia inmediata)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 y 373; Ley 26.485 art. 16 inc. i (protección integral contra violencia de género — no exige denuncia inmediata); CN art. 18; sana crítica racional",
+        "jurisprudencia_referente": "SCBA, P. 112.218 (2013) — demora y necesidad de corroboración; Cámara de Apelaciones de Azul, 'R., H.A.' (2016) — análisis de la credibilidad ante denuncia tardía; doctrina del TEDH 'M.C. vs. Bulgaria' (aplicada comparativamente)",
+        "doctrina": "Falcone, 'Garantías del imputado en los delitos de abuso sexual', pp. 55-70; Cafferata Nores, 'La prueba', pp. 145-160"
+    },
+    "aplicacion_practica": "La defensa debe plantear: (a) qué prueba objetiva existe más allá del relato tardío (la demora puede haber destruido o hecho inaccesible evidencia exculpatoria); (b) si existe una explicación concreta por la demora o si es invocada abstractamente; (c) si la conducta de la víctima durante el período de demora es coherente con el relato acusatorio (comunicaciones, convivencia, relaciones con el imputado). La demora en la denuncia también puede ser relevante para el cómputo de la prescripción de la acción penal.",
+    "condiciones_aplicacion": [
+        "Denuncias formuladas con meses o años de distancia del supuesto hecho",
+        "Casos donde la demora imposibilitó la realización de pericias o el aseguramiento de evidencia"
+    ],
+    "riesgos_procesales": [
+        "No señalar qué prueba objetiva hubiera sido posible obtener si la denuncia hubiera sido inmediata",
+        "No analizar si la conducta de la víctima durante el período de demora contradice el relato acusatorio",
+        "Omitir plantear la prescripción de la acción cuando la demora es de varios años"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "demora_denuncia",
+        "abuso_sexual",
+        "corroboracion",
+        "credibilidad",
+        "prescripcion",
+        "valoracion_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

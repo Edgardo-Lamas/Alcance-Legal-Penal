@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-PRUEBA-006",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "regla_exclusion",
+    "criterio": "Regla de exclusión — prueba obtenida ilícitamente y doctrina del fruto del árbol envenenado",
+    "regla_general": "La prueba obtenida en violación a garantías constitucionales (allanamiento sin orden judicial, interceptación ilegal de comunicaciones, declaración bajo coacción, extracción de datos sin autorización) es nula y debe ser excluida del proceso. Toda prueba derivada de la prueba ilícita ('fruto del árbol envenenado') también carece de valor probatorio, aunque su obtención sea en sí misma regular, si la conexión causal con la ilicitud original es directa.",
+    "articulos_cpp": [
+        "CN, arts. 18 y 19",
+        "CPP PBA (Ley 11.922), arts. 89, 101 y 217",
+        "CADH, arts. 8 y 25"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN arts. 18 (garantías del proceso) y 19 (acciones privadas); CPP PBA (Ley 11.922) arts. 89 (nulidades absolutas), 101 (efectos de la nulidad) y 217 (requisitos de la interceptación); CADH arts. 8 (garantías judiciales) y 25 (protección judicial)",
+        "jurisprudencia_referente": "CSJN, 'Montenegro', Fallos 303:1938 (1981) — exclusión de confesión bajo tortura; CSJN, 'Rayford', Fallos 308:733 (1986) — fruto del árbol envenenado; CSJN, 'Fiorentino', Fallos 306:1752 (1984) — allanamiento sin orden; CSJN, 'Baldivieso', Fallos 333:405 (2010)",
+        "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita y sus derivadas en el proceso penal', pp. 1-180 (obra monográfica sobre el tema); Binder, 'Introducción al DPP', pp. 230-250"
+    },
+    "aplicacion_practica": "La defensa debe identificar el acto procesal ilícito original y trazar la cadena causal con la prueba que se pretende usar. La exclusión procede aun cuando: (a) el agente actuó de buena fe (salvo la excepción de 'good faith' que no está consagrada en el derecho argentino con el mismo alcance que en EE.UU.); (b) la prueba hubiera podido obtenerse por medios lícitos (doctrina del 'hallazgo inevitable' que no está plenamente incorporada en Argentina). La excepción más reconocida es la 'fuente independiente': la prueba derivada no se excluye si hubiera sido obtenida igualmente por medios legítimos sin relación con la ilicitud.",
+    "condiciones_aplicacion": [
+        "Procesos donde la investigación se inició o se enriqueció con prueba obtenida sin autorización judicial",
+        "Supuestos de confesiones, grabaciones o secuestros realizados sin cumplir los requisitos legales"
+    ],
+    "riesgos_procesales": [
+        "No plantear la nulidad en el momento en que se conoce la ilicitud (preclusión)",
+        "Omitir demostrar el nexo causal entre la prueba ilícita original y la prueba derivada cuya exclusión se solicita",
+        "No impugnar la sentencia que usa prueba ilícita argumentando que existe 'fuente independiente' sin demostrarlo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "regla_exclusion",
+        "prueba_ilicita",
+        "fruto_arbol_envenenado",
+        "nulidad",
+        "allanamiento",
+        "escuchas",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

@@ -62,6 +62,7 @@ interface AnalizarCasoResponse {
         contraargumentacion: string
         conclusion_defensiva: string
         limitaciones: string
+        patrones_detectados: PatronDetectado[]
     }
     advertencias?: string[]
     disclaimer: typeof DISCLAIMER
@@ -80,6 +81,30 @@ interface RechazoResponse {
     recomendacion?: string
     disclaimer: typeof DISCLAIMER
 }
+
+interface PatronDetectado {
+    id: string
+    nombre_corto: string
+    nivel_alerta: 'alto' | 'medio' | 'bajo'
+    presente: boolean
+    nota_resumen: string
+    secciones_relacionadas: string[]
+}
+
+// ============================================
+// PATRONES PROCESALES PENALES (descripción compacta para el LLM)
+// ============================================
+
+const PATRONES_PROCESALES_DESCRIPCION = `
+PDN-001 – Prueba digital no autenticada: capturas de pantalla, WhatsApp, correo electrónico, imágenes enviadas sin pericia informática que acredite integridad y autoría. Indicadores: captura de pantalla, mensaje de WhatsApp, chat, correo electrónico, impresión de pantalla, peritaje informático. Nivel base: alto.
+PIM-002 – Prueba de imposibilidad material ignorada: coartada no tratada, testigo de descargo ignorado, registro de ingreso/cámara de seguridad/GPS no incorporado, salón no construido, obra en construcción. Nivel base: alto.
+CPF-003 – Cambio en la plataforma fáctica: modificación de fecha, lugar o modalidad del hecho entre la imputación y la sentencia; hechos indeterminados o "en reiteradas oportunidades". Nivel base: alto.
+RIM-004 – Riesgo de imparcialidad del tribunal: perspectiva de género usada como presunción de culpabilidad, jurado popular, cobertura mediática previa, alegatos emocionales, campaña, activismo. Nivel base: medio.
+PDP-005 – Pena desproporcionada / doble valoración de agravantes: se usaron circunstancias que ya integran el tipo agravado (vínculo, convivencia, menor de edad) para agravar además la pena; pena cercana al máximo legal. Nivel base: medio.
+ARE-006 – Ausencia de revisión efectiva en la cadena recursiva: tribunal de alzada que confirma sin revisar la prueba; "cuestión de hecho", "valoración del a quo", casación rechazada sin respuesta a los agravios. Nivel base: alto.
+PPM-007 – Pericia psicológica oficial de baja calidad con alto peso probatorio: pericia sin metodología validada (SVA/CBCA/NICHD), conclusión de "credibilidad" que usurpa función del juez, usada como eje de la condena sin contrapericia. Nivel base: alto.
+CGP-008 – Uso problemático de Cámara Gesell: entrevista sin protocolo NICHD, declaraciones previas que contaminaron el relato, defensa sin control del acto, video no íntegro, múltiples declaraciones, transcripción incompleta. Nivel base: alto.
+`.trim()
 
 // ============================================
 // DISCLAIMER INSTITUCIONAL
@@ -188,6 +213,86 @@ async function invocarRazonamiento(context: string): Promise<Record<string, stri
 
     const data = await response.json()
     return JSON.parse(data.choices[0].message.content)
+}
+
+// ============================================
+// DETECCIÓN DE PATRONES PROCESALES (FASE 4 sub-tarea)
+// ============================================
+
+async function detectarPatrones(
+    casoContext: string,
+    borrador: Record<string, string>
+): Promise<PatronDetectado[]> {
+    const borradorTexto = Object.entries(borrador)
+        .map(([k, v]) => `### ${k}\n${v}`)
+        .join('\n\n')
+
+    const prompt =
+        `Tenés el siguiente caso penal y el borrador de informe defensivo.\n\n` +
+        `## CASO\n${casoContext}\n\n` +
+        `## BORRADOR DE INFORME\n${borradorTexto}\n\n` +
+        `## PATRONES PROCESALES PENALES\n${PATRONES_PROCESALES_DESCRIPCION}\n\n` +
+        `Revisá el caso y el borrador. Para cada uno de los 8 patrones (PDN-001 a CGP-008) determiná:\n` +
+        `- presente: true si hay indicios del patrón en el caso o la prueba descripta\n` +
+        `- nivel_alerta: "alto", "medio" o "bajo" según la gravedad\n` +
+        `- nota_resumen: 1-2 frases en lenguaje claro explicando por qué está o no presente\n` +
+        `- secciones_relacionadas: array con las secciones donde debe reflejarse (analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, encuadre_procesal, conclusion_defensiva)\n\n` +
+        `Devolvé SOLO el JSON array sin texto adicional:\n` +
+        `[{"id":"PDN-001","nombre_corto":"...","nivel_alerta":"alto","presente":true,"nota_resumen":"...","secciones_relacionadas":["..."]}]`
+
+    if (ANTHROPIC_API_KEY) {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'x-api-key': ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-6',
+                max_tokens: 2048,
+                messages: [{ role: 'user', content: prompt }]
+            }),
+        })
+
+        if (!response.ok) {
+            throw new Error(`Anthropic API error (patrones): ${await response.text()}`)
+        }
+
+        const data = await response.json()
+        return JSON.parse(data.content[0].text) as PatronDetectado[]
+    }
+
+    // Fallback OpenAI — json_object requiere wrapper de objeto
+    const promptOpenAI = prompt.replace(
+        'Devolvé SOLO el JSON array sin texto adicional:\n[{',
+        'Devolvé un JSON object con la clave "patrones_detectados" conteniendo el array:\n{"patrones_detectados":[{'
+    ).replace(/\]$/, ']}'
+    )
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'gpt-4-turbo-preview',
+            response_format: { type: 'json_object' },
+            messages: [
+                { role: 'system', content: 'Eres un asistente jurídico especializado en defensa penal PBA. Devuelve solo JSON.' },
+                { role: 'user', content: promptOpenAI }
+            ]
+        }),
+    })
+
+    if (!response.ok) {
+        throw new Error(`OpenAI error (patrones): ${await response.text()}`)
+    }
+
+    const data = await response.json()
+    const parsed = JSON.parse(data.choices[0].message.content)
+    return (parsed.patrones_detectados ?? parsed) as PatronDetectado[]
 }
 
 // ============================================
@@ -429,7 +534,7 @@ serve(async (req: Request) => {
         const razonamiento = await invocarRazonamiento(contextReasoning)
 
         // ==========================================
-        // FASE 4: VALIDACIÓN DE SALIDA
+        // FASE 4: VALIDACIÓN DE SALIDA + DETECCIÓN DE PATRONES
         // ==========================================
         const validacion = validateOutput(razonamiento)
 
@@ -449,6 +554,14 @@ serve(async (req: Request) => {
             })
         }
 
+        // Detectar patrones procesales (no bloquea el pipeline)
+        let patrones: PatronDetectado[] = []
+        try {
+            patrones = await detectarPatrones(textoConsulta, razonamiento)
+        } catch (e) {
+            console.warn('Error en detección de patrones:', e)
+        }
+
         // ==========================================
         // FASE 5: RESPUESTA
         // ==========================================
@@ -465,7 +578,8 @@ serve(async (req: Request) => {
                 nulidades_y_vicios:     razonamiento.nulidades_y_vicios     || '',
                 contraargumentacion:    razonamiento.contraargumentacion     || '',
                 conclusion_defensiva:   razonamiento.conclusion_defensiva   || '',
-                limitaciones:           razonamiento.limitaciones            || ''
+                limitaciones:           razonamiento.limitaciones            || '',
+                patrones_detectados:    patrones
             },
             advertencias: validacion.status === 'limited' ? validacion.advertencias : undefined,
             disclaimer: DISCLAIMER,

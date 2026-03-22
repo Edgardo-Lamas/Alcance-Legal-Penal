@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-004",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "ne_bis_in_idem",
+    "criterio": "Ne bis in idem — prohibición del doble juzgamiento",
+    "regla_general": "Nadie puede ser perseguido penalmente más de una vez por el mismo hecho, aunque se le atribuyan distintas calificaciones jurídicas. La garantía opera desde el inicio de la persecución penal y no sólo desde la sentencia. Una absolución firme, un sobreseimiento definitivo o el cumplimiento de la pena extinguen toda persecución futura por el mismo hecho.",
+    "articulos_cpp": [
+        "CN, art. 18 (implícita)",
+        "CADH, art. 8.4",
+        "PIDCP, art. 14.7",
+        "CPP PBA (Ley 11.922), art. 6"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 (juicio previo); CADH art. 8.4; PIDCP art. 14.7; CPP PBA (Ley 11.922) art. 6",
+        "jurisprudencia_referente": "CSJN, 'Polak', Fallos 321:2826 (1998); CSJN, 'Sandoval', Fallos 333:1687 (2010); CSJN, 'Recurso de hecho deducido por la defensa de Marcelo Eduardo Montecino Bonilla', Fallos 329:2265 (2006)",
+        "doctrina": "Maier, 'DPP', T. I, § 6.i, pp. 595-625; Binder, pp. 165-175"
+    },
+    "aplicacion_practica": "La garantía bloquea: (a) un nuevo juicio por hechos ya juzgados, aunque sean recalificados (mismo sustrato fáctico); (b) la reapertura de causas archivadas definitivamente; (c) la persecución paralela en jurisdicciones distintas por los mismos hechos. La identidad de hechos se analiza desde la perspectiva fáctica, no jurídica: basta que los hechos materiales sean los mismos aunque la calificación varíe.",
+    "condiciones_aplicacion": [
+        "Existencia de persecución penal anterior por los mismos hechos materiales",
+        "Identidad de persona imputada",
+        "Resolución anterior con efecto de cosa juzgada material (absolución, sobreseimiento definitivo, condena cumplida)"
+    ],
+    "riesgos_procesales": [
+        "Reabrir causa archivada agregando nuevos hechos accesorios sin sustrato fáctico autónomo",
+        "Formular nueva acusación con distinta calificación sobre los mismos hechos históricos",
+        "No advertir la identidad de objeto con causa anterior al momento de la imputación"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "ne_bis_in_idem",
+        "doble_juzgamiento",
+        "cosa_juzgada",
+        "sobreseimiento",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

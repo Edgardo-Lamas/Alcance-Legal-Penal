@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-GAR-006",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "defensa_en_juicio",
+    "criterio": "Defensa en juicio — derecho a asistencia letrada efectiva",
+    "regla_general": "El imputado tiene derecho irrenunciable a la asistencia de un defensor de confianza desde el primer acto del proceso. La defensa técnica debe ser efectiva: no basta con la mera designación de un abogado; la asistencia debe ser real, activa y diligente durante todo el proceso.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, arts. 8.2.d y 8.2.e",
+        "PIDCP, art. 14.3.d",
+        "CPP PBA (Ley 11.922), arts. 89, 90 y 91"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH arts. 8.2.d (derecho a la defensa) y 8.2.e (defensor irrenunciable); PIDCP art. 14.3.d; CPP PBA (Ley 11.922) arts. 89 y ss.",
+        "jurisprudencia_referente": "CSJN, 'Scilingo', Fallos 323:929 (2000); CSJN, 'Núñez', Fallos 327:5095 (2004); SCBA, P. 81.615 (2004) — defensa técnica ineficaz",
+        "doctrina": "Binder, 'El incumplimiento de las formas procesales', pp. 89-105; Maier, 'DPP', T. I, § 6.c"
+    },
+    "aplicacion_practica": "La defensa es ineficaz cuando: (a) el abogado no interrogó a testigos clave ni ofreció prueba descargo disponible; (b) no impugnó prueba obtenida ilícitamente; (c) no planteó nulidades manifiestas; (d) no apeló resoluciones desfavorables sin fundamento técnico. La ineficacia debe ser demostrada con el estándar 'Strickland' adaptado: deficiencia en la actuación y prejuicio concreto en el resultado. Los actos procesales cumplidos sin asistencia letrada son nulos de nulidad absoluta.",
+    "condiciones_aplicacion": [
+        "Todo acto procesal relevante: declaración indagatoria, requerimiento de elevación, debate, recursos",
+        "Comunicación con el imputado detenido sin restricciones injustificadas"
+    ],
+    "riesgos_procesales": [
+        "Incorporar al proceso declaraciones realizadas sin defensor presente",
+        "No impugnar designación de defensor oficial cuando el imputado tiene derecho a defensor particular",
+        "Omitir señalar la falta de notificación al defensor como causal de nulidad del acto"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "defensa_en_juicio",
+        "asistencia_letrada",
+        "defensa_tecnica",
+        "nulidad",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

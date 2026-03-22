@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-003",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "nemo_tenetur",
+    "criterio": "Nemo tenetur se ipsum accusare — derecho a no autoincriminarse",
+    "regla_general": "Nadie puede ser obligado a declarar contra sí mismo ni a producir prueba en su propia contra. El imputado tiene derecho a guardar silencio en cualquier etapa del proceso, y ese silencio no puede ser interpretado como indicio de culpabilidad ni como consentimiento tácito.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.2.g",
+        "PIDCP, art. 14.3.g",
+        "CPP PBA (Ley 11.922), art. 60 inc. 5"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 (prohibición de declarar contra sí mismo); CADH art. 8.2.g (derecho a no ser obligado a declarar contra sí mismo); PIDCP art. 14.3.g; CPP PBA (Ley 11.922) art. 60 inc. 5",
+        "jurisprudencia_referente": "CSJN, 'Montenegro', Fallos 303:1938 (1981); CSJN, 'Rayford', Fallos 308:733 (1986); CSJN, 'Baldivieso', Fallos 333:405 (2010)",
+        "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita y sus derivadas en el proceso penal', pp. 43-60; Binder, 'Introducción al DPP', pp. 200-210"
+    },
+    "aplicacion_practica": "El derecho se extiende a: (a) negarse a declarar sin consecuencias procesales adversas; (b) no ser sometido a análisis psicológicos, grafológicos o de voz sin consentimiento voluntario; (c) no ser obligado a reproducir o describir los hechos que se le imputan. Las declaraciones obtenidas bajo coacción física o psicológica son absolutamente nulas y excluyen también la prueba derivada (doctrina del fruto del árbol envenenado). El asesoramiento previo del defensor es requisito de validez de cualquier declaración espontánea.",
+    "condiciones_aplicacion": [
+        "Toda declaración del imputado en cualquier etapa, incluyendo actos de investigación",
+        "Cualquier mecanismo de obtención de información sin consentimiento libre e informado"
+    ],
+    "riesgos_procesales": [
+        "Utilizar el silencio como elemento de convicción en el alegato acusatorio",
+        "Obtener declaración sin asistencia letrada y utilizarla en juicio",
+        "Inferir conciencia de culpabilidad a partir de conductas posteriores al hecho",
+        "Valorar declaraciones vertidas en sede policial sin presencia del defensor"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "nemo_tenetur",
+        "no_autoincriminacion",
+        "silencio_imputado",
+        "declaracion_nula",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

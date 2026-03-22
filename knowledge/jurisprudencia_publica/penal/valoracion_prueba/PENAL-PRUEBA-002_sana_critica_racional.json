@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-PRUEBA-002",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "sana_critica_racional",
+    "criterio": "Sana crítica racional — reglas de la lógica, la ciencia y la experiencia como límites a la valoración",
+    "regla_general": "La valoración de la prueba debe seguir las reglas de la lógica formal (principio de no contradicción, razón suficiente), las leyes de la ciencia aplicable al caso y las máximas de la experiencia humana generalmente admitidas. Una sentencia que valora la prueba en contra de estas reglas es arbitraria y nula por violación al deber de fundamentación. La sana crítica no autoriza la 'íntima convicción' ni el juicio moral del juzgador sin respaldo en la prueba producida.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (arbitrariedad como violación a las garantías)",
+        "CADH, art. 8.1 (tribunal que decida con fundamento)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) art. 354 (libre convicción según sana crítica racional) y art. 373 (fundamentación de la sentencia); CN art. 18; doctrina de arbitrariedad de la CSJN",
+        "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 (2005) — revisabilidad de la sana crítica en casación; CSJN doctrina de arbitrariedad (múltiples fallos); SCBA, P. 103.696 (2010) — violación a la sana crítica como agravio de casación",
+        "doctrina": "Cafferata Nores, 'La prueba', pp. 55-75 (sistemas de valoración); Devis Echandía, 'Teoría general de la prueba judicial', T. I, pp. 85-110; Taruffo, 'La prueba de los hechos', pp. 365-400"
+    },
+    "aplicacion_practica": "Violan la sana crítica racional las sentencias que: (a) afirman que la víctima 'transmitió credibilidad' sin explicar qué datos objetivos generaron esa impresión; (b) descartan la prueba de la defensa sin razón técnica sino por mera preferencia; (c) aplicanmáximas de experiencia formuladas en términos de género ('las víctimas de abuso siempre demoran la denuncia') como si fueran reglas universales; (d) extraen conclusiones que no se derivan necesariamente de los indicios acreditados. El control de la sana crítica es el fundamento del recurso de casación amplia conforme 'Casal'.",
+    "condiciones_aplicacion": [
+        "Revisión de sentencias condenatorias en casación por arbitrariedad en la valoración probatoria",
+        "Casos donde el tribunal valoró la prueba apelando a impresiones subjetivas sin respaldo objetivo"
+    ],
+    "riesgos_procesales": [
+        "Plantear el agravio de arbitrariedad sin identificar específicamente qué regla de la lógica, ciencia o experiencia fue violada",
+        "No demostrar el nexo causal entre la violación a la sana crítica y el resultado condenatorio",
+        "Confundir discrepancia en la valoración (no revisable) con arbitrariedad (revisable en casación)"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "sana_critica_racional",
+        "arbitrariedad",
+        "valoracion_prueba",
+        "fundamentacion",
+        "casacion",
+        "logica_juridica"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

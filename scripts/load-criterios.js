@@ -1,14 +1,15 @@
 /**
  * Script de Carga de Criterios Penales a Supabase
  *
- * Carga los archivos JSON del corpus penal, genera embeddings con OpenAI
+ * Carga los criterios del corpus penal, genera embeddings con OpenAI
  * y los inserta en la tabla criterios_juridicos de Supabase.
  *
  * Ejecutar: node scripts/load-criterios.js
- * Requiere: SUPABASE_URL, SUPABASE_SERVICE_KEY, OPENAI_API_KEY en .env
+ * Requiere: SUPABASE_URL, SUPABASE_SERVICE_KEY, OPENAI_API_KEY en .env.local
  *
- * Estructura esperada del corpus:
- *   knowledge/jurisprudencia_publica/penal/<categoria>/PENAL-*.json
+ * Fuentes de datos soportadas:
+ *   1. knowledge/jurisprudencia_publica/penal/corpus_criterios_v1.json  (array)
+ *   2. knowledge/jurisprudencia_publica/penal/<categoria>/PENAL-*.json  (individuales)
  */
 
 import { createClient } from '@supabase/supabase-js'
@@ -16,6 +17,10 @@ import OpenAI from 'openai'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { config } from 'dotenv'
+
+// Cargar .env.local
+config({ path: '.env.local' })
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -28,7 +33,6 @@ const SUPABASE_URL = process.env.SUPABASE_URL
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
-// Ruta base del corpus penal
 const CORPUS_BASE_PATH = path.join(
     __dirname,
     '../knowledge/jurisprudencia_publica/penal'
@@ -46,7 +50,6 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !OPENAI_API_KEY) {
     process.exit(1)
 }
 
-// Clientes
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY })
 
@@ -54,34 +57,59 @@ const openai = new OpenAI({ apiKey: OPENAI_API_KEY })
 // EMBEDDING
 // ============================================
 
-/**
- * Genera embedding para un texto usando text-embedding-ada-002.
- */
 async function generarEmbedding(texto) {
     const response = await openai.embeddings.create({
         model: 'text-embedding-ada-002',
-        input: texto
+        input: texto.slice(0, 8000) // límite seguro de tokens
     })
     return response.data[0].embedding
 }
 
 // ============================================
-// TRANSFORMACIÓN: JSON penal → registro DB
+// TRANSFORMACIÓN: corpus JSON → registro DB
+//
+// Soporta dos esquemas:
+//
+// Esquema corpus_criterios_v1.json:
+//   { id, fuero, tema, texto_regla, aplicacion_practica, etiquetas, fuente, referencias }
+//
+// Esquema individual PENAL-*.json (legado):
+//   { id, criterio, regla_general, instituto, subtipo, articulos_cpp, nivel_autoridad, ... }
 // ============================================
 
-/**
- * Convierte un criterio penal JSON al formato de inserción en la DB.
- *
- * Schema penal (campos directos, sin extracción anidada):
- *   id, instituto, subtipo, criterio, regla_general, articulos_cpp,
- *   nivel_autoridad, aplicacion_practica, condiciones_aplicacion,
- *   riesgos_procesales, jurisdiccion, alcance
- *
- * Texto para embedding: criterio + regla_general + aplicacion_practica
- *   + condiciones_aplicacion + riesgos_procesales + tags
- *   → mayor densidad semántica = mejor recuperación en RAG
- */
 function criterioARegistro(criterio) {
+    const esCorpusV1 = criterio.texto_regla !== undefined && criterio.regla_general === undefined
+
+    if (esCorpusV1) {
+        // Mapeo desde esquema corpus_criterios_v1
+        const nombre = (criterio.tema || criterio.id).replace(/_/g, ' ')
+        const etiquetas = criterio.etiquetas || []
+
+        const textoEmbedding = [
+            nombre,
+            criterio.texto_regla,
+            criterio.aplicacion_practica || '',
+            ...(criterio.fuente?.norma ? [criterio.fuente.norma] : []),
+            ...etiquetas
+        ].filter(Boolean).join(' ')
+
+        return {
+            id: criterio.id,
+            contenido: textoEmbedding,
+            instituto: etiquetas[0] || criterio.tema || 'garantias',
+            subtipo: criterio.tema || criterio.id,
+            jurisdiccion: 'argentina_pba',
+            alcance: 'criterios_generales',
+            fuero: 'penal',
+            criterio: nombre,
+            regla_general: criterio.texto_regla,
+            articulos_cpp: criterio.referencias || [],
+            nivel_autoridad: 'orientativo',
+            data: criterio
+        }
+    }
+
+    // Esquema individual legado
     const textoEmbedding = [
         criterio.criterio,
         criterio.regla_general,
@@ -98,75 +126,103 @@ function criterioARegistro(criterio) {
         subtipo: criterio.subtipo,
         jurisdiccion: criterio.jurisdiccion || 'argentina_pba',
         alcance: criterio.alcance || 'criterios_generales',
+        fuero: 'penal',
         criterio: criterio.criterio,
         regla_general: criterio.regla_general,
         articulos_cpp: criterio.articulos_cpp || [],
         nivel_autoridad: criterio.nivel_autoridad || 'orientativo',
-        data: criterio  // JSON completo en columna JSONB
+        data: criterio
     }
 }
 
 // ============================================
-// CARGA POR CATEGORÍA
+// INSERCIÓN EN DB
 // ============================================
 
-/**
- * Carga todos los criterios PENAL-*.json de una categoría.
- */
-async function cargarCategoria(categoriaPath, nombreCategoria) {
-    if (!fs.existsSync(categoriaPath)) {
-        console.log(`⚠️  Categoría no encontrada: ${nombreCategoria}`)
+async function insertarCriterio(registro) {
+    console.log(`   🔄 ${registro.id} — generando embedding...`)
+    registro.embedding = await generarEmbedding(registro.contenido)
+
+    const { error } = await supabase
+        .from('criterios_juridicos')
+        .upsert(registro, { onConflict: 'id' })
+
+    if (error) {
+        console.error(`   ❌ Error insertando ${registro.id}:`, error.message)
+        return false
+    }
+
+    console.log(`   ✅ ${registro.id} — cargado`)
+    await new Promise(r => setTimeout(r, OPENAI_RATE_LIMIT_MS))
+    return true
+}
+
+// ============================================
+// FUENTE 1: corpus_criterios_v1.json (array en raíz del corpus)
+// ============================================
+
+async function cargarCorpusArray(rutaArchivo) {
+    if (!fs.existsSync(rutaArchivo)) return 0
+
+    console.log(`\n📂 corpus_criterios_v1.json`)
+    let raw
+    try {
+        raw = JSON.parse(fs.readFileSync(rutaArchivo, 'utf8'))
+    } catch (e) {
+        console.error(`   ❌ JSON inválido:`, e.message)
         return 0
     }
+
+    const criterios = Array.isArray(raw) ? raw : [raw]
+    console.log(`   ${criterios.length} criterios encontrados`)
+
+    let cargados = 0
+    for (const criterio of criterios) {
+        try {
+            const registro = criterioARegistro(criterio)
+            const ok = await insertarCriterio(registro)
+            if (ok) cargados++
+        } catch (e) {
+            console.error(`   ❌ Error procesando ${criterio?.id}:`, e.message)
+        }
+    }
+    return cargados
+}
+
+// ============================================
+// FUENTE 2: archivos individuales PENAL-*.json (en subdirectorios)
+// ============================================
+
+async function cargarCategoria(categoriaPath, nombreCategoria) {
+    if (!fs.existsSync(categoriaPath)) return 0
 
     const archivos = fs.readdirSync(categoriaPath)
         .filter(f => f.endsWith('.json') && f.startsWith('PENAL-'))
-        .sort()  // Orden determinístico
+        .sort()
 
-    if (archivos.length === 0) {
-        console.log(`   ℹ️  Sin archivos PENAL-*.json en: ${nombreCategoria}`)
-        return 0
-    }
+    if (archivos.length === 0) return 0
 
     console.log(`\n📂 ${nombreCategoria}: ${archivos.length} criterios`)
 
     let cargados = 0
     for (const archivo of archivos) {
         const archivoPath = path.join(categoriaPath, archivo)
-
         let criterioJson
         try {
             criterioJson = JSON.parse(fs.readFileSync(archivoPath, 'utf8'))
-        } catch (parseErr) {
-            console.error(`   ❌ JSON inválido en ${archivo}:`, parseErr.message)
+        } catch (e) {
+            console.error(`   ❌ JSON inválido en ${archivo}:`, e.message)
             continue
         }
 
         try {
             const registro = criterioARegistro(criterioJson)
-
-            console.log(`   🔄 ${registro.id} — generando embedding...`)
-            registro.embedding = await generarEmbedding(registro.contenido)
-
-            const { error } = await supabase
-                .from('criterios_juridicos')
-                .upsert(registro, { onConflict: 'id' })
-
-            if (error) {
-                console.error(`   ❌ Error insertando ${registro.id}:`, error.message)
-            } else {
-                console.log(`   ✅ ${registro.id} — cargado`)
-                cargados++
-            }
-
-            // Rate limiting OpenAI
-            await new Promise(r => setTimeout(r, OPENAI_RATE_LIMIT_MS))
-
-        } catch (err) {
-            console.error(`   ❌ Error procesando ${archivo}:`, err.message)
+            const ok = await insertarCriterio(registro)
+            if (ok) cargados++
+        } catch (e) {
+            console.error(`   ❌ Error procesando ${archivo}:`, e.message)
         }
     }
-
     return cargados
 }
 
@@ -184,38 +240,25 @@ async function main() {
         process.exit(1)
     }
 
-    // Auto-descubrir todas las categorías (subdirectorios, excluir _meta y ocultos)
+    let totalCargados = 0
+
+    // Fuente 1: corpus array en raíz
+    const corpusArrayPath = path.join(CORPUS_BASE_PATH, 'corpus_criterios_v1.json')
+    totalCargados += await cargarCorpusArray(corpusArrayPath)
+
+    // Fuente 2: archivos individuales en subdirectorios
     const categorias = fs.readdirSync(CORPUS_BASE_PATH, { withFileTypes: true })
         .filter(entry => entry.isDirectory() && !entry.name.startsWith('_'))
         .map(entry => entry.name)
         .sort()
 
-    if (categorias.length === 0) {
-        console.error('❌ No se encontraron categorías en el corpus')
-        process.exit(1)
-    }
-
-    console.log(`\n📋 Categorías encontradas: ${categorias.join(', ')}`)
-
-    let totalCargados = 0
-    let totalErrores = 0
-
     for (const categoria of categorias) {
         const categoriaPath = path.join(CORPUS_BASE_PATH, categoria)
-        try {
-            const cargados = await cargarCategoria(categoriaPath, categoria)
-            totalCargados += cargados
-        } catch (err) {
-            console.error(`❌ Error en categoría ${categoria}:`, err.message)
-            totalErrores++
-        }
+        totalCargados += await cargarCategoria(categoriaPath, categoria)
     }
 
     console.log('\n' + '='.repeat(50))
     console.log(`✅ Carga completada: ${totalCargados} criterios insertados`)
-    if (totalErrores > 0) {
-        console.log(`⚠️  Categorías con error: ${totalErrores}`)
-    }
 
     // Verificar estado final en la DB
     const { count, error: countError } = await supabase
@@ -225,23 +268,6 @@ async function main() {
 
     if (!countError) {
         console.log(`📊 Total en DB (alcance=criterios_generales): ${count} criterios`)
-    }
-
-    // Resumen por instituto
-    const { data: institutos, error: institErr } = await supabase
-        .from('criterios_juridicos')
-        .select('instituto')
-        .eq('alcance', 'criterios_generales')
-
-    if (!institErr && institutos) {
-        const conteo = institutos.reduce((acc, row) => {
-            acc[row.instituto] = (acc[row.instituto] || 0) + 1
-            return acc
-        }, {})
-        console.log('\n📊 Distribución por instituto:')
-        Object.entries(conteo).sort().forEach(([inst, n]) => {
-            console.log(`   ${inst}: ${n}`)
-        })
     }
 }
 

@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-NUL-006",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "cadena_custodia",
+    "criterio": "Vicio en la cadena de custodia — compromiso de la integridad de la evidencia física y digital",
+    "regla_general": "La evidencia física o digital incorporada al proceso debe estar acompañada por documentación ininterrumpida que acredite: quién la recolectó, cómo fue almacenada, quién tuvo acceso a ella y en qué condiciones llegó a juicio. Las brechas en la cadena de custodia generan duda razonable sobre la integridad de la evidencia y deben traducirse en reducción o eliminación de su valor probatorio.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 213, 214 y 354",
+        "CN, art. 18 (in dubio pro reo)",
+        "Resolución Ministerio de Seguridad PBA sobre protocolos de cadena de custodia"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 213 (secuestro de elementos) y 214 (identificación y conservación); CN art. 18 (garantías procesales); protocolos de cadena de custodia del Ministerio de Seguridad PBA; estándares técnicos internacionales (SWGMAT — Scientific Working Group for Materials Analysis)",
+        "jurisprudencia_referente": "SCBA, P. 119.245 (2016) — vicio en cadena de custodia de evidencia digital; Cámara Nacional Criminal, Sala IV, 'R., M.A.' (2017) — brecha en custodia y reducción del valor probatorio; Cámara de Apelaciones de Mar del Plata, 'T., G.H.' (2019)",
+        "doctrina": "Riquert, 'Delincuencia informática', pp. 120-140 (custodia de evidencia digital); Cano Martínez, 'Computación forense', pp. 180-215; Cáceres Nieto, 'Cadena de custodia en el proceso penal', pp. 45-90"
+    },
+    "aplicacion_practica": "La defensa debe controlar: (a) si el acta de secuestro identifica con precisión cada elemento con sus características, peso o número de serie; (b) si la evidencia estuvo siempre en lugar seguro (depósito judicial, caja fuerte) con registro de accesos; (c) si para evidencia digital existe el hash calculado al momento del secuestro y luego verificado al momento de la pericia; (d) si la cantidad o condición de la evidencia física varió entre el secuestro y la presentación en juicio. Cualquier brecha no justificada equivale a duda sobre si la evidencia presentada es la misma que la secuestrada.",
+    "condiciones_aplicacion": [
+        "Causas donde la evidencia fue secuestrada por fuerzas de seguridad sin perito presente",
+        "Supuestos donde la evidencia digital fue manipulada o accedida sin registro técnico"
+    ],
+    "riesgos_procesales": [
+        "No solicitar el libro de custodia de la evidencia secuestrada para controlar el registro de accesos",
+        "Omitir verificar si el hash de la evidencia digital al momento del juicio coincide con el hash original",
+        "No señalar en el alegato final las brechas de custodia identificadas y su impacto sobre el valor probatorio"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "cadena_custodia",
+        "evidencia_fisica",
+        "evidencia_digital",
+        "integridad_prueba",
+        "duda_razonable",
+        "hash"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

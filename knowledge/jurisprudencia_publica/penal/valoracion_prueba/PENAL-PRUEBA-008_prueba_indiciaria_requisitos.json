@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-PRUEBA-008",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "prueba_indiciaria",
+    "criterio": "Prueba indiciaria — requisitos de pluralidad, concordancia, gravedad y exclusión de hipótesis alternativas",
+    "regla_general": "La prueba indiciaria o circunstancial puede fundar una condena únicamente cuando los indicios son: (a) plurales (más de uno, independientes entre sí); (b) graves (cada uno con fuerza probatoria significativa); (c) concordantes (todos apuntan en la misma dirección); (d) suficientemente precisos para excluir toda hipótesis alternativa razonable de inocencia. Un solo indicio, aunque sea grave, es insuficiente para condenar.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (in dubio pro reo)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 (sana crítica) y 373 (motivación de la sentencia); CN art. 18 (in dubio pro reo); principios generales de valoración de prueba indiciaria en el sistema de sana crítica",
+        "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 (2005) — revisión de inferencias indiciarias; SCBA, P. 101.946 (2009) — requisitos de la prueba indiciaria para fundar condena; Cámara de Apelaciones de La Plata, Sala II, 'M., H.O.' (2014) — un solo indicio no alcanza",
+        "doctrina": "Cafferata Nores, 'La prueba en el proceso penal', pp. 185-215 (indicios); Devis Echandía, 'Teoría general de la prueba', T. II, pp. 600-660 (indicios); Gorphe, 'Apreciación judicial de las pruebas', pp. 195-250"
+    },
+    "aplicacion_practica": "La defensa debe identificar: (a) si los indicios invocados por la sentencia son realmente independientes entre sí o si uno deriva del otro (indicios derivados valen como uno); (b) si cada indicio es compatible también con la hipótesis de inocencia; (c) si existe algún indicio que contradice la hipótesis de culpabilidad (contrindicio) que el tribunal no consideró. La hipótesis de inocencia es 'razonablemente posible' cuando: ningún indicio la excluye de manera necesaria, o la explicación del imputado no fue desmentida por la prueba. El alegato de la defensa debe construir expresamente la hipótesis alternativa compatible con los indicios acreditados.",
+    "condiciones_aplicacion": [
+        "Procesos donde no existe prueba directa del hecho y la condena reposa en indicios",
+        "Casos donde los 'indicios' son en realidad meras sospechas sin base probatoria acreditada"
+    ],
+    "riesgos_procesales": [
+        "No analizar si los indicios invocados son realmente independientes entre sí o derivados de una fuente común",
+        "Omitir construir y presentar la hipótesis alternativa de inocencia compatible con los indicios",
+        "No señalar en el recurso de casación cuál contrindicio fue ignorado por el tribunal"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "prueba_indiciaria",
+        "indicios",
+        "hipotesis_alternativa",
+        "duda_razonable",
+        "condena",
+        "valoracion_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

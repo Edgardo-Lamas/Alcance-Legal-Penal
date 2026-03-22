@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-PRUEBA-005",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "captura_pantalla",
+    "criterio": "Capturas de pantalla sin trazabilidad técnica — valor probatorio nulo o mínimo",
+    "regla_general": "Una captura de pantalla (screenshot) de conversaciones, publicaciones o archivos digitales, aportada sin verificación técnica del dispositivo de origen, sin hash de integridad, sin peritaje que confirme su autenticidad y sin cadena de custodia, carece de valor probatorio suficiente para fundar una condena. La facilidad de manipulación digital hace que estas imágenes sean altamente susceptibles de falsificación, edición o descontextualización.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (in dubio pro reo)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 (sana crítica) y 373 (fundamentación); principio in dubio pro reo; estándares técnicos de forense digital (RFC 3227; NIST Special Publication 800-86)",
+        "jurisprudencia_referente": "Cámara Nacional Criminal y Correccional, Sala V, 'S., C.M.' (2019) — capturas sin verificación técnica excluidas; SCBA, P. 123.850 (2019) — requisitos para incorporar conversaciones de WhatsApp como prueba; Juzgado de Garantías de Quilmes, 'P., R.' (2020) — inadmisibilidad de capturas sin peritaje",
+        "doctrina": "Riquert, 'Delincuencia informática', pp. 95-120; Marcelo Temperini, 'Evidencia digital en el proceso penal argentino', pp. 45-80; Cano Martínez, 'Computación forense', pp. 210-240"
+    },
+    "aplicacion_practica": "Para impugnar capturas de pantalla la defensa debe: (a) señalar que el archivo imagen puede haber sido generado por cualquier editor gráfico; (b) exigir que la acusación identifique el dispositivo de origen y presente el peritaje sobre ese dispositivo; (c) señalar que los metadatos de la imagen (EXIF) deben ser verificados para confirmar fecha y origen; (d) solicitar el acceso al dispositivo original para verificar que el contenido mostrado en la captura coincide con el contenido actual del dispositivo. Si el dispositivo original no está disponible o no fue peritado, la captura carece de valor probatorio autónomo.",
+    "condiciones_aplicacion": [
+        "Casos donde capturas de WhatsApp, Instagram, Telegram u otras apps son la prueba central de la acusación",
+        "Supuestos donde la captura fue aportada por la víctima o por un testigo sin peritaje del dispositivo"
+    ],
+    "riesgos_procesales": [
+        "Omitir impugnar la captura de pantalla al momento de su ofrecimiento o incorporación al proceso",
+        "No solicitar el peritaje del dispositivo de origen en la etapa de investigación",
+        "No señalar en el alegato final que la condena no puede fundarse en una captura sin trazabilidad técnica"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "captura_pantalla",
+        "screenshot",
+        "prueba_digital",
+        "trazabilidad",
+        "whatsapp",
+        "autenticidad",
+        "valor_probatorio"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-AS-006",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "camara_gesell",
+    "criterio": "Cámara Gesell — garantías de la defensa y derecho de contraexamen",
+    "regla_general": "La declaración de niños, niñas y adolescentes tomada en cámara Gesell debe cumplir requisitos de validez formal y garantizar el derecho de defensa. La imposibilidad de interrogar directamente a la víctima debe ser compensada con el derecho del defensor a formular preguntas a través del juez o psicólogo entrevistador durante la entrevista. La declaración obtenida sin participación efectiva de la defensa no puede ser el único sustento de la condena.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 102 bis, 103 y 221 bis",
+        "Ley 26.061, art. 27 (interés superior del niño)",
+        "CN, art. 18 (defensa en juicio)",
+        "CADH, art. 8.2.f (derecho a interrogar testigos)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 102 bis (declaración de menores), 103 (testimonio de niños y adolescentes) y 221 bis (cámara Gesell — modalidad de la entrevista); Ley 26.061 arts. 3 y 27; CADH art. 8.2.f (derecho de interrogar testigos); Ley 27.372 (derechos de las víctimas)",
+        "jurisprudencia_referente": "CSJN, 'Benítez', Fallos 329:5556 (2006) — limitaciones al derecho de interrogar testigos; SCBA, P. 118.927 (2015) — validez de la cámara Gesell y garantías de la defensa; TEDH, 'A.M. vs. France' (aplicado por analogía en doctrina local)",
+        "doctrina": "Falcone, 'Garantías del imputado en los delitos de abuso sexual', pp. 90-120; Nores Cafferata, 'Niños víctimas y proceso penal', pp. 45-70"
+    },
+    "aplicacion_practica": "La defensa debe verificar: (a) si le fue notificada con antelación suficiente la realización de la entrevista en Gesell; (b) si tuvo oportunidad de proponer preguntas antes de la entrevista o durante ella a través del juez; (c) si el video de la entrevista fue puesto a disposición íntegro antes del debate; (d) si el psicólogo entrevistador siguió protocolos que eviten la sugestión. Si la entrevista fue realizada sin notificación al defensor o sin posibilidad de formular preguntas, la declaración es nula para fundar condena de manera exclusiva. La valoración de la declaración Gesell exige también análisis del relato (consistencia, espontaneidad, ausencia de interferencias externas).",
+    "condiciones_aplicacion": [
+        "Casos con víctimas menores de edad cuyo único o principal testimonio fue tomado en cámara Gesell",
+        "Supuestos donde la defensa no fue notificada o no pudo proponer preguntas en la entrevista"
+    ],
+    "riesgos_procesales": [
+        "No controlar si la notificación al defensor fue realizada con anticipación suficiente",
+        "Omitir formular preguntas antes o durante la entrevista Gesell cuando se tiene la oportunidad",
+        "No solicitar el video íntegro de la entrevista para controlar la metodología del entrevistador"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "camara_gesell",
+        "abuso_sexual",
+        "menores",
+        "derecho_contraexamen",
+        "nulidad",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

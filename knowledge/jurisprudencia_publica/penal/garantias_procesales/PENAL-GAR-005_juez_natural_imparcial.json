@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-005",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "juez_natural",
+    "criterio": "Juez natural e imparcial — derecho al tribunal preestablecido por ley",
+    "regla_general": "El imputado tiene derecho a ser juzgado por el tribunal designado conforme a la ley antes del hecho de la causa, con competencia preestablecida y que garantice imparcialidad objetiva y subjetiva. Ningún juez que haya prejuzgado sobre el fondo puede intervenir en la etapa de juicio.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.1",
+        "PIDCP, art. 14.1",
+        "CPP PBA (Ley 11.922), arts. 1 y 47 y ss."
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 (juez natural); CADH art. 8.1 (juez competente, independiente e imparcial); PIDCP art. 14.1; CPP PBA (Ley 11.922) arts. 1, 47 y ss. (recusación e inhibición)",
+        "jurisprudencia_referente": "CSJN, 'Llerena', Fallos 328:1491 (2005); CSJN, 'Dieser y Fraticelli', Fallos 329:3034 (2006); CSJN, 'Zenzerovich', Fallos 322:1941 (1999)",
+        "doctrina": "Maier, 'DPP', T. I, § 6.b; Castillo Alva, 'Las garantías del proceso penal', pp. 45-70"
+    },
+    "aplicacion_practica": "Causales de recusación aplicables: (a) el juez que intervino en la investigación preparatoria no puede integrar el tribunal de juicio (contaminación por prejuzgamiento); (b) declaraciones públicas del magistrado sobre el caso antes del debate; (c) relación personal o institucional con alguna de las partes. La imparcialidad objetiva exige eliminar cualquier apariencia de parcialidad, no sólo la parcialidad demostrada.",
+    "condiciones_aplicacion": [
+        "Intervención previa del mismo juez en etapas que implican valoración de mérito",
+        "Declaraciones o conductas del juez que revelen opinión anticipada",
+        "Vínculos institucionales, familiares o de amistad con alguna de las partes"
+    ],
+    "riesgos_procesales": [
+        "No plantear la recusación en tiempo procesal oportuno bajo pena de preclusión",
+        "Omitir señalar declaraciones extrajudiciales del magistrado como causal de apartamiento",
+        "No distinguir imparcialidad subjetiva (intención) de imparcialidad objetiva (apariencia)"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "juez_natural",
+        "imparcialidad",
+        "recusacion",
+        "prejuzgamiento",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

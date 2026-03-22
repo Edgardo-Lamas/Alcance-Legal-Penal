@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-PRUEBA-003",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "pericia_especializada",
+    "criterio": "Pericia especializada — límites de la revisión judicial y valor probatorio frente a contradicción entre peritos",
+    "regla_general": "Las opiniones de peritos especializados no son vinculantes para el juez, pero para apartarse de ellas se requiere una razón técnica o científica que lo justifique. Cuando la pericia de cargo y la pericia de la defensa llegan a conclusiones opuestas sobre una cuestión central, la contradicción pericial genera duda razonable que debe resolverse a favor del imputado. El juez no puede preferir arbitrariamente un dictamen sobre otro sin fundamento técnico.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 234, 241 y 354",
+        "CN, art. 18 (in dubio pro reo)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 234 (peritos), 241 (dictamen pericial) y 354 (valoración según sana crítica); CN art. 18; principio in dubio pro reo",
+        "jurisprudencia_referente": "CSJN, 'Tarnopolsky', Fallos 322:2512 (1999) — límites del apartamiento del dictamen pericial; SCBA, P. 107.882 (2011) — contradicción pericial y duda razonable; Cámara de Apelaciones de Quilmes, 'G., R.H.' (2015)",
+        "doctrina": "Cafferata Nores, 'La prueba', pp. 175-200 (peritos); Devis Echandía, 'Teoría general de la prueba', T. II, pp. 285-330 (valoración de dictámenes periciales)"
+    },
+    "aplicacion_practica": "Estrategia defensiva ante pericia adversa: (a) proponer perito de parte con antelación suficiente; (b) interrogar al perito oficial sobre las limitaciones metodológicas de su dictamen; (c) señalar si el dictamen oficial emite opiniones que exceden la competencia técnica del perito (ej: psicólogo que opina sobre el hecho imputado, no solo sobre el estado psíquico); (d) demostrar que la conclusión del perito es una entre varias técnicamente posibles, lo que genera duda razonable. En causas de abuso sexual, el dictamen psicológico sobre 'síndrome de la víctima' no puede suplir la prueba del hecho en sí.",
+    "condiciones_aplicacion": [
+        "Casos donde existe contradicción entre perito oficial y perito de parte",
+        "Supuestos donde el dictamen pericial es la prueba central de la acusación"
+    ],
+    "riesgos_procesales": [
+        "No ofrecer perito de parte en el momento procesal oportuno",
+        "No interrogar al perito oficial sobre las limitaciones de su metodología",
+        "Omitir señalar cuando el perito excede su competencia técnica al emitir el dictamen"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "pericia",
+        "perito",
+        "contradiccion_pericial",
+        "duda_razonable",
+        "valoracion_prueba",
+        "arbitrariedad"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

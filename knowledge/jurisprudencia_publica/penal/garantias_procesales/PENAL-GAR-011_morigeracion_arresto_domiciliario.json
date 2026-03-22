@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-011",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "morigeracion_prision_preventiva",
+    "criterio": "Morigeración de la prisión preventiva — arresto domiciliario y alternativas cautelares",
+    "regla_general": "Cuando concurran circunstancias personales que tornen desproporcionada la detención en establecimiento carcelario, el tribunal debe evaluar medidas alternativas de similar eficacia cautelar: arresto domiciliario, presentaciones periódicas, prohibición de salida del país, caución. La morigeración no requiere demostrar inocencia sino desproporción de la medida aplicada.",
+    "articulos_cpp": [
+        "CP, art. 10",
+        "Ley 24.660, arts. 32 y 33",
+        "CPP PBA (Ley 11.922), arts. 159 y 160",
+        "CADH, art. 7.3"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CP art. 10 (detención domiciliaria); Ley 24.660 arts. 32 y 33 (prisión domiciliaria); CPP PBA (Ley 11.922) arts. 159 (alternativas a la prisión preventiva) y 160 (arresto domiciliario); CADH art. 7.3",
+        "jurisprudencia_referente": "CSJN, 'Bramajo', Fallos 319:1840 (1996) — proporcionalidad; SCBA, P. 115.908 (2013) — morigeración por razones de salud; CSJN, 'Patti', Fallos 331:2578 (2008)",
+        "doctrina": "Bovino, 'Problemas del derecho procesal penal contemporáneo', pp. 130-155"
+    },
+    "aplicacion_practica": "Causales de morigeración: (a) enfermedad grave que no pueda ser tratada adecuadamente en prisión; (b) edad avanzada (mayor de 70 años); (c) embarazo o maternidad de hijo menor de cinco años o discapacitado; (d) ser el único sostén de familia con hijos menores. La defensa debe aportar certificados médicos, informes socioambientales y constancias de imposibilidad de tratamiento en el establecimiento. El monitoreo electrónico puede ser propuesto como medida alternativa al arresto domiciliario pleno.",
+    "condiciones_aplicacion": [
+        "Imputado en prisión preventiva que acredita circunstancias personales de vulnerabilidad",
+        "Evaluación periódica de proporcionalidad de la medida cautelar"
+    ],
+    "riesgos_procesales": [
+        "No acreditar el cuadro médico o familiar con documentación idónea",
+        "Solicitar morigeración sin proponer medida cautelar alternativa de igual eficacia",
+        "No actualizar los informes médicos ante variación del estado del imputado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "morigeracion",
+        "arresto_domiciliario",
+        "prision_preventiva",
+        "proporcionalidad",
+        "monitoreo_electronico",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

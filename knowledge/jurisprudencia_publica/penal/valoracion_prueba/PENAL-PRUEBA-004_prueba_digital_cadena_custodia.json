@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-PRUEBA-004",
+    "fuero": "penal_pba",
+    "instituto": "valoracion_prueba",
+    "subtipo": "prueba_digital",
+    "criterio": "Prueba digital — requisitos de autenticación, integridad y cadena de custodia",
+    "regla_general": "La evidencia digital (archivos, correos, mensajes, registros de dispositivos) es admisible únicamente si la acusación demuestra: (a) autenticidad (el archivo es lo que se dice ser); (b) integridad (no fue modificado desde su obtención); (c) cadena de custodia documentada desde la extracción hasta la presentación en juicio; (d) procedimiento de extracción técnicamente válido. La ausencia de cualquiera de estos requisitos compromete el valor probatorio de la evidencia digital.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 213 y ss. y 354",
+        "Ley 25.326 (Protección de Datos Personales)",
+        "Ley 26.388 (Delitos Informáticos), arts. 1 y ss.",
+        "CN, art. 18"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 213 y ss. (secuestro y preservación de elementos); Ley 26.388 (Delitos Informáticos, incorpora delitos a través de medios digitales); Ley 25.326 (datos personales y privacidad digital); estándares internacionales: RFC 3227 (Guidelines for Evidence Collection and Archiving) aplicado por peritos informáticos",
+        "jurisprudencia_referente": "CSJN, 'Quaranta', Fallos 333:1674 (2010) — prueba digital y privacidad; SCBA, P. 119.245 (2016) — cadena de custodia en evidencia digital; Cámara Nacional Criminal y Correccional, Sala VI, 'R., M.E.' (2018) — exclusión de evidencia digital sin hash verificado",
+        "doctrina": "Marcelo Riquert, 'Delincuencia informática en Argentina y el MERCOSUR'; Cano Martínez, 'Computación forense'; ENISA Guidelines on Digital Forensics (como estándar técnico aplicado doctrinariamente)"
+    },
+    "aplicacion_practica": "Para impugnar evidencia digital la defensa debe: (a) solicitar el informe técnico de extracción (herramienta usada, hash MD5/SHA256 del dispositivo y de los archivos extraídos); (b) controlar que la cadena de custodia documental esté completa desde el momento del secuestro; (c) verificar si el dispositivo fue almacenado en forma apropiada (jaula de Faraday, bolsa antiestática) para evitar modificaciones remotas; (d) proponer perito informático de parte para auditar la extracción. Un archivo digital sin hash verificado puede haber sido generado, modificado o insertado con posterioridad al secuestro.",
+    "condiciones_aplicacion": [
+        "Todo proceso en que se incorporen archivos digitales, capturas de pantalla, mensajes o registros de dispositivos como prueba",
+        "Casos donde la extracción fue realizada por personal policial sin perito informático"
+    ],
+    "riesgos_procesales": [
+        "No solicitar el informe técnico de extracción al momento de la oferta de prueba de la acusación",
+        "Omitir proponer perito informático de parte cuando la prueba digital es central en la acusación",
+        "No plantear la nulidad de la incorporación de evidencia digital sin cadena de custodia documentada"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "prueba_digital",
+        "cadena_custodia",
+        "autenticidad",
+        "hash",
+        "perito_informatico",
+        "evidencia_digital"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

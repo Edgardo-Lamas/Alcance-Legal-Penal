@@ -1,0 +1,40 @@
+{
+    "id": "PENAL-NUL-001",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "nulidad_absoluta",
+    "criterio": "Nulidad absoluta por violación al derecho de defensa — declaración de oficio e insanabilidad",
+    "regla_general": "Los actos procesales que vulneran de manera esencial el derecho de defensa en juicio son nulos de nulidad absoluta. Este tipo de nulidad: (a) puede ser declarada de oficio por el tribunal en cualquier estado del proceso; (b) no puede ser saneada por consentimiento expreso o tácito del imputado; (c) anula el acto viciado y todos los actos que de él dependan. No es necesaria demostración de perjuicio concreto si la violación es al contenido esencial de la garantía.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, arts. 8.2.d y 8.2.e",
+        "CPP PBA (Ley 11.922), arts. 89, 90 y 101"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 (garantía de defensa en juicio); CADH arts. 8.2.d (derecho a la defensa) y 8.2.e (asistencia letrada); CPP PBA (Ley 11.922) arts. 89 (nulidades absolutas), 90 (nulidades relativas) y 101 (efectos de la declaración de nulidad)",
+        "jurisprudencia_referente": "CSJN, 'Núñez', Fallos 327:5095 (2004) — nulidad absoluta y de oficio; CSJN, 'Di Nunzio', Fallos 328:4860 (2005) — efectos de la nulidad absoluta; SCBA, P. 94.020 (2007) — alcance de las nulidades absolutas en CPP PBA",
+        "doctrina": "Binder, 'El incumplimiento de las formas procesales', pp. 60-90; Maier, 'DPP', T. I, § 8 (actos procesales y su invalidez); Clariá Olmedo, 'Derecho Procesal Penal', T. III, §§ 1060-1085"
+    },
+    "aplicacion_practica": "Supuestos típicos de nulidad absoluta por violación al derecho de defensa: (a) acto procesal realizado sin presencia o sin notificación al defensor (declaración del imputado, pericia, reconocimiento en rueda); (b) restricción injustificada al acceso al expediente; (c) negativa a incorporar prueba descargo ofrecida en tiempo y forma; (d) condena sin que el imputado haya tenido oportunidad de ser oído en el debate. La nulidad debe ser planteada en el primer momento oportuno posterior al conocimiento del vicio; si no puede hacerse (porque el vicio fue descubierto tardíamente), debe señalarse expresamente la razón de la tardanza.",
+    "condiciones_aplicacion": [
+        "Cualquier acto procesal que afecte al imputado y haya sido cumplido sin intervención del defensor",
+        "Resoluciones adoptadas sin dar al imputado oportunidad de ser oído"
+    ],
+    "riesgos_procesales": [
+        "No plantear la nulidad en el primer momento procesal posible tras conocer el vicio",
+        "Consentir tácitamente el acto nulo sin reserva expresa (lo que puede sanearlo en caso de nulidad relativa)",
+        "Omitir identificar cuáles actos posteriores deben ser anulados por derivar del acto viciado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "nulidad_absoluta",
+        "derecho_defensa",
+        "insanabilidad",
+        "de_oficio",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

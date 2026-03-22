@@ -60,6 +60,21 @@ export interface InformeHeader {
     titulo: string;
 }
 
+export interface PatronDetectado {
+    /** ID del patrón (ej: "PIM-002") */
+    id: string;
+    /** Nombre corto del patrón */
+    nombre_corto: string;
+    /** Nivel de alerta: alto, medio o bajo */
+    nivel_alerta: 'alto' | 'medio' | 'bajo';
+    /** Si el patrón está presente en el caso analizado */
+    presente: boolean;
+    /** Resumen en 1-3 frases del por qué */
+    nota_resumen: string;
+    /** Secciones del informe donde debe reflejarse */
+    secciones_relacionadas: string[];
+}
+
 export interface AnalisisCuerpo {
     /** Encuadre jurídico: instituto y artículos aplicables */
     encuadre: string | null;
@@ -73,6 +88,8 @@ export interface AnalisisCuerpo {
     limitaciones: string | null;
     /** Advertencias de validación (si status es 'limited') */
     advertencias_validacion: string[] | null;
+    /** Patrones procesales penales detectados en el caso */
+    patrones_detectados: PatronDetectado[] | null;
 }
 
 export interface ReportMeta {
@@ -115,7 +132,8 @@ function generarNumeroInforme(profileCode: string): string {
 export function buildPenalReport(
     validationResult: ValidationResult,
     criteriosUtilizados: number = 0,
-    profile: ProfileDefinition = PROFILE_PENAL_PBA
+    profile: ProfileDefinition = PROFILE_PENAL_PBA,
+    patrones: PatronDetectado[] = []
 ): PenalReport {
     const now = new Date().toISOString();
     const { output, status, advertencias, metadata } = validationResult;
@@ -137,7 +155,8 @@ export function buildPenalReport(
             riesgos: contenido.riesgos || null,
             conclusion: status === 'rejected' ? null : (contenido.conclusion || null),
             limitaciones: contenido.limitaciones || null,
-            advertencias_validacion: advertencias && advertencias.length > 0 ? advertencias : null
+            advertencias_validacion: advertencias && advertencias.length > 0 ? advertencias : null,
+            patrones_detectados: patrones.length > 0 ? patrones : null
         },
         disclaimer: DISCLAIMER_INSTITUCIONAL,
         meta: {

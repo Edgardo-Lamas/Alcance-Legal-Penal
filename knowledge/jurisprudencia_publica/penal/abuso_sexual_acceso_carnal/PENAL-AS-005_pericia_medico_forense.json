@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-005",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "pericia_medico_forense",
+    "criterio": "Pericia médico-forense en abuso sexual — valor probatorio, alcance y limitaciones",
+    "regla_general": "La pericia médico-forense es prueba objetiva de alta relevancia en los delitos sexuales. Su ausencia, resultado negativo o resultado no concluyente constituye elemento que debe ponderarse a favor del imputado, especialmente cuando el relato de la víctima es el único sostén de la acusación. Los hallazgos periciales deben ser coherentes con el mecanismo lesivo descrito en la denuncia; la incompatibilidad entre ambos genera duda razonable.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 234 y ss. (peritos)",
+        "CPP PBA (Ley 11.922), art. 354 (sana crítica en valoración)",
+        "CN, art. 18 (in dubio pro reo)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 234 y ss. (régimen de peritos); art. 354 (valoración según sana crítica); CN art. 18; Protocolo de Istanbul (ONU, 1999) para examen de víctimas de violencia sexual",
+        "jurisprudencia_referente": "SCBA, P. 115.720 (2014) — examen médico negativo y duda razonable; Cámara de Apelaciones de San Martín, 'G., C.E.' (2016) — incompatibilidad médica con el relato; CSJN, 'G.M.J.' Fallos 339:1484 (2016)",
+        "doctrina": "Lorenzatti y Bongiorno, 'Medicina forense y derecho penal'; Cafferata Nores, 'La prueba en el proceso penal', pp. 175-195 (peritos); Gorphe, 'Apreciación judicial de las pruebas', pp. 280-310"
+    },
+    "aplicacion_practica": "La defensa debe analizar: (a) si el resultado del examen médico ginecológico o proctológico es compatible, incompatible o neutro respecto del hecho relatado; (b) si la antigüedad de las lesiones coincide con la fecha del hecho imputado; (c) si el perito dejó constancia de posibles causas alternativas de los hallazgos; (d) si el examen fue realizado dentro del plazo en que las lesiones serían detectables. Un examen negativo no descarta el abuso, pero requiere que la sentencia explique por qué condena ante ausencia de hallazgos físicos. La defensa puede proponer perito de parte para contradecir las conclusiones del perito oficial.",
+    "condiciones_aplicacion": [
+        "Casos donde el examen médico forense fue realizado y sus resultados son negativos o ambiguos",
+        "Supuestos donde no se realizó examen médico por demora en la denuncia"
+    ],
+    "riesgos_procesales": [
+        "No interrogar al perito médico en el debate sobre la compatibilidad del hallazgo con el mecanismo lesivo descrito",
+        "Omitir señalar que las lesiones identificadas tienen causas alternativas no relacionadas con el abuso",
+        "No solicitar aclaración pericial cuando el informe contiene afirmaciones ambiguas o técnicamente imprecisas"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "pericia_medica",
+        "abuso_sexual",
+        "examen_forense",
+        "duda_razonable",
+        "valoracion_prueba",
+        "perito"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

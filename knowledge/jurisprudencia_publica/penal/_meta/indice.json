@@ -1,0 +1,74 @@
+{
+    "corpus": "penal_pba",
+    "version": "1.0",
+    "fecha_creacion": "2026-03-21",
+    "total_criterios": 37,
+    "categorias": [
+        {
+            "id": "garantias_procesales",
+            "label": "Garantías Procesales",
+            "criterios": 12,
+            "archivos": [
+                "PENAL-GAR-001_in_dubio_pro_reo.json",
+                "PENAL-GAR-002_presuncion_inocencia_carga_prueba.json",
+                "PENAL-GAR-003_nemo_tenetur.json",
+                "PENAL-GAR-004_ne_bis_in_idem.json",
+                "PENAL-GAR-005_juez_natural_imparcial.json",
+                "PENAL-GAR-006_defensa_en_juicio.json",
+                "PENAL-GAR-007_plazo_razonable.json",
+                "PENAL-GAR-008_conocer_imputacion.json",
+                "PENAL-GAR-009_inviolabilidad_comunicaciones.json",
+                "PENAL-GAR-010_prision_preventiva_excepcionalidad.json",
+                "PENAL-GAR-011_morigeracion_arresto_domiciliario.json",
+                "PENAL-GAR-012_recurso_amplio_casacion.json"
+            ]
+        },
+        {
+            "id": "abuso_sexual_acceso_carnal",
+            "label": "Abuso Sexual con Acceso Carnal",
+            "criterios": 10,
+            "archivos": [
+                "PENAL-AS-001_tipo_penal_elementos.json",
+                "PENAL-AS-002_consentimiento.json",
+                "PENAL-AS-003_testimonio_unico_insuficiencia.json",
+                "PENAL-AS-004_perspectiva_genero_limites.json",
+                "PENAL-AS-005_pericia_medico_forense.json",
+                "PENAL-AS-006_camara_gesell_garantias.json",
+                "PENAL-AS-007_retractacion_cambio_version.json",
+                "PENAL-AS-008_demora_denuncia.json",
+                "PENAL-AS-009_abuso_continuado_prueba.json",
+                "PENAL-AS-010_contexto_relacional_previo.json"
+            ]
+        },
+        {
+            "id": "valoracion_prueba",
+            "label": "Valoración de Prueba",
+            "criterios": 8,
+            "archivos": [
+                "PENAL-PRUEBA-001_certeza_apodíctica_condena.json",
+                "PENAL-PRUEBA-002_sana_critica_racional.json",
+                "PENAL-PRUEBA-003_pericia_especializada_limites.json",
+                "PENAL-PRUEBA-004_prueba_digital_cadena_custodia.json",
+                "PENAL-PRUEBA-005_capturas_pantalla_sin_trazabilidad.json",
+                "PENAL-PRUEBA-006_regla_exclusion_prueba_ilicita.json",
+                "PENAL-PRUEBA-007_coimputado_colaborador.json",
+                "PENAL-PRUEBA-008_prueba_indiciaria_requisitos.json"
+            ]
+        },
+        {
+            "id": "irregularidades_procesales",
+            "label": "Irregularidades Procesales y Nulidades",
+            "criterios": 7,
+            "archivos": [
+                "PENAL-NUL-001_nulidad_absoluta_defensa.json",
+                "PENAL-NUL-002_allanamiento_sin_orden.json",
+                "PENAL-NUL-003_exceso_acusatorio.json",
+                "PENAL-NUL-004_prision_preventiva_exceso_plazo.json",
+                "PENAL-NUL-005_defensa_tecnica_ineficaz.json",
+                "PENAL-NUL-006_cadena_custodia_vicio.json",
+                "PENAL-NUL-007_nulidad_formas_sustanciales.json"
+            ]
+        }
+    ],
+    "notas": "v1 del corpus penal PBA. Centrado en garantías defensivas, abuso sexual con acceso carnal (art. 119 CP), valoración de prueba (pericias médicas, evidencia digital) e irregularidades procesales. Pendiente: ampliar con criterios sobre delitos específicos del CP, jurisprudencia de la SCBA más reciente, y criterios sobre etapas preliminares (medidas cautelares, sobreseimiento)."
+}

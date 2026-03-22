@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-002",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "presuncion_inocencia",
+    "criterio": "Presunción de inocencia — carga exclusiva de la acusación",
+    "regla_general": "El imputado es inocente hasta que una sentencia firme declare su culpabilidad. La carga de la prueba recae exclusiva e íntegramente sobre la acusación. La defensa no tiene obligación de probar la inocencia: basta con no ser probada la culpabilidad más allá de toda duda razonable.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.2",
+        "PIDCP, art. 14.2",
+        "CPP PBA (Ley 11.922), art. 1"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH art. 8.2; PIDCP art. 14.2; CPP PBA (Ley 11.922) art. 1",
+        "jurisprudencia_referente": "CSJN, 'Fernández Prieto', Fallos 321:2947 (1998); CIDH, Informe 86/09, caso 12.553; SCBA, P. 106.858 (2011)",
+        "doctrina": "Ferrajoli, 'Derecho y razón', pp. 549-554; Roxin, 'Derecho Procesal Penal', § 11, III; Maier, 'DPP', T. I, § 6.h"
+    },
+    "aplicacion_practica": "La acusación debe aportar prueba autónoma suficiente. No puede fundar la culpabilidad en: (a) la falta de explicación del imputado sobre los hechos; (b) su conducta procesal (silencio, negativa a declarar); (c) antecedentes penales no relacionados con el hecho juzgado; (d) probabilidad estadística o perfiles de comportamiento. La sentencia condenatoria debe señalar concretamente cada elemento probatorio que destruye la presunción de inocencia.",
+    "condiciones_aplicacion": [
+        "Todo imputado en cualquier etapa del proceso",
+        "Aplica tanto en la discusión de la prisión preventiva como en el debate de fondo"
+    ],
+    "riesgos_procesales": [
+        "Fundar prisión preventiva en la gravedad del hecho como señal de culpabilidad",
+        "Valorar el silencio del imputado en su contra",
+        "Exigir al imputado que 'explique' o 'justifique' su conducta sin prueba previa de cargo",
+        "Trasladar la carga de la prueba bajo el argumento del 'contexto' o 'relato verosímil'"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "presuncion_inocencia",
+        "carga_prueba",
+        "acusacion",
+        "in_dubio_pro_reo",
+        "silencio_imputado"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

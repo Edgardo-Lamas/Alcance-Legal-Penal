@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-012",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "recurso_amplio",
+    "criterio": "Recurso amplio — doble conforme y revisión integral de la condena",
+    "regla_general": "El condenado tiene derecho a que un tribunal superior revise íntegramente la sentencia condenatoria, incluyendo tanto las cuestiones de derecho como los hechos y la valoración de la prueba. La restricción de la casación a cuestiones de derecho formal es inconstitucional. El doble conforme exige revisión real y efectiva, no meramente formal.",
+    "articulos_cpp": [
+        "CADH, art. 8.2.h",
+        "PIDCP, art. 14.5",
+        "CN, art. 75 inc. 22",
+        "CPP PBA (Ley 11.922), arts. 450 y ss."
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CADH art. 8.2.h (derecho a recurrir el fallo ante juez o tribunal superior); PIDCP art. 14.5; CN art. 75 inc. 22 (jerarquía constitucional de la CADH); CPP PBA (Ley 11.922) arts. 450 y ss. (recurso de casación)",
+        "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 (2005) — casación amplia; CSJN, 'Herrera Ulloa vs. Costa Rica', CIDH (2004); SCBA, P. 103.021 (2009) — aplicación de Casal en PBA",
+        "doctrina": "Pastor, 'La nueva imagen de la casación penal', pp. 1-50; Maier, 'DPP', T. I, § 6.i"
+    },
+    "aplicacion_practica": "Conforme 'Casal', el tribunal de casación debe agotar el esfuerzo por revisar todo lo que pueda de la sentencia. Procede recurso de casación cuando: (a) la sentencia valora la prueba en forma arbitraria o contra las reglas de la sana crítica; (b) omite considerar prueba relevante producida por la defensa; (c) aplica incorrectamente el estándar de duda razonable; (d) condena con fundamento en indicios sin cumplir los requisitos de pluralidad, concordancia y gravedad. Los agravios sobre la valoración probatoria son ahora revisables en casación.",
+    "condiciones_aplicacion": [
+        "Sentencia condenatoria de primera instancia o de cámara de apelaciones",
+        "Existencia de agravio concreto sobre la valoración de prueba o aplicación del derecho"
+    ],
+    "riesgos_procesales": [
+        "Formular agravios de casación como si la revisión fuera sólo formal (error de derecho)",
+        "No señalar qué prueba fue omitida o mal valorada y cuál debió ser su efecto en el resultado",
+        "Presentar recurso fuera del plazo procesal sin solicitar prórroga o declaración de extemporaneidad justificada"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "recurso_casacion",
+        "doble_conforme",
+        "revision_condena",
+        "arbitrariedad",
+        "valoracion_prueba",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

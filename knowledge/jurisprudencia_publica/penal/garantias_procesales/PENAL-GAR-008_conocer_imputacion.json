@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-GAR-008",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "conocer_imputacion",
+    "criterio": "Derecho a conocer la imputación con precisión — correlación acusación-sentencia",
+    "regla_general": "El imputado tiene derecho a conocer de manera previa, detallada y en idioma comprensible los hechos que se le atribuyen y la calificación legal. La sentencia no puede condenar por hechos distintos o no contenidos en el requerimiento de elevación. La correlación entre acusación y sentencia es condición de validez del fallo condenatorio.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.2.b",
+        "PIDCP, art. 14.3.a",
+        "CPP PBA (Ley 11.922), arts. 334, 335 y 371"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18; CADH art. 8.2.b (comunicación previa y detallada de la acusación); PIDCP art. 14.3.a; CPP PBA (Ley 11.922) arts. 334 (requerimiento de citación a juicio), 335 (contenido) y 371 (correlación en sentencia)",
+        "jurisprudencia_referente": "CSJN, 'Tarifeño', Fallos 325:2019 (2002); CSJN, 'Mostaccio', Fallos 327:120 (2004); SCBA, P. 103.696 (2010) — sorpresa en la calificación final",
+        "doctrina": "Maier, 'DPP', T. I, § 6.d (congruencia procesal); Binder, pp. 180-195"
+    },
+    "aplicacion_practica": "La correlación exige identidad de: (a) persona imputada; (b) hechos materiales (no calificación); (c) modalidad comisiva descripta. Es nulo el fallo que condena por: (a) agravante no descripta en la acusación; (b) modalidad de comisión distinta a la imputada; (c) hecho diferente al debatido. La defensa debe controlar activamente que el alegato final de la acusación no introduzca hechos nuevos no discutidos durante el debate.",
+    "condiciones_aplicacion": [
+        "Toda etapa en que la acusación se modifica o amplía sin notificación al imputado",
+        "Sentencia que condena por hechos o calificación no objeto del debate"
+    ],
+    "riesgos_procesales": [
+        "No oponerse en el momento en que el fiscal introduce hechos nuevos en el alegato final",
+        "Omitir plantear la nulidad de sentencia cuando condena por agravante no acusada",
+        "No solicitar suspensión del debate para preparar defensa ante ampliación de acusación"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "correlacion_acusacion_sentencia",
+        "conocer_imputacion",
+        "nulidad_sentencia",
+        "sorpresa_calificacion",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

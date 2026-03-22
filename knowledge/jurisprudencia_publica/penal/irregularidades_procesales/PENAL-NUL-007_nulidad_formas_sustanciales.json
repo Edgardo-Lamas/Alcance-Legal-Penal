@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-NUL-007",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "formas_sustanciales",
+    "criterio": "Nulidad por incumplimiento de formas sustanciales del acto procesal",
+    "regla_general": "Los actos procesales deben cumplir las formalidades previstas bajo pena de nulidad cuando: (a) la ley las exige expresamente (nulidad expresa); o (b) la omisión de la forma priva al acto de un requisito esencial para alcanzar su fin o afecta la intervención, asistencia o representación del imputado (nulidad implícita). La nulidad no se declara si el acto cumplió su finalidad sin perjuicio para el imputado — principio de trascendencia.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 89, 90, 91 y 101",
+        "CN, art. 18",
+        "CADH, art. 8"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 89 (nulidades absolutas), 90 (nulidades relativas), 91 (saneamiento) y 101 (efectos de la nulidad); CN art. 18; principio de trascendencia o pas de nullité sans grief",
+        "jurisprudencia_referente": "CSJN, 'Plenario Costas' (Fallos clásicos sobre nulidades procesales); SCBA doctrina general sobre nulidades en el CPP PBA; CSJN, 'Herrera de Noble', Fallos 333:1268 (2010) — principio de trascendencia en nulidades",
+        "doctrina": "Binder, 'El incumplimiento de las formas procesales', pp. 30-60; Clariá Olmedo, 'DPP', T. III, §§ 1050-1090; Maier, 'DPP', T. I, § 8 (actos procesales defectuosos)"
+    },
+    "aplicacion_practica": "Tipos de actos cuya nulidad debe controlarse: (a) requerimiento fiscal de elevación a juicio con descripción imprecisa de los hechos; (b) auto de procesamiento o elevación a juicio sin motivación suficiente; (c) sentencia sin fundamentación del quantum punitivo; (d) notificaciones realizadas en domicilio erróneo o a persona sin legitimación para recibirlas. Para que la nulidad sea declarada deben concurrir: existencia del vicio formal, que no haya sido saneado (art. 91), y que haya causado un perjuicio real para la defensa del imputado (principio de trascendencia — pas de nullité sans grief). La nulidad es un remedio, no un fin en sí mismo.",
+    "condiciones_aplicacion": [
+        "Actos procesales que omiten requisitos formales esenciales para la validez del acto",
+        "Notificaciones, acusaciones o resoluciones que carecen de los elementos mínimos exigidos por el CPP PBA"
+    ],
+    "riesgos_procesales": [
+        "Plantear nulidades formales sin demostrar el perjuicio concreto sufrido por el imputado (nulidad sin trascendencia es rechazada)",
+        "No plantear la nulidad en el primer momento oportuno (nulidades relativas precluyen)",
+        "Omitir identificar cuál es la forma sustancial violada y por qué es 'sustancial' en el caso concreto"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "nulidad_procesal",
+        "formas_sustanciales",
+        "trascendencia",
+        "saneamiento",
+        "perjuicio_concreto",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

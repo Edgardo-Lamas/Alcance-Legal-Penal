@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-001",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "tipo_penal_elementos",
+    "criterio": "Abuso sexual con acceso carnal — elementos constitutivos del tipo (art. 119 CP)",
+    "regla_general": "El delito de abuso sexual con acceso carnal (art. 119 párrafo 3 CP) requiere la concurrencia de: (a) acceso carnal por cualquier vía (vaginal, anal u oral); (b) ausencia de consentimiento válido de la víctima, o víctima menor de trece años con independencia del consentimiento; (c) alguna de las circunstancias coercitivas del párrafo 1: violencia, amenaza, abuso coactivo de una relación de dependencia, o incapacidad de la víctima para consentir libremente. La ausencia de cualquiera de estos elementos impone la absolución.",
+    "articulos_cpp": [
+        "CP, art. 119, párrafos 1 y 3",
+        "CP, art. 119, párrafo 4 (agravantes)",
+        "CN, art. 19 (principio de legalidad)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CP art. 119 párr. 1 (abuso sexual simple con circunstancias coercitivas) y párr. 3 (abuso sexual con acceso carnal, pena de 6 a 15 años); CP art. 119 párr. 4 (agravantes: menor de 18, arma, convivencia, etc.); Ley 25.087 (reforma 1999)",
+        "jurisprudencia_referente": "CSJN, 'G.M.J. s/ abuso sexual', Fallos 339:1484 (2016); SCBA, P. 112.537 (2012) — elementos del tipo; Cámara de Apelaciones de Mar del Plata, 'Rojas' (2018) — acceso carnal por vía oral",
+        "doctrina": "Donna, 'Derecho Penal, Parte Especial', T. I, §§ 119-120; De Luca y López Casariego, 'Delitos sexuales', pp. 45-90; Buompadre, 'Delitos contra la integridad sexual', pp. 60-120"
+    },
+    "aplicacion_practica": "La defensa debe analizar críticamente: (a) si el acceso carnal fue efectivamente acreditado con prueba objetiva (pericia médica, evidencia material) o reposa solo en el testimonio; (b) si la coerción descrita en la acusación corresponde a alguna de las modalidades taxativas del tipo; (c) si la víctima mayor de 13 años tenía capacidad plena para consentir libremente. La tipificación errónea (confundir abuso simple con acceso carnal) puede fundar recurso si afecta la pena aplicada.",
+    "condiciones_aplicacion": [
+        "Casos donde la imputación incluye acceso carnal como elemento diferenciador",
+        "Análisis del tipo cuando la acusación no especifica la vía de acceso carnal"
+    ],
+    "riesgos_procesales": [
+        "Omitir cuestionar la falta de prueba objetiva del acceso carnal más allá del testimonio",
+        "No examinar si la víctima mayor de 13 años tenía capacidad plena de consentir",
+        "No plantear reducción de calificación de párrafo 3 a párrafo 1 ante duda sobre el acceso carnal"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "abuso_sexual",
+        "acceso_carnal",
+        "art_119_cp",
+        "tipo_penal",
+        "consentimiento",
+        "elementos_constitutivos"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

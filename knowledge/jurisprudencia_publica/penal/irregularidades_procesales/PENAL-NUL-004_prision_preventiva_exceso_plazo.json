@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-NUL-004",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "prision_preventiva_plazo",
+    "criterio": "Prisión preventiva en exceso del plazo razonable — derecho al cese o morigeración",
+    "regla_general": "La prisión preventiva que supera el tiempo razonable se convierte en pena anticipada y debe cesar o morigerarse con independencia del mérito de la causa. El plazo razonable se evalúa según: duración efectiva de la detención, complejidad del caso, conducta del imputado en el proceso y conducta de las autoridades judiciales. Ningún plazo cronológico es automático, pero la detención prolongada activa la presunción de irrazonabilidad.",
+    "articulos_cpp": [
+        "CADH, arts. 7.3 y 7.5",
+        "PIDCP, art. 9.3",
+        "CPP PBA (Ley 11.922), arts. 141, 168 y 169",
+        "Ley 24.390 (plazos de prisión preventiva — derogada pero con doctrina vigente)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CADH arts. 7.3 (prohibición de detención arbitraria) y 7.5 (plazo razonable o libertad); PIDCP art. 9.3; CPP PBA (Ley 11.922) arts. 141 (plazos de la investigación penal preparatoria), 168 y 169 (revisión y cese de la prisión preventiva); Ley 24.390 (art. 1: plazos máximos de PP — doctrina del 2x1 aplicable en causas anteriores a 2001 o retroactivamente por ley penal más benigna)",
+        "jurisprudencia_referente": "CSJN, 'Verbitsky', Fallos 328:1146 (2005) — condiciones de detención y plazo razonable; CIDH, 'Informe 35/07' — principios sobre prisión preventiva; CSJN, 'Bramajo', Fallos 319:1840 (1996) — control de constitucionalidad del plazo de PP",
+        "doctrina": "Llobet Rodríguez, 'La prisión preventiva', pp. 95-140; Pastor, 'El plazo razonable en el proceso del estado de derecho', pp. 200-250"
+    },
+    "aplicacion_practica": "La defensa debe: (a) llevar un registro preciso del tiempo efectivo de detención; (b) solicitar periódicamente al tribunal la revisión de la necesidad y proporcionalidad de la medida (CPP PBA art. 168); (c) acreditar que el imputado no generó dilaciones procesales; (d) demostrar que la investigación está estancada o que las razones que justificaron la detención original han desaparecido. Ante exceso de plazo, corresponde solicitar el cese de la prisión preventiva o su conversión en medida alternativa (arresto domiciliario, tobillera electrónica).",
+    "condiciones_aplicacion": [
+        "Imputados detenidos en prisión preventiva por períodos prolongados sin sentencia firme",
+        "Causas en las que la investigación no avanzó pese a la detención del imputado"
+    ],
+    "riesgos_procesales": [
+        "No solicitar revisión periódica de la medida cautelar según los plazos del CPP PBA",
+        "No documentar que las demoras procesales son atribuibles al fiscal o al tribunal, no al imputado",
+        "Omitir la demanda de cese de PP ante el vencimiento de los plazos de la investigación penal preparatoria"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "prision_preventiva",
+        "plazo_razonable",
+        "cese_detencion",
+        "pena_anticipada",
+        "revision_cautelar",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

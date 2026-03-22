@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-AS-009",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "abuso_continuado",
+    "criterio": "Abuso sexual continuado o reiterado — prueba de la habitualidad y especificidad de los actos",
+    "regla_general": "Cuando la acusación imputa abuso sexual continuado o reiterado a lo largo de un período, debe identificar al menos algunos actos con suficiente especificidad (fecha aproximada, lugar, modalidad) que permitan al imputado ejercer su defensa respecto de cada uno de ellos. La imputación genérica 'durante X años abusó sexualmente' sin identificación de episodios concretos viola el derecho de defensa y el principio de correlación acusación-sentencia.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, art. 8.2.b",
+        "CPP PBA (Ley 11.922), arts. 334 y 335",
+        "CP, art. 119 párrafo 3"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CN art. 18; CADH art. 8.2.b (conocer la acusación en detalle); CPP PBA (Ley 11.922) arts. 334 y 335 (requerimiento de citación a juicio y su contenido); CP art. 119",
+        "jurisprudencia_referente": "SCBA, P. 108.590 (2011) — especificidad en imputación de abuso continuado; Cámara de Apelaciones de La Plata, 'H., R.O.' (2014) — sobreseimiento por imputación genérica; TS de Córdoba (comparado), 'R., V.' (2013)",
+        "doctrina": "Maier, 'DPP', T. I, § 6.d (congruencia y especificidad de la imputación); Binder, 'Introducción al DPP', pp. 190-200; De Luca y López Casariego, 'Delitos sexuales', pp. 165-185"
+    },
+    "aplicacion_practica": "Ante una imputación de abuso continuado la defensa debe: (a) exigir que la acusación identifique los episodios concretos con la mayor precisión posible (período, lugar, modalidad de cada acto); (b) señalar que la condena no puede estar fundada en la suma de episodios que ninguno de ellos supera el estándar probatorio; (c) analizar si el imputado tenía acceso físico a la víctima en los períodos descriptos; (d) verificar la cronología del relato con registros escolares, laborales o domiciliarios que puedan acreditar imposibilidad de acceso.",
+    "condiciones_aplicacion": [
+        "Acusaciones que imputan 'abuso por un período' sin identificar episodios individuales",
+        "Casos donde la cantidad de actos atribuidos influye en la calificación o la pena"
+    ],
+    "riesgos_procesales": [
+        "No plantear la excepción de falta de acción por acusación genérica en el momento procesal oportuno",
+        "Omitir producir prueba de imposibilidad de acceso a la víctima durante el período acusado",
+        "No impugnar la sentencia que condena sin distinguir y probar cada episodio individualmente"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "abuso_continuado",
+        "habitualidad",
+        "especificidad_imputacion",
+        "derecho_defensa",
+        "correlacion_acusacion",
+        "abuso_sexual"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

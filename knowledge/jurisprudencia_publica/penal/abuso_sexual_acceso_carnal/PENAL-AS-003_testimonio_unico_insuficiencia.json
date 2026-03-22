@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-003",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "testimonio_unico",
+    "criterio": "Testimonio único de la víctima — insuficiencia como prueba exclusiva de cargo",
+    "regla_general": "En delitos sexuales, el testimonio aislado de la presunta víctima, sin corroboración periférica objetiva, no alcanza por sí solo el estándar probatorio requerido para fundar una condena más allá de toda duda razonable. La valoración del testimonio único debe ser especialmente rigurosa y exige verificar: ausencia de motivo de falsedad, persistencia en la incriminación, y coherencia interna y externa con otros elementos del proceso.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 354 y 373",
+        "CN, art. 18 (in dubio pro reo implícito)",
+        "CADH, art. 8.2"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA (Ley 11.922) arts. 354 (valoración de la prueba bajo sana crítica racional) y 373 (motivación de la sentencia); estándar internacional: CADH art. 8.2",
+        "jurisprudencia_referente": "SCBA, P. 112.218 (2013) — testimonio único requiere corroboración; Tribunal Oral en lo Criminal de Quilmes, 'H.R.G.' (2017) — absolución por falta de corroboración; TS de España (como doctrina comparada) aplicada en causas locales",
+        "doctrina": "Cafferata Nores, 'La prueba en el proceso penal', pp. 140-165; Maza Martín (comparada), 'Testimonio de la víctima y presunción de inocencia'; Falcone, 'Garantías del imputado en los delitos de abuso sexual'"
+    },
+    "aplicacion_practica": "El criterio 'Maza' para evaluar el testimonio único requiere: (a) ausencia de incredibilidad subjetiva (sin motivos de falsedad: resentimiento, conflicto previo, interés económico, disputa por custodia de hijos); (b) verosimilitud objetiva (corroboración con datos periféricos: testigos de contexto, mensajes, pericias, conducta posterior de la víctima); (c) persistencia en la incriminación sin contradicciones esenciales. Si el relato tiene modificaciones sustanciales entre la denuncia, la cámara Gesell y el debate, la corroboración objetiva es imprescindible.",
+    "condiciones_aplicacion": [
+        "Casos donde la prueba de cargo se reduce al testimonio de la víctima sin respaldo objetivo",
+        "Supuestos donde la pericia médica es negativa o no concluyente"
+    ],
+    "riesgos_procesales": [
+        "No señalar explícitamente en el alegato cuáles son los motivos de incredibilidad subjetiva presentes en el caso",
+        "Omitir el análisis de las modificaciones o contradicciones entre las distintas declaraciones de la víctima",
+        "No impugnar la sentencia que condena sin señalar qué elemento objetivo corrobora el testimonio"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "testimonio_unico",
+        "victima",
+        "corroboracion",
+        "abuso_sexual",
+        "duda_razonable",
+        "valoracion_prueba"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

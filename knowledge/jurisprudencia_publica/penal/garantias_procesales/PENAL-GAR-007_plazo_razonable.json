@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-007",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "plazo_razonable",
+    "criterio": "Plazo razonable — derecho a resolución sin dilaciones indebidas",
+    "regla_general": "Toda persona tiene derecho a ser juzgada en un plazo razonable. Las dilaciones injustificadas del proceso penal, especialmente cuando el imputado se encuentra detenido, constituyen una violación autónoma a los derechos fundamentales, independientemente del resultado del proceso.",
+    "articulos_cpp": [
+        "CADH, arts. 7.5 y 8.1",
+        "PIDCP, arts. 9.3 y 14.3.c",
+        "CN, art. 18 (implícita)",
+        "CPP PBA (Ley 11.922), arts. 141 y 168"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CADH arts. 7.5 (plazo razonable en detención) y 8.1 (plazo razonable del proceso); PIDCP arts. 9.3 y 14.3.c; Principios y Buenas Prácticas de la CIDH sobre PPL (Principio III.2); CPP PBA (Ley 11.922) arts. 141, 168",
+        "jurisprudencia_referente": "CSJN, 'Mattei', Fallos 272:188 (1968) — preclusión y derecho a un proceso rápido; CIDH, caso 'Suárez Rosero vs. Ecuador' (1997); SCBA, causas sobre prisión preventiva en exceso de plazo",
+        "doctrina": "Pastor, 'El plazo razonable en el proceso del estado de derecho', pp. 67-120; Binder, pp. 210-230"
+    },
+    "aplicacion_practica": "Para evaluar el plazo razonable se ponderan: (a) complejidad del caso; (b) comportamiento del imputado (si generó dilaciones); (c) comportamiento de las autoridades judiciales y del fiscal. El exceso en el plazo de prisión preventiva constituye una violación autónoma que exige la morigeración o cese de la detención, con independencia del mérito de la causa. En PBA, los plazos de la investigación penal preparatoria son perentorios.",
+    "condiciones_aplicacion": [
+        "Imputado sometido a proceso por tiempo que excede lo razonable según la complejidad de la causa",
+        "Imputado en prisión preventiva por período prolongado sin sentencia firme",
+        "Demoras atribuibles al órgano jurisdiccional o fiscal, no al imputado"
+    ],
+    "riesgos_procesales": [
+        "No plantear la extinción de la acción por exceso de plazo en el momento procesal oportuno",
+        "Omitir computar el tiempo de prisión preventiva sufrida para solicitar morigeración",
+        "No documentar las demoras atribuibles al fiscal o al tribunal"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "plazo_razonable",
+        "prision_preventiva",
+        "dilacion_indebida",
+        "extincion_accion",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

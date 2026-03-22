@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-NUL-002",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "allanamiento_ilegal",
+    "criterio": "Allanamiento sin orden judicial — nulidad absoluta y exclusión de la evidencia obtenida",
+    "regla_general": "El allanamiento del domicilio privado sin orden judicial fundada y emanada de juez competente es inconstitucional. Toda evidencia obtenida en un allanamiento ilegal debe ser excluida del proceso, junto con la prueba derivada de ella. Las excepciones legales (flagrancia, consentimiento del morador, peligro inminente) son taxativas y de interpretación restrictiva; la carga de probar la excepción recae en la acusación.",
+    "articulos_cpp": [
+        "CN, art. 18 (inviolabilidad del domicilio)",
+        "CPP PBA (Ley 11.922), arts. 219, 220 y 224",
+        "CADH, art. 11.2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 (inviolabilidad del domicilio); CADH art. 11.2 (nadie puede ser objeto de injerencias arbitrarias en su domicilio); CPP PBA (Ley 11.922) arts. 219 (allanamiento — requisitos de la orden judicial), 220 (excepciones) y 224 (flagrancia)",
+        "jurisprudencia_referente": "CSJN, 'Fiorentino', Fallos 306:1752 (1984) — nulidad de allanamiento sin orden y exclusión de prueba; CSJN, 'Rayford', Fallos 308:733 (1986) — prueba derivada de allanamiento ilegal; CSJN, 'Minaglia', Fallos 330:3801 (2007) — requisitos de la orden de allanamiento",
+        "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita', pp. 120-160 (allanamiento); Binder, 'Introducción al DPP', pp. 240-255"
+    },
+    "aplicacion_practica": "La defensa debe verificar: (a) si existe orden judicial escrita y firmada por juez competente, previa al ingreso; (b) si la orden identifica el domicilio con precisión, el objeto de la búsqueda y el plazo; (c) si el consentimiento del morador fue libre, informado y documentado (un consentimiento viciado por presión policial no es válido); (d) si la flagrancia invocada existía realmente al momento del ingreso. Si el allanamiento es nulo, todos los elementos secuestrados y las pericias sobre ellos son excluibles. La nulidad del allanamiento puede generar la exclusión en cadena de toda la investigación.",
+    "condiciones_aplicacion": [
+        "Causas donde la prueba principal proviene de un secuestro domiciliario",
+        "Supuestos donde el consentimiento del morador fue obtenido bajo circunstancias coercitivas"
+    ],
+    "riesgos_procesales": [
+        "No solicitar copia de la orden de allanamiento en la etapa de investigación para controlar su legalidad",
+        "Omitir impugnar el consentimiento del morador cuando existen indicios de que fue viciado",
+        "No plantear la exclusión de todos los elementos derivados del allanamiento nulo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "allanamiento",
+        "domicilio",
+        "orden_judicial",
+        "nulidad",
+        "exclusion_prueba",
+        "fruto_arbol_envenenado"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

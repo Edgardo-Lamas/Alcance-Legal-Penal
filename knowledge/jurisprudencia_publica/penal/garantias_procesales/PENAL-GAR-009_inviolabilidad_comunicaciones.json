@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-GAR-009",
+    "fuero": "penal_pba",
+    "instituto": "garantias_procesales",
+    "subtipo": "inviolabilidad_comunicaciones",
+    "criterio": "Inviolabilidad de comunicaciones y correspondencia — requisitos de interceptación válida",
+    "regla_general": "Las comunicaciones privadas, la correspondencia y el domicilio son inviolables. Su intercepción o registro exige orden judicial fundada, emanada de juez competente, con delimitación precisa del objeto de la investigación, plazo máximo de duración y destinatario de la medida. Toda interceptación sin estas condiciones es nula y excluye la prueba obtenida y sus derivados.",
+    "articulos_cpp": [
+        "CN, arts. 18 y 19",
+        "CADH, art. 11",
+        "CPP PBA (Ley 11.922), arts. 217 y 218",
+        "Ley 25.520 (Inteligencia Nacional), art. 5"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN arts. 18 (inviolabilidad del domicilio y correspondencia) y 19 (acciones privadas); CADH art. 11 (protección de la honra y dignidad); CPP PBA (Ley 11.922) arts. 217 (interceptación de comunicaciones) y 218 (requisitos); Ley 25.520 art. 5 (prohibición interceptaciones sin autorización judicial)",
+        "jurisprudencia_referente": "CSJN, 'Halabi', Fallos 332:111 (2009); CSJN, 'Quaranta', Fallos 333:1674 (2010); CSJN, 'Minaglia', Fallos 330:3801 (2007)",
+        "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita', pp. 80-100; Binder, 'El proceso penal', pp. 250-270"
+    },
+    "aplicacion_practica": "Son nulas las grabaciones o transcripciones de comunicaciones cuando: (a) no existe orden judicial previa; (b) la orden es genérica sin delimitar personas, números o período; (c) la intercepción excedió el plazo autorizado; (d) fue realizada por particulares y luego aportada como prueba. Las escuchas telefónicas incorporadas sin las formalidades legales deben ser excluidas del proceso junto con toda prueba derivada de su contenido (doctrina del árbol envenenado, CSJN 'Rayford').",
+    "condiciones_aplicacion": [
+        "Toda incorporación de grabaciones, capturas de comunicaciones o registros de dispositivos al proceso",
+        "Evidencia digital obtenida de teléfonos, computadoras o servidores durante la investigación"
+    ],
+    "riesgos_procesales": [
+        "No solicitar la nulidad al momento de incorporación de las escuchas al proceso",
+        "Omitir verificar si la orden judicial delimitaba correctamente el objeto y el plazo",
+        "No plantear la exclusión de prueba derivada de interceptación nula"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "inviolabilidad_comunicaciones",
+        "escuchas_telefonicas",
+        "prueba_digital",
+        "nulidad",
+        "fruto_arbol_envenenado",
+        "garantias_procesales"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}

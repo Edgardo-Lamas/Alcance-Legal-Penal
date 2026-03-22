@@ -1,0 +1,41 @@
+{
+    "id": "PENAL-AS-010",
+    "fuero": "penal_pba",
+    "instituto": "abuso_sexual",
+    "subtipo": "contexto_relacional",
+    "criterio": "Contexto relacional previo entre imputado y víctima — relevancia para el tipo subjetivo y la credibilidad",
+    "regla_general": "La existencia de una relación afectiva o sexual previa y voluntaria entre el imputado y la presunta víctima no justifica el acto abusivo imputado, pero es un elemento de contexto relevante para: (a) analizar el tipo subjetivo del imputado (dolo de abuso vs. interpretación razonable de consentimiento); (b) evaluar la verosimilitud del relato acusatorio; (c) ponderar la credibilidad del cambio de versión posterior. Debe ser incorporado al proceso y valorado conforme a la sana crítica.",
+    "articulos_cpp": [
+        "CP, art. 119 (dolo como elemento subjetivo)",
+        "CPP PBA (Ley 11.922), art. 354 (sana crítica)",
+        "CN, art. 18 (garantías procesales)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CP art. 119 (elemento subjetivo: el tipo requiere dolo de realizar el acto sin consentimiento); CPP PBA (Ley 11.922) art. 354 (libre valoración según sana crítica); CN art. 19 (autonomía personal)",
+        "jurisprudencia_referente": "SCBA, P. 110.263 (2012) — relación previa y análisis del tipo subjetivo; Cámara de Apelaciones de Azul, 'M., A.P.' (2017) — contexto de relación afectiva y error de tipo; doctrina comparada del TEDH sobre consentimiento en contextos relacionales",
+        "doctrina": "Donna, 'Parte Especial', T. I, §§ 119-120 (elemento subjetivo); De Luca y López Casariego, 'Delitos sexuales', pp. 115-135 (dolo y error de tipo); Tenca, 'Delitos sexuales', pp. 70-90"
+    },
+    "aplicacion_practica": "La defensa puede usar el contexto relacional previo para: (a) plantear error de tipo (el imputado creyó razonablemente que existía consentimiento dado el contexto de la relación); (b) señalar que las comunicaciones post-hecho entre las partes son inconsistentes con el relato de un acto abusivo; (c) aportar testimonios de terceros que observaron el tipo de relación entre imputado y víctima. El contexto relacional no exculpa per se, pero puede fundar un error de tipo invencible o reducir el dolo al grado de culpa no punible en el art. 119 CP.",
+    "condiciones_aplicacion": [
+        "Casos con relación afectiva, de pareja o de amistad íntima previa al hecho imputado",
+        "Supuestos donde las comunicaciones post-hecho son incoherentes con el relato de abuso"
+    ],
+    "riesgos_procesales": [
+        "No aportar prueba documental o testimonial del contexto relacional previo",
+        "Omitir plantear el error de tipo cuando el contexto relacional es relevante para el tipo subjetivo",
+        "No impugnar la sentencia que omite considerar el contexto relacional al analizar el dolo del imputado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": [
+        "contexto_relacional",
+        "abuso_sexual",
+        "dolo",
+        "error_tipo",
+        "consentimiento",
+        "tipo_subjetivo"
+    ],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-03-21"
+}
