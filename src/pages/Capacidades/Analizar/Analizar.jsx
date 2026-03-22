@@ -1,7 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../../services/api'
 import './Analizar.css'
+
+const MAX_IMAGES = 4
+const MAX_SIZE_MB = 4
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const etapasProcesales = [
     { value: 'ipp', label: 'Investigación Penal Preparatoria (IPP)' },
@@ -12,6 +16,8 @@ const etapasProcesales = [
 
 function Analizar() {
     const navigate = useNavigate()
+    const fileInputRef = useRef(null)
+
     const [formData, setFormData] = useState({
         hechos: '',
         tipo_penal: '',
@@ -20,8 +26,17 @@ function Analizar() {
         pretension_defensiva: '',
         documentacion_caso: '',
     })
+    const [imagenes, setImagenes] = useState([]) // [{data, mediaType, nombre, preview}]
+    const [isDragging, setIsDragging] = useState(false)
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
+
+    // Revocar blob URLs al desmontar el componente
+    useEffect(() => {
+        return () => {
+            imagenes.forEach(img => URL.revokeObjectURL(img.preview))
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -40,6 +55,64 @@ function Analizar() {
         return Object.keys(newErrors).length === 0
     }
 
+    // Valida y lee un archivo como base64, lo agrega al estado
+    const processFile = (file) => {
+        if (!ACCEPTED_TYPES.includes(file.type)) {
+            setErrors(prev => ({
+                ...prev,
+                imagenes: `Formato no soportado: ${file.name}. Use JPG, PNG o WebP.`
+            }))
+            return
+        }
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+            setErrors(prev => ({
+                ...prev,
+                imagenes: `${file.name} supera el límite de ${MAX_SIZE_MB}MB.`
+            }))
+            return
+        }
+
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const dataUrl = e.target.result      // "data:image/jpeg;base64,..."
+            const base64 = dataUrl.split(',')[1] // solo el dato, sin prefijo
+            const preview = URL.createObjectURL(file)
+            setImagenes(prev => [...prev, { data: base64, mediaType: file.type, nombre: file.name, preview }])
+            setErrors(prev => ({ ...prev, imagenes: null }))
+        }
+        reader.readAsDataURL(file)
+    }
+
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files)
+        const remaining = MAX_IMAGES - imagenes.length
+        files.slice(0, remaining).forEach(processFile)
+        e.target.value = '' // permite re-seleccionar el mismo archivo
+    }
+
+    const handleDragOver = (e) => {
+        e.preventDefault()
+        if (!isLoading && imagenes.length < MAX_IMAGES) setIsDragging(true)
+    }
+
+    const handleDragLeave = () => setIsDragging(false)
+
+    const handleDrop = (e) => {
+        e.preventDefault()
+        setIsDragging(false)
+        if (isLoading || imagenes.length >= MAX_IMAGES) return
+        const files = Array.from(e.dataTransfer.files)
+        const remaining = MAX_IMAGES - imagenes.length
+        files.slice(0, remaining).forEach(processFile)
+    }
+
+    const handleRemoveImage = (index) => {
+        setImagenes(prev => {
+            URL.revokeObjectURL(prev[index].preview)
+            return prev.filter((_, i) => i !== index)
+        })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!validate()) return
@@ -48,10 +121,15 @@ function Analizar() {
         setErrors({})
 
         try {
-            const response = await api.analizarCaso(formData)
+            // Enviar sin el campo preview (blob URL — solo útil en el browser)
+            const payload = {
+                ...formData,
+                imagenes: imagenes.map(({ data, mediaType, nombre }) => ({ data, mediaType, nombre })),
+            }
+
+            const response = await api.analizarCaso(payload)
 
             if (response.success) {
-                // Aplanar la respuesta para Resultado.jsx
                 const estadoLabels = {
                     approved: 'INFORME APROBADO',
                     limited: 'INFORME CON LIMITACIONES',
@@ -72,7 +150,6 @@ function Analizar() {
                     }
                 })
             } else {
-                // Rechazo fundado del pipeline (admisibilidad, RAG, validación)
                 setErrors({
                     api: response.fundamento || response.recomendacion || 'La consulta no pudo ser procesada.'
                 })
@@ -85,6 +162,7 @@ function Analizar() {
     }
 
     const charCount = formData.hechos.length
+    const imagenesRestantes = MAX_IMAGES - imagenes.length
 
     return (
         <div className="analizar">
@@ -237,7 +315,90 @@ function Analizar() {
                     />
                 </div>
 
-                {/* Error general */}
+                {/* Imágenes Adjuntas */}
+                <div className="form-group">
+                    <label className="form-label">Imágenes Adjuntas</label>
+                    <p className="form-hint">
+                        Adjunte hasta {MAX_IMAGES} imágenes: pericias escaneadas, capturas de WhatsApp,
+                        fotos de evidencia o escritos manuscritos. El sistema las analizará visualmente.
+                        Formatos: JPG, PNG, WebP · Máx. {MAX_SIZE_MB}MB por imagen.
+                    </p>
+
+                    {/* Zona de carga — visible mientras no se alcanzó el límite */}
+                    {imagenes.length < MAX_IMAGES && (
+                        <div
+                            className={`upload-zone${isDragging ? ' upload-zone--dragging' : ''}${isLoading ? ' upload-zone--disabled' : ''}`}
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            onClick={() => !isLoading && fileInputRef.current?.click()}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === 'Enter' && !isLoading && fileInputRef.current?.click()}
+                            aria-label="Subir imágenes"
+                        >
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                accept="image/jpeg,image/png,image/webp"
+                                multiple
+                                onChange={handleFileSelect}
+                                style={{ display: 'none' }}
+                                disabled={isLoading}
+                            />
+                            <svg className="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                            <p className="upload-zone__text">
+                                {isDragging ? 'Suelte las imágenes aquí' : 'Haga clic o arrastre imágenes aquí'}
+                            </p>
+                            <p className="upload-zone__counter">
+                                {imagenes.length}/{MAX_IMAGES} · {imagenesRestantes} lugar{imagenesRestantes !== 1 ? 'es' : ''} disponible{imagenesRestantes !== 1 ? 's' : ''}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Thumbnails de imágenes cargadas */}
+                    {imagenes.length > 0 && (
+                        <div className="imagenes-preview">
+                            {imagenes.map((img, index) => (
+                                <div key={index} className="imagen-thumb">
+                                    <img
+                                        src={img.preview}
+                                        alt={img.nombre}
+                                        className="imagen-thumb__img"
+                                    />
+                                    {!isLoading && (
+                                        <button
+                                            type="button"
+                                            className="imagen-thumb__remove"
+                                            onClick={() => handleRemoveImage(index)}
+                                            title="Eliminar imagen"
+                                            aria-label={`Eliminar ${img.nombre}`}
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                    <p className="imagen-thumb__nombre">
+                                        {img.nombre.length > 14 ? img.nombre.slice(0, 12) + '…' : img.nombre}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {imagenes.length >= MAX_IMAGES && (
+                        <p className="upload-limit-msg">
+                            Límite alcanzado ({MAX_IMAGES}/{MAX_IMAGES}). Elimine una imagen para agregar otra.
+                        </p>
+                    )}
+
+                    {errors.imagenes && <span className="form-error">{errors.imagenes}</span>}
+                </div>
+
+                {/* Error general de API */}
                 {errors.api && (
                     <div className="form-error-block">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

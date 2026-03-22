@@ -433,6 +433,143 @@
     color: #1a2744;
 }
 
+/* ============================================
+   UPLOAD ZONE — Zona de carga de imágenes
+   ============================================ */
+
+.upload-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.75rem 1rem;
+    border: 2px dashed #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    margin-bottom: 1rem;
+    user-select: none;
+}
+
+.upload-zone:hover {
+    border-color: #c9a227;
+    background: #fffbeb;
+}
+
+.upload-zone:focus {
+    outline: none;
+    border-color: #c9a227;
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+}
+
+.upload-zone--dragging {
+    border-color: #c9a227;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.upload-zone--disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.upload-zone__icon {
+    width: 36px;
+    height: 36px;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.upload-zone--dragging .upload-zone__icon,
+.upload-zone:hover .upload-zone__icon {
+    color: #c9a227;
+}
+
+.upload-zone__text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #475569;
+    margin: 0;
+    text-align: center;
+}
+
+.upload-zone__counter {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* Thumbnails */
+.imagenes-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.imagen-thumb {
+    position: relative;
+    width: 84px;
+    flex-shrink: 0;
+}
+
+.imagen-thumb__img {
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    display: block;
+}
+
+.imagen-thumb__remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.15s ease;
+    padding: 0;
+}
+
+.imagen-thumb__remove:hover {
+    background: #b91c1c;
+    transform: scale(1.1);
+}
+
+.imagen-thumb__nombre {
+    font-size: 0.65rem;
+    color: #64748b;
+    margin: 0.3rem 0 0 0;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 84px;
+}
+
+.upload-limit-msg {
+    font-size: 0.8rem;
+    color: #92400e;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0 0.5rem 0;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .analizar {

@@ -37,6 +37,15 @@ const RAG_CONFIG = {
 // CONTRATOS REQUEST/RESPONSE
 // ============================================
 
+interface ImagenAdjunta {
+    /** Base64 del archivo de imagen, sin el prefijo "data:..." */
+    data: string
+    /** MIME type de la imagen */
+    mediaType: 'image/jpeg' | 'image/png' | 'image/webp'
+    /** Nombre original del archivo (opcional, para logs) */
+    nombre?: string
+}
+
 interface AnalizarCasoRequest {
     /** Descripción de los hechos imputados (requerido) */
     hechos: string
@@ -50,6 +59,8 @@ interface AnalizarCasoRequest {
     tipo_penal?: string
     /** Texto de documentación del expediente: pericias, declaraciones, actas (opcional) */
     documentacion_caso?: string
+    /** Imágenes adjuntas: pericias escaneadas, capturas, fotos de evidencia (máx. 4) */
+    imagenes?: ImagenAdjunta[]
 }
 
 interface AnalizarCasoResponse {
@@ -167,8 +178,22 @@ async function generarEmbedding(texto: string): Promise<number[]> {
     return data.data[0].embedding
 }
 
-async function invocarRazonamiento(context: string): Promise<Record<string, string>> {
+async function invocarRazonamiento(
+    context: string,
+    imagenes?: ImagenAdjunta[]
+): Promise<Record<string, string>> {
     if (ANTHROPIC_API_KEY) {
+        // Si hay imágenes, el contenido del mensaje es un array de content blocks
+        const userContent = (imagenes && imagenes.length > 0)
+            ? [
+                { type: 'text', text: context },
+                ...imagenes.slice(0, 4).map(img => ({
+                    type: 'image',
+                    source: { type: 'base64', media_type: img.mediaType, data: img.data }
+                }))
+              ]
+            : context
+
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
@@ -180,7 +205,7 @@ async function invocarRazonamiento(context: string): Promise<Record<string, stri
                 model: 'claude-sonnet-4-6',
                 max_tokens: 4096,
                 system: PROFILE_PENAL_PBA_CONFIG.systemPrompt,
-                messages: [{ role: 'user', content: context }]
+                messages: [{ role: 'user', content: userContent }]
             }),
         })
 
@@ -192,7 +217,7 @@ async function invocarRazonamiento(context: string): Promise<Record<string, stri
         return JSON.parse(data.content[0].text)
     }
 
-    // Fallback a OpenAI GPT-4
+    // Fallback a OpenAI GPT-4 (solo texto — no soporta vision en este flujo)
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -525,6 +550,8 @@ serve(async (req: Request) => {
             `### Criterio: ${c.criterio} (${c.id})\n**Regla:** ${c.regla_general}\n**Artículos:** ${c.articulos_cpp?.join(', ') || 'N/A'}`
         ).join('\n\n')
 
+        const imagenesCount = body.imagenes?.length ?? 0
+
         const contextReasoning =
             `## HECHOS IMPUTADOS\n${body.hechos}\n\n` +
             (body.tipo_penal ? `## TIPO PENAL APLICADO POR LA ACUSACIÓN\n${body.tipo_penal}\n\n` : '') +
@@ -532,10 +559,17 @@ serve(async (req: Request) => {
             (body.prueba_acusacion ? `## PRUEBA INVOCADA POR LA ACUSACIÓN\n${body.prueba_acusacion}\n\n` : '') +
             (body.pretension_defensiva ? `## PRETENSIÓN DEFENSIVA\n${body.pretension_defensiva}\n\n` : '') +
             (body.documentacion_caso ? `## DOCUMENTACIÓN DEL EXPEDIENTE\n${body.documentacion_caso.slice(0, 20000)}\n\n` : '') +
+            (imagenesCount > 0
+                ? `## IMÁGENES ADJUNTAS (${imagenesCount} imagen/es)\n` +
+                  `El abogado ha adjuntado ${imagenesCount} imagen/es para análisis. ` +
+                  `Pueden contener: pericias médico-forenses escaneadas, capturas de pantalla de conversaciones (WhatsApp, redes sociales), ` +
+                  `fotos de evidencia física, o escritos manuscritos. ` +
+                  `Analícelas en el contexto de la defensa penal e incorpore la información relevante al informe.\n\n`
+                : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
 
-        const razonamiento = await invocarRazonamiento(contextReasoning)
+        const razonamiento = await invocarRazonamiento(contextReasoning, body.imagenes)
 
         // ==========================================
         // FASE 4: VALIDACIÓN DE SALIDA + DETECCIÓN DE PATRONES
