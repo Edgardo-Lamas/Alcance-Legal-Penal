@@ -54,7 +54,7 @@ function DisclaimerAcceptance({ onAccept }) {
                 <header className="disclaimer-header">
                     <div className="disclaimer-logo">⚖️</div>
                     <h1>ALCANCE LEGAL</h1>
-                    <p>Sistema de Inteligencia Jurídica Civil</p>
+                    <p>Sistema de Inteligencia Jurídica Penal</p>
                 </header>
 
                 <div

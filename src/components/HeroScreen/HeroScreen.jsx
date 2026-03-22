@@ -35,7 +35,7 @@ function HeroScreen({ onEnter }) {
                 </div>
 
                 <h1 className="hero-screen__title">Alcance Legal</h1>
-                <p className="hero-screen__tagline">Inteligencia Jurídica Civil</p>
+                <p className="hero-screen__tagline">Inteligencia Jurídica Penal</p>
 
                 <div className="hero-screen__badge">
                     <span>Asociado Senior Digital</span>

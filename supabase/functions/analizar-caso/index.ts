@@ -48,6 +48,8 @@ interface AnalizarCasoRequest {
     pretension_defensiva?: string
     /** Norma o tipo penal aplicado por la acusación (opcional) */
     tipo_penal?: string
+    /** Texto de documentación del expediente: pericias, declaraciones, actas (opcional) */
+    documentacion_caso?: string
 }
 
 interface AnalizarCasoResponse {
@@ -312,7 +314,7 @@ function checkAdmissibility(body: AnalizarCasoRequest): {
         }
     }
 
-    const textoCompleto = `${body.hechos} ${body.pretension_defensiva || ''} ${body.tipo_penal || ''}`.toLowerCase()
+    const textoCompleto = `${body.hechos} ${body.pretension_defensiva || ''} ${body.tipo_penal || ''} ${body.documentacion_caso || ''}`.toLowerCase()
 
     const tieneFueroExcluido = PROFILE_PENAL_PBA_CONFIG.fuerosExcluidosKeywords
         .some(kw => textoCompleto.includes(kw.toLowerCase()))
@@ -493,6 +495,7 @@ serve(async (req: Request) => {
             body.etapa_procesal ? `Etapa: ${body.etapa_procesal}` : '',
             body.prueba_acusacion ? `Prueba de cargo: ${body.prueba_acusacion}` : '',
             body.pretension_defensiva ? `Pretensión: ${body.pretension_defensiva}` : '',
+            body.documentacion_caso ? `Documentación del expediente: ${body.documentacion_caso.slice(0, 8000)}` : '',
         ].filter(Boolean).join('\n\n')
 
         const embedding = await generarEmbedding(textoConsulta)
@@ -528,6 +531,7 @@ serve(async (req: Request) => {
             (body.etapa_procesal ? `## ETAPA PROCESAL\n${body.etapa_procesal}\n\n` : '') +
             (body.prueba_acusacion ? `## PRUEBA INVOCADA POR LA ACUSACIÓN\n${body.prueba_acusacion}\n\n` : '') +
             (body.pretension_defensiva ? `## PRETENSIÓN DEFENSIVA\n${body.pretension_defensiva}\n\n` : '') +
+            (body.documentacion_caso ? `## DOCUMENTACIÓN DEL EXPEDIENTE\n${body.documentacion_caso.slice(0, 20000)}\n\n` : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
 

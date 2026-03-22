@@ -18,7 +18,7 @@ const manualContent = {
             },
             {
                 title: '3. Perfiles y Alcance',
-                content: 'Actualmente operativo en Fuero Civil. Los fueros de Familia y Comercial se encuentran en desarrollo. El fuero Penal está expresamente excluido.'
+                content: 'Operativo exclusivamente en Fuero Penal — Provincia de Buenos Aires (CPP PBA, Ley 11.922). Los fueros civil, comercial, laboral y familia están expresamente excluidos.'
             }
         ]
     },
@@ -53,7 +53,7 @@ const manualContent = {
                 title: '❓ Preguntas Frecuentes',
                 items: [
                     { label: '¿Puedo usar borradores directamente?', detail: 'No. Son puntos de partida que requieren su criterio profesional.' },
-                    { label: '¿Qué fueros cubre?', detail: 'Solo Fuero Civil. Penal está expresamente excluido.' },
+                    { label: '¿Qué fueros cubre?', detail: 'Solo Fuero Penal PBA (CPP PBA). Civil, comercial, laboral y familia están excluidos.' },
                     { label: '¿Y si rechaza mi consulta?', detail: 'Revise el mensaje y reformule con más información.' }
                 ]
             }

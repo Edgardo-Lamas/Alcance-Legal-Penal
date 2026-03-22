@@ -18,6 +18,7 @@ function Analizar() {
         etapa_procesal: '',
         prueba_acusacion: '',
         pretension_defensiva: '',
+        documentacion_caso: '',
     })
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -210,6 +211,28 @@ function Analizar() {
                         value={formData.pretension_defensiva}
                         onChange={handleChange}
                         placeholder="Ej: Sobreseimiento por insuficiencia probatoria, o en subsidio nulidad del allanamiento..."
+                        disabled={isLoading}
+                    />
+                </div>
+
+                {/* Documentación del Expediente */}
+                <div className="form-group">
+                    <label className="form-label" htmlFor="documentacion_caso">
+                        Documentación del Expediente
+                    </label>
+                    <p className="form-hint">
+                        Pegue aquí el texto de pericias, declaraciones, actas u otros documentos del expediente.
+                        El sistema extraerá la información relevante para el análisis defensivo.
+                        No es necesario pegar el documento completo — las partes más relevantes son suficientes.
+                    </p>
+                    <textarea
+                        id="documentacion_caso"
+                        name="documentacion_caso"
+                        className="form-textarea"
+                        rows="6"
+                        value={formData.documentacion_caso}
+                        onChange={handleChange}
+                        placeholder="Ej: Pericia médico-forense: '...el examen físico revela...', Declaración testimonial: '...la denunciante manifestó...', Acta de allanamiento: '...'"
                         disabled={isLoading}
                     />
                 </div>

@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import DisclaimerModal from '../DisclaimerModal'
 import './Navigation.css'
@@ -75,7 +75,6 @@ const icons = {
 function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
     const [showDisclaimer, setShowDisclaimer] = useState(false)
-    const location = useLocation()
 
     const toggleNav = () => setIsOpen(!isOpen)
     const closeNav = () => setIsOpen(false)
@@ -92,7 +91,7 @@ function Navigation() {
                         {icons.scale}
                     </div>
                     <h1 className="navigation__title">Alcance Legal</h1>
-                    <p className="navigation__subtitle">Inteligencia Jurídica Civil</p>
+                    <p className="navigation__subtitle">Inteligencia Jurídica Penal</p>
                 </div>
 
                 <div className="navigation__section">
@@ -123,7 +122,7 @@ function Navigation() {
                     >
                         Ver Aviso Legal
                     </button>
-                    <div className="navigation__badge">Fuero Civil</div>
+                    <div className="navigation__badge">Fuero Penal · CPP PBA</div>
                     <span className="navigation__version">v1.0.0</span>
                 </div>
             </nav>

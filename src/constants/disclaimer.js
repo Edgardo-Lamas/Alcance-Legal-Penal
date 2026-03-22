@@ -14,26 +14,26 @@ export const DISCLAIMER_VERSION = '1.0'
  */
 export const DISCLAIMER_COMPLETO = {
     titulo: 'AVISO LEGAL OBLIGATORIO',
-    introduccion: 'Alcance Legal es un sistema de inteligencia jurídica especializado en criterios jurisprudenciales del derecho civil argentino.',
+    introduccion: 'Alcance Legal Penal es un sistema de inteligencia jurídica especializado en criterios jurisprudenciales del derecho procesal penal de la Provincia de Buenos Aires (CPP PBA — Ley 11.922). Opera exclusivamente desde la perspectiva de la defensa penal.',
 
     permite: [
-        'Consultar criterios de viabilidad basados en jurisprudencia pública',
-        'Identificar elementos constitutivos de responsabilidad civil',
-        'Detectar riesgos procesales antes de iniciar acciones',
-        'Orientar el análisis preliminar de situaciones civiles',
-        'Evaluar la presencia de causales de justificación o eximentes',
-        'Generar reportes estructurados con fundamentos normativos'
+        'Consultar criterios defensivos basados en jurisprudencia pública',
+        'Identificar garantías procesales aplicables al caso',
+        'Detectar nulidades, irregularidades y vicios del procedimiento',
+        'Orientar el análisis preliminar desde la perspectiva de la defensa',
+        'Evaluar la solidez de la prueba de cargo y sus limitaciones',
+        'Generar reportes estructurados con fundamentos normativos y jurisprudenciales'
     ],
 
-    propositoPositivo: 'Su función es brindar un insumo técnico de calidad para profesionales del derecho, optimizando la investigación jurisprudencial y reduciendo tiempos de análisis.',
+    propositoPositivo: 'Su función es brindar un insumo técnico de calidad para defensores penales, optimizando la investigación jurisprudencial y el análisis estratégico desde la perspectiva del in dubio pro reo.',
 
     noConstituye: [
         'Asesoramiento legal profesional',
-        'Patrocinio letrado',
+        'Patrocinio letrado ni defensa técnica',
         'Dictamen jurídico vinculante',
-        'Análisis integral de casos concretos',
-        'Estrategia procesal',
-        'Estimación de montos indemnizatorios'
+        'Análisis integral del caso concreto',
+        'Estrategia procesal definitiva',
+        'Predicción del resultado del proceso'
     ],
 
     noReemplaza: [
@@ -53,7 +53,7 @@ export const DISCLAIMER_COMPLETO = {
     exclusionResponsabilidad: 'El operador, desarrollador y proveedores del sistema no asumen responsabilidad alguna por el uso que se haga de la información proporcionada, ni por las decisiones adoptadas en base a ella.',
 
     jurisdiccion: 'República Argentina',
-    alcance: 'Criterios jurisprudenciales públicos de aplicación general'
+    alcance: 'Criterios jurisprudenciales penales — Fuero Penal Provincia de Buenos Aires (CPP PBA)'
 }
 
 /**
