@@ -1,6 +1,7 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import DisclaimerModal from '../DisclaimerModal'
+import { useAuth } from '../../context/AuthContext'
 import './Navigation.css'
 
 const navItems = [
@@ -75,9 +76,17 @@ const icons = {
 function Navigation() {
     const [isOpen, setIsOpen] = useState(false)
     const [showDisclaimer, setShowDisclaimer] = useState(false)
+    const { user, signOut, isAdmin } = useAuth()
+    const navigate = useNavigate()
 
     const toggleNav = () => setIsOpen(!isOpen)
     const closeNav = () => setIsOpen(false)
+
+    const handleSignOut = async () => {
+        closeNav()
+        await signOut()
+        navigate('/login', { replace: true })
+    }
 
     return (
         <>
@@ -115,7 +124,39 @@ function Navigation() {
                     </ul>
                 </div>
 
+                {isAdmin && (
+                    <div className="navigation__section navigation__section--admin">
+                        <span className="navigation__section-label">Administración</span>
+                        <ul className="navigation__menu">
+                            <li className="navigation__item">
+                                <NavLink
+                                    to="/admin"
+                                    className={({ isActive }) =>
+                                        `navigation__link navigation__link--admin ${isActive ? 'navigation__link--active' : ''}`
+                                    }
+                                    onClick={closeNav}
+                                >
+                                    <span className="navigation__icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M3 3h7v7H3z" /><path d="M14 3h7v7h-7z" /><path d="M14 14h7v7h-7z" /><path d="M3 14h7v7H3z" />
+                                        </svg>
+                                    </span>
+                                    Panel Admin
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                )}
+
                 <div className="navigation__footer">
+                    {user && (
+                        <div className="navigation__user">
+                            <span className="navigation__user-email">{user.email}</span>
+                            <button className="navigation__signout" onClick={handleSignOut}>
+                                Cerrar sesión
+                            </button>
+                        </div>
+                    )}
                     <button
                         className="navigation__legal-link"
                         onClick={() => setShowDisclaimer(true)}

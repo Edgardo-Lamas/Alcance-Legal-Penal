@@ -1,135 +1,327 @@
 import './Manual.css'
 
-const manualContent = {
-    api: {
-        title: 'Manual de Uso de la API',
-        sections: [
+const secciones = [
+    {
+        id: 'primeros-pasos',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+        ),
+        titulo: 'Primeros Pasos',
+        bloques: [
             {
-                title: '1. Filosofía de la API',
-                content: 'La API de Alcance Legal no es un motor de chat genérico. Es un sistema de inteligencia jurídica aplicada que opera bajo metodología jurídica definida y Ground Truth curado.'
-            },
-            {
-                title: '2. Endpoints Principales',
+                subtitulo: 'Cómo acceder al sistema',
+                tipo: 'pasos',
                 items: [
-                    { label: 'Análisis de Caso', detail: 'Determina la viabilidad técnica preliminar basada en hechos y pretensiones.' },
-                    { label: 'Auditoría de Estrategia', detail: 'Detecta inconsistencias y supuestos implícitos en una estrategia propuesta.' },
-                    { label: 'Redacción Asistida', detail: 'Genera borradores técnicos con señalamiento de secciones pendientes.' }
+                    { num: '1', label: 'Crear cuenta', detalle: 'Ingrese a la pantalla de inicio → pestaña "Crear cuenta" → complete nombre, correo y contraseña. Recibirá un correo de confirmación.' },
+                    { num: '2', label: 'Confirmar correo', detalle: 'Haga clic en el enlace del correo de Supabase. Sin esta confirmación no podrá ingresar.' },
+                    { num: '3', label: 'Ingresar', detalle: 'Vuelva al inicio de sesión, ingrese su correo y contraseña. Quedará dentro del sistema.' },
                 ]
             },
             {
-                title: '3. Perfiles y Alcance',
-                content: 'Operativo exclusivamente en Fuero Penal — Provincia de Buenos Aires (CPP PBA, Ley 11.922). Los fueros civil, comercial, laboral y familia están expresamente excluidos.'
+                subtitulo: 'Flujo de trabajo recomendado',
+                tipo: 'flujo',
+                items: [
+                    { icono: '🔍', label: 'Analizar', detalle: 'Al recibir un caso nuevo: evalúe viabilidad defensiva antes de comprometerse.' },
+                    { icono: '📋', label: 'Auditar', detalle: 'Cuando ya tiene estrategia: detecte inconsistencias antes de ir a audiencia.' },
+                    { icono: '✍️', label: 'Redactar', detalle: 'Para generar un borrador estructurado de su escrito defensivo.' },
+                ]
+            },
+        ]
+    },
+    {
+        id: 'analizar',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/>
+            </svg>
+        ),
+        titulo: 'Analizar Caso',
+        badge: 'Función principal',
+        bloques: [
+            {
+                subtitulo: '¿Qué hace?',
+                tipo: 'texto',
+                texto: 'Recibe los hechos imputados y produce un análisis defensivo estructurado: encuadre procesal, evaluación de la prueba de cargo, nulidades potenciales, contraargumentación y conclusión defensiva. Opera exclusivamente desde la perspectiva del imputado — in dubio pro reo.'
+            },
+            {
+                subtitulo: 'Qué información ingresar',
+                tipo: 'lista',
+                items: [
+                    { label: 'Hechos imputados (obligatorio)', detalle: 'Describa la conducta atribuida tal como la plantea la acusación. Sea preciso: quién, qué, cuándo, dónde. Mínimo 20 caracteres.' },
+                    { label: 'Tipo penal / Calificación', detalle: 'Artículo del CP invocado. Ej: "Art. 166 inc. 1 CP — Robo con fuerza". Si no lo sabe, déjelo en blanco.' },
+                    { label: 'Etapa procesal', detalle: 'IPP, Juicio Oral, Recursos o Ejecución. Afecta el foco del análisis.' },
+                    { label: 'Prueba de la acusación', detalle: 'Enumere lo que tiene la fiscalía: testimonios, pericias, videos, etc. Cuanto más detalle, mejor el análisis.' },
+                    { label: 'Pretensión defensiva', detalle: 'Qué busca: sobreseimiento, nulidad, absolución, reducción del tipo. Opcional pero mejora el resultado.' },
+                    { label: 'Documentación del expediente', detalle: 'Pegue texto de actas, pericias, declaraciones. No necesita el documento completo — las partes relevantes son suficientes.' },
+                ]
+            },
+            {
+                subtitulo: 'Qué recibirá',
+                tipo: 'lista',
+                items: [
+                    { label: 'Encuadre procesal', detalle: 'Lectura del caso desde el CPP PBA y código penal aplicable.' },
+                    { label: 'Análisis de prueba de cargo', detalle: 'Fortalezas y debilidades de cada elemento probatorio presentado por la acusación.' },
+                    { label: 'Nulidades y vicios', detalle: 'Defectos procesales detectables en la información proporcionada.' },
+                    { label: 'Contraargumentación', detalle: 'Líneas de defensa concretas con fundamento normativo.' },
+                    { label: 'Conclusión defensiva', detalle: 'Síntesis con pretensión recomendada y fundamento.' },
+                ]
+            },
+            {
+                subtitulo: 'Tips para mejores resultados',
+                tipo: 'tips',
+                items: [
+                    'Cargue toda la prueba que tenga la acusación, no solo la que le parece relevante.',
+                    'Si tiene imágenes (pericias, capturas de WhatsApp, escritos), adjúntelas — el sistema las analiza visualmente.',
+                    'Para casos complejos, puede hacer varias consultas: una por aspecto (ej: nulidad del allanamiento por separado).',
+                    'Si el resultado dice "No entregable", relea el mensaje de rechazo — generalmente es por falta de información mínima.',
+                ]
+            },
+        ]
+    },
+    {
+        id: 'auditar',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+        ),
+        titulo: 'Auditar Estrategia',
+        bloques: [
+            {
+                subtitulo: '¿Qué hace?',
+                tipo: 'texto',
+                texto: 'Revisa la coherencia interna de una estrategia defensiva ya elaborada. Detecta supuestos implícitos, inconsistencias argumentales y puntos débiles que la acusación podría aprovechar. Es el "segundo par de ojos" antes de una audiencia o escrito crucial.'
+            },
+            {
+                subtitulo: 'Cuándo usarlo',
+                tipo: 'lista',
+                items: [
+                    { label: 'Antes de audiencias de juicio oral', detalle: 'Valide que su teoría del caso no tenga fisuras antes de presentarla.' },
+                    { label: 'Antes de interponer recursos', detalle: 'Chequee que los agravios sean consistentes entre sí.' },
+                    { label: 'Al revisar estrategias heredadas', detalle: 'Cuando toma un caso de otro abogado y necesita evaluar lo actuado.' },
+                    { label: 'En casos con múltiples imputados', detalle: 'Para detectar si la estrategia de uno perjudica a otro.' },
+                ]
+            },
+        ]
+    },
+    {
+        id: 'redactar',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+        ),
+        titulo: 'Redactar Escrito',
+        bloques: [
+            {
+                subtitulo: '¿Qué hace?',
+                tipo: 'texto',
+                texto: 'Genera un borrador estructurado de un escrito defensivo (excepción, recurso, alegato, etc.) con secciones profesionales, citas normativas y argumento defensivo. Las partes que requieren datos específicos del expediente se marcan explícitamente para completar.'
+            },
+            {
+                subtitulo: 'Importante',
+                tipo: 'advertencia',
+                texto: 'Todo borrador generado es un punto de partida. Requiere obligatoriamente su revisión y adecuación profesional antes de presentarlo. El sistema no tiene acceso al expediente completo ni a los datos precisos del caso.',
+            },
+        ]
+    },
+    {
+        id: 'imagenes',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+            </svg>
+        ),
+        titulo: 'Adjuntar Imágenes',
+        bloques: [
+            {
+                subtitulo: '¿Para qué sirve?',
+                tipo: 'texto',
+                texto: 'En la función Analizar Caso puede adjuntar hasta 4 imágenes. El sistema las analiza visualmente junto con el texto. Útil para pericias escaneadas, capturas de WhatsApp, fotos de evidencia o escritos manuscritos que no puede tipear.'
+            },
+            {
+                subtitulo: 'Especificaciones',
+                tipo: 'lista',
+                items: [
+                    { label: 'Formatos aceptados', detalle: 'JPG, PNG, WebP' },
+                    { label: 'Tamaño máximo', detalle: '4 MB por imagen' },
+                    { label: 'Cantidad máxima', detalle: '4 imágenes por consulta' },
+                    { label: 'Cómo adjuntar', detalle: 'Arrastre las imágenes a la zona de carga, o haga clic para seleccionarlas desde su dispositivo.' },
+                ]
+            },
+        ]
+    },
+    {
+        id: 'faq',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+        ),
+        titulo: 'Preguntas Frecuentes',
+        bloques: [
+            {
+                tipo: 'faq',
+                items: [
+                    {
+                        pregunta: '¿El sistema reemplaza al abogado?',
+                        respuesta: 'No. Es una herramienta de apoyo al criterio profesional. El análisis jurídico final, la estrategia y la responsabilidad son siempre del abogado. El sistema no tiene patrocinio ni ejerce la profesión.'
+                    },
+                    {
+                        pregunta: '¿Qué pasa si el sistema rechaza mi consulta?',
+                        respuesta: 'El rechazo es fundado: el mensaje explica por qué. Las causas más comunes son: materia ajena al fuero penal, información insuficiente para el análisis, o consulta fuera del alcance del CPP PBA. Lea el mensaje y reformule con más detalle.'
+                    },
+                    {
+                        pregunta: '¿Cubre toda la provincia de Buenos Aires?',
+                        respuesta: 'Sí. Opera sobre el CPP PBA (Ley 11.922) que rige en todos los departamentos judiciales de la provincia. Para causas federales o de CABA, el sistema no aplica.'
+                    },
+                    {
+                        pregunta: '¿Puedo usar los informes en el expediente?',
+                        respuesta: 'Los informes son herramientas de trabajo interno, no documentos de presentación judicial. Son insumo para su propio análisis y redacción. No están firmados por letrado ni reemplazanvun dictamen profesional.'
+                    },
+                    {
+                        pregunta: '¿Con qué frecuencia se actualiza el corpus?',
+                        respuesta: 'El corpus CPP PBA y Código Penal se mantiene actualizado. Las modificaciones legislativas y criterios jurisprudenciales relevantes se incorporan periódicamente sin costo adicional para el suscriptor.'
+                    },
+                    {
+                        pregunta: '¿Mis consultas son confidenciales?',
+                        respuesta: 'Las consultas se procesan para generar el análisis y no se comparten con terceros. No ingrese datos de identidad del imputado — utilice iniciales o referencias genéricas como "mi cliente" o "el imputado".'
+                    },
+                ]
             }
         ]
     },
-    usuario: {
-        title: 'Guía de Navegación',
-        sections: [
-            {
-                title: '🔍 Analizar Caso',
-                content: 'Use esta opción al recibir un cliente nuevo. Ingrese la situación fáctica detallada, la pretensión y la documentación disponible. Recibirá un índice de viabilidad, análisis de elementos constitutivos y riesgos detectados.'
-            },
-            {
-                title: '📋 Auditar Estrategia',
-                content: 'Para cuando ya tiene una teoría del caso. Describa su línea argumental y etapa procesal. Recibirá un dictamen de consistencia, supuestos implícitos e inconsistencias.'
-            },
-            {
-                title: '✍️ Redactar Escrito',
-                content: 'Genera borradores estructurados con secciones profesionales. Las partes pendientes se marcan claramente. TODO borrador requiere revisión profesional obligatoria.'
-            },
-            {
-                title: '📊 Flujo Recomendado',
-                content: '1° Analice → 2° Audite → 3° Redacte. Este orden evita invertir tiempo en casos inviables y asegura coherencia entre estrategia y documento.'
-            },
-            {
-                title: '🚦 Indicadores',
-                items: [
-                    { label: 'Rojo (Crítico)', detail: 'Atención inmediata: prescripción, plazos procesales.' },
-                    { label: 'Amarillo (Advertencia)', detail: 'Elemento a profundizar o validar con el cliente.' },
-                    { label: 'Verde (Consistencia)', detail: 'Fundamentación sólida, puede avanzar.' }
-                ]
-            },
-            {
-                title: '❓ Preguntas Frecuentes',
-                items: [
-                    { label: '¿Puedo usar borradores directamente?', detail: 'No. Son puntos de partida que requieren su criterio profesional.' },
-                    { label: '¿Qué fueros cubre?', detail: 'Solo Fuero Penal PBA (CPP PBA). Civil, comercial, laboral y familia están excluidos.' },
-                    { label: '¿Y si rechaza mi consulta?', detail: 'Revise el mensaje y reformule con más información.' }
-                ]
-            }
-        ]
-    }
-}
+]
 
-function ManualPage() {
+function Manual() {
     return (
-        <div className="manual-page">
-            <header className="manual-page__header">
-                <h1 className="manual-page__title">Centro de Ayuda y Documentación</h1>
-                <p className="manual-page__subtitle">Guía técnica y funcional de Alcance Legal</p>
+        <div className="manual">
+            <header className="manual__header">
+                <h1 className="manual__title">Guía de Uso</h1>
+                <p className="manual__subtitle">
+                    Alcance Legal Penal · Sistema de Inteligencia Jurídica Defensiva — CPP PBA
+                </p>
             </header>
 
-            <div className="manual-page__grid">
-                <section className="manual-section">
-                    <div className="manual-section__icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                        </svg>
-                    </div>
-                    <h2 className="manual-section__title">{manualContent.api.title}</h2>
-                    {manualContent.api.sections.map((s, idx) => (
-                        <div key={idx} className="manual-section__block">
-                            <h3>{s.title}</h3>
-                            {s.content && <p>{s.content}</p>}
-                            {s.items && (
-                                <ul className="manual-section__list">
-                                    {s.items.map((item, i) => (
-                                        <li key={i}>
-                                            <strong>{item.label}:</strong> {item.detail}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+            <div className="manual__body">
+                {secciones.map((sec) => (
+                    <section key={sec.id} className="manual__seccion" id={sec.id}>
+                        <div className="manual__seccion-header">
+                            <div className="manual__seccion-icono">{sec.icono}</div>
+                            <div>
+                                <h2 className="manual__seccion-titulo">{sec.titulo}</h2>
+                                {sec.badge && <span className="manual__badge">{sec.badge}</span>}
+                            </div>
                         </div>
-                    ))}
-                </section>
 
-                <section className="manual-section">
-                    <div className="manual-section__icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 19l7-7 3 3-7 7-3-3z" />
-                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-                            <path d="M2 2l7.586 7.586" />
-                            <circle cx="11" cy="11" r="2" />
-                        </svg>
-                    </div>
-                    <h2 className="manual-section__title">{manualContent.usuario.title}</h2>
-                    {manualContent.usuario.sections.map((s, idx) => (
-                        <div key={idx} className="manual-section__block">
-                            <h3>{s.title}</h3>
-                            {s.content && <p>{s.content}</p>}
-                            {s.items && (
-                                <ul className="manual-section__list">
-                                    {s.items.map((item, i) => (
-                                        <li key={i}>
-                                            <strong>{item.label}:</strong> {item.detail}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </div>
-                    ))}
-                </section>
+                        {sec.bloques.map((bloque, bi) => (
+                            <div key={bi} className="manual__bloque">
+                                {bloque.subtitulo && (
+                                    <h3 className="manual__bloque-titulo">{bloque.subtitulo}</h3>
+                                )}
+
+                                {bloque.tipo === 'texto' && (
+                                    <p className="manual__texto">{bloque.texto}</p>
+                                )}
+
+                                {bloque.tipo === 'advertencia' && (
+                                    <div className="manual__advertencia">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                        </svg>
+                                        <p>{bloque.texto}</p>
+                                    </div>
+                                )}
+
+                                {bloque.tipo === 'lista' && (
+                                    <ul className="manual__lista">
+                                        {bloque.items.map((item, ii) => (
+                                            <li key={ii} className="manual__lista-item">
+                                                <strong>{item.label}</strong>
+                                                <span>{item.detalle}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                {bloque.tipo === 'pasos' && (
+                                    <ol className="manual__pasos">
+                                        {bloque.items.map((item, ii) => (
+                                            <li key={ii} className="manual__paso">
+                                                <span className="manual__paso-num">{item.num}</span>
+                                                <div>
+                                                    <strong>{item.label}</strong>
+                                                    <p>{item.detalle}</p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                )}
+
+                                {bloque.tipo === 'flujo' && (
+                                    <div className="manual__flujo">
+                                        {bloque.items.map((item, ii) => (
+                                            <div key={ii} className="manual__flujo-paso">
+                                                <span className="manual__flujo-icono">{item.icono}</span>
+                                                <strong>{item.label}</strong>
+                                                <p>{item.detalle}</p>
+                                                {ii < bloque.items.length - 1 && (
+                                                    <svg className="manual__flujo-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                                        <polyline points="12 5 19 12 12 19"/>
+                                                    </svg>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {bloque.tipo === 'tips' && (
+                                    <ul className="manual__tips">
+                                        {bloque.items.map((tip, ii) => (
+                                            <li key={ii} className="manual__tip">
+                                                <span className="manual__tip-dot" />
+                                                {tip}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                {bloque.tipo === 'faq' && (
+                                    <div className="manual__faq">
+                                        {bloque.items.map((item, ii) => (
+                                            <div key={ii} className="manual__faq-item">
+                                                <h4 className="manual__faq-pregunta">{item.pregunta}</h4>
+                                                <p className="manual__faq-respuesta">{item.respuesta}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </section>
+                ))}
             </div>
 
-            <footer className="manual-page__footer">
+            <footer className="manual__footer">
                 <p>
-                    Para más detalles técnicos, consulte los archivos <code>docs/manual_uso_api.md</code> y <code>docs/guia_navegacion_usuario.md</code> en el repositorio.
+                    Alcance Legal Penal opera exclusivamente sobre causas del <strong>Fuero Penal — Provincia de Buenos Aires</strong>.
+                    Los fueros civil, comercial, laboral y familia están excluidos.
+                </p>
+                <p className="manual__footer-nota">
+                    Versión beta · Desarrollado por Studio Lamas
                 </p>
             </footer>
         </div>
     )
 }
 
-export default ManualPage
+export default Manual

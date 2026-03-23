@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../../services/api'
+import { supabase } from '../../../services/supabase'
 import './Analizar.css'
 
 const MAX_IMAGES = 4
@@ -130,6 +131,9 @@ function Analizar() {
             const response = await api.analizarCaso(payload)
 
             if (response.success) {
+                // Incrementar contador del usuario en background (no bloquea la navegación)
+                if (supabase) supabase.rpc('increment_analisis_count').catch(() => {})
+
                 const estadoLabels = {
                     approved: 'INFORME APROBADO',
                     limited: 'INFORME CON LIMITACIONES',

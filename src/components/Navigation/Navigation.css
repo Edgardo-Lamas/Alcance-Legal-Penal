@@ -112,6 +112,22 @@
     height: 100%;
 }
 
+/* Admin section */
+.navigation__section--admin {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.navigation__link--admin {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.navigation__link--admin:hover {
+    color: #94a3b8;
+}
+
 /* Footer */
 .navigation__footer {
     padding: 1rem 1.5rem;
@@ -120,6 +136,42 @@
     flex-direction: column;
     gap: 0.75rem;
     align-items: center;
+}
+
+/* Usuario activo */
+.navigation__user {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    width: 100%;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.navigation__user-email {
+    font-size: 0.72rem;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.navigation__signout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #64748b;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.navigation__signout:hover {
+    border-color: rgba(220, 38, 38, 0.4);
+    color: #fca5a5;
+    background: rgba(220, 38, 38, 0.06);
 }
 
 .navigation__legal-link {
