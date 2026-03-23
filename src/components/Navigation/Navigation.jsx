@@ -124,6 +124,21 @@ function Navigation() {
                     </button>
                     <div className="navigation__badge">Fuero Penal · CPP PBA</div>
                     <span className="navigation__version">v1.0.0</span>
+
+                    {/* Firma del estudio */}
+                    <div className="navigation__brand">
+                        <div className="navigation__brand-mark" aria-hidden="true">
+                            <svg viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="0" y="0" width="3.5" height="22" rx="1.75" fill="#c9a227"/>
+                                <rect x="0" y="0" width="11" height="3.5" rx="1.75" fill="#c9a227"/>
+                                <rect x="0" y="18.5" width="11" height="3.5" rx="1.75" fill="#c9a227"/>
+                            </svg>
+                        </div>
+                        <div className="navigation__brand-text">
+                            <span className="navigation__brand-name">Studio Lamas</span>
+                            <span className="navigation__brand-tagline">Desarrollo Digital</span>
+                        </div>
+                    </div>
                 </div>
             </nav>
 
