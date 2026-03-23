@@ -1,5 +1,96 @@
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { supabase } from '../../services/supabase'
+import { useAuth } from '../../context/AuthContext'
 import './Resultado.css'
+
+function FeedbackWidget({ numeroInforme, tipoAnalisis }) {
+    const { user } = useAuth()
+    const [estado, setEstado] = useState('idle') // idle | selected | enviado
+    const [rating, setRating] = useState(null)
+    const [comentario, setComentario] = useState('')
+    const [enviando, setEnviando] = useState(false)
+
+    const seleccionar = (valor) => {
+        setRating(valor)
+        setEstado('selected')
+    }
+
+    const enviar = async () => {
+        if (!supabase || rating === null) return
+        setEnviando(true)
+        await supabase.from('feedback').insert({
+            user_id: user?.id ?? null,
+            numero_informe: numeroInforme,
+            tipo_analisis: tipoAnalisis,
+            rating,
+            comentario: comentario.trim() || null,
+        }).catch(() => {})
+        setEstado('enviado')
+        setEnviando(false)
+    }
+
+    if (estado === 'enviado') {
+        return (
+            <div className="feedback feedback--enviado">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span>Gracias por tu feedback — nos ayuda a mejorar el sistema.</span>
+            </div>
+        )
+    }
+
+    return (
+        <div className="feedback">
+            <p className="feedback__pregunta">¿Fue útil este análisis?</p>
+            <div className="feedback__botones">
+                <button
+                    className={`feedback__btn feedback__btn--si ${rating === true ? 'feedback__btn--activo' : ''}`}
+                    onClick={() => seleccionar(true)}
+                    aria-label="Útil"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/>
+                        <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                    Sí, fue útil
+                </button>
+                <button
+                    className={`feedback__btn feedback__btn--no ${rating === false ? 'feedback__btn--activo feedback__btn--activo-no' : ''}`}
+                    onClick={() => seleccionar(false)}
+                    aria-label="No útil"
+                >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/>
+                        <path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
+                    </svg>
+                    Puede mejorar
+                </button>
+            </div>
+
+            {estado === 'selected' && (
+                <div className="feedback__comentario">
+                    <textarea
+                        className="feedback__textarea"
+                        placeholder="¿Qué podría mejorar? (opcional)"
+                        value={comentario}
+                        onChange={(e) => setComentario(e.target.value)}
+                        rows={2}
+                        maxLength={500}
+                    />
+                    <button
+                        className="feedback__enviar"
+                        onClick={enviar}
+                        disabled={enviando}
+                    >
+                        {enviando ? 'Enviando...' : 'Enviar'}
+                    </button>
+                </div>
+            )}
+        </div>
+    )
+}
 
 // Datos de ejemplo — se muestran cuando se navega a /resultado sin estado (acceso directo)
 const ejemploAnalisis = {
@@ -414,6 +505,11 @@ function Resultado() {
                 {capacidad === 'auditar' && renderAuditoria()}
                 {capacidad === 'redactar' && renderRedaccion()}
             </main>
+
+            <FeedbackWidget
+                numeroInforme={informe.numero_informe}
+                tipoAnalisis={capacidad}
+            />
 
             <footer className="resultado__footer">
                 <div className="resultado__footer-disclaimer">

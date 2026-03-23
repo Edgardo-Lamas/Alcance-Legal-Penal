@@ -44,6 +44,7 @@ function Admin() {
     const { isAdmin, loading } = useAuth()
     const navigate = useNavigate()
     const [profiles, setProfiles] = useState([])
+    const [feedbacks, setFeedbacks] = useState([])
     const [loadingData, setLoadingData] = useState(true)
     const [error, setError] = useState(null)
 
@@ -54,19 +55,26 @@ function Admin() {
         }
     }, [isAdmin, loading, navigate])
 
-    // Fetch profiles
+    // Fetch profiles + feedback
     useEffect(() => {
         if (!isAdmin || !supabase) return
 
-        supabase
-            .from('profiles')
-            .select('id, nombre, email, created_at, analisis_count, is_admin')
-            .order('created_at', { ascending: false })
-            .then(({ data, error }) => {
-                if (error) setError(error.message)
-                else setProfiles(data || [])
-                setLoadingData(false)
-            })
+        Promise.all([
+            supabase
+                .from('profiles')
+                .select('id, nombre, email, created_at, analisis_count, is_admin')
+                .order('created_at', { ascending: false }),
+            supabase
+                .from('feedback')
+                .select('id, tipo_analisis, rating, comentario, created_at')
+                .order('created_at', { ascending: false })
+                .limit(50)
+        ]).then(([profRes, fbRes]) => {
+            if (profRes.error) setError(profRes.error.message)
+            else setProfiles(profRes.data || [])
+            setFeedbacks(fbRes.data || [])
+            setLoadingData(false)
+        })
     }, [isAdmin])
 
     if (loading || loadingData) {
@@ -96,6 +104,13 @@ function Admin() {
         totalAnalisis: profiles.reduce((acc, p) => acc + (p.analisis_count || 0), 0),
         usuariosActivos: profiles.filter(p => (p.analisis_count || 0) > 0).length,
     }
+
+    // Feedback stats
+    const fbPositivos = feedbacks.filter(f => f.rating === true).length
+    const fbNegativos = feedbacks.filter(f => f.rating === false).length
+    const fbTotal = feedbacks.length
+    const fbPct = fbTotal > 0 ? Math.round((fbPositivos / fbTotal) * 100) : null
+    const fbConComentario = feedbacks.filter(f => f.comentario)
 
     // Chart
     const semanas = agruparPorSemana(profiles, 8)
@@ -187,6 +202,54 @@ function Admin() {
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            {/* Feedback */}
+            <div className="admin__section">
+                <h2 className="admin__section-title">
+                    Feedback de análisis
+                    <span className="admin__count-badge">{fbTotal}</span>
+                    {fbPct !== null && (
+                        <span className={`admin__count-badge ${fbPct >= 70 ? 'admin__count-badge--pos' : 'admin__count-badge--neg'}`}>
+                            {fbPct}% positivo
+                        </span>
+                    )}
+                </h2>
+
+                {fbTotal === 0 ? (
+                    <p className="admin__empty-text">Sin feedback todavía.</p>
+                ) : (
+                    <>
+                        <div className="admin__fb-bar">
+                            <div className="admin__fb-bar-pos" style={{ width: `${fbTotal > 0 ? (fbPositivos / fbTotal) * 100 : 0}%` }} />
+                            <div className="admin__fb-bar-neg" style={{ width: `${fbTotal > 0 ? (fbNegativos / fbTotal) * 100 : 0}%` }} />
+                        </div>
+                        <div className="admin__fb-legend">
+                            <span className="admin__fb-legend-pos">👍 {fbPositivos} útil</span>
+                            <span className="admin__fb-legend-neg">👎 {fbNegativos} puede mejorar</span>
+                        </div>
+
+                        {fbConComentario.length > 0 && (
+                            <div className="admin__fb-comentarios">
+                                <h3 className="admin__fb-comentarios-titulo">Comentarios recientes</h3>
+                                {fbConComentario.slice(0, 10).map(f => (
+                                    <div key={f.id} className="admin__fb-item">
+                                        <div className="admin__fb-meta">
+                                            <span className={`admin__fb-rating ${f.rating ? 'admin__fb-rating--pos' : 'admin__fb-rating--neg'}`}>
+                                                {f.rating ? '👍' : '👎'}
+                                            </span>
+                                            <span className="admin__fb-tipo">{f.tipo_analisis}</span>
+                                            <span className="admin__fb-fecha">
+                                                {new Date(f.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                                            </span>
+                                        </div>
+                                        <p className="admin__fb-comentario">{f.comentario}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     )
