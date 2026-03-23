@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alcance Legal Penal</title>
+    <script>
+      /**
+       * SPA redirect para GitHub Pages.
+       * Cuando GitHub Pages no encuentra la ruta (ej: /Alcance-Legal-Penal/analizar),
+       * sirve este 404.html, que codifica la ruta como query param y redirige a index.html.
+       * El script en index.html luego restaura la URL original.
+       *
+       * segmentCount = 1 porque el sitio está en /Alcance-Legal-Penal/ (1 segmento de base).
+       */
+      var segmentCount = 1
+      var l = window.location
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      )
+    </script>
+  </head>
+  <body></body>
+</html>
