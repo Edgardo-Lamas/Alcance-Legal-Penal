@@ -598,6 +598,66 @@
     }
 }
 
+/* Bloque de capacidades */
+.analizar__capacidades {
+    margin: 0 0 2rem 0;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #0f1f3d 0%, #1a2a4a 100%);
+    border: 1px solid #c9a22730;
+    border-left: 3px solid #c9a227;
+    border-radius: 10px;
+}
+.capacidades__titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #c9a227;
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+.capacidades__desc {
+    font-size: 0.83rem;
+    color: #94a3b8;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.capacidades__lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+.capacidades__lista li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+.capacidades__icono {
+    font-size: 1rem;
+    line-height: 1.5;
+    flex-shrink: 0;
+}
+.capacidades__lista li div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.capacidades__lista li strong {
+    font-size: 0.83rem;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+.capacidades__lista li span {
+    font-size: 0.78rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
 /* PDF upload */
 .btn-pdf-upload {
     display: inline-flex;
