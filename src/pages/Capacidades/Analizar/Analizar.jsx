@@ -441,6 +441,10 @@ function Analizar() {
                         Adjunte hasta {MAX_IMAGES} imágenes: pericias escaneadas, capturas de WhatsApp,
                         fotos de evidencia o escritos manuscritos. Formatos: JPG, PNG, WebP · Máx. {MAX_SIZE_MB}MB c/u.
                     </p>
+                    <p className="form-hint form-hint--aviso">
+                        Solo se admiten imágenes relacionadas con el expediente judicial. El sistema rechaza automáticamente
+                        contenido inapropiado. Cada carga queda registrada bajo su cuenta.
+                    </p>
 
                     {imagenes.length < MAX_IMAGES && (
                         <div

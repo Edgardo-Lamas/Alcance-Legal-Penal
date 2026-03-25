@@ -187,6 +187,42 @@ async function generarEmbedding(texto: string): Promise<number[]> {
     return data.data[0].embedding
 }
 
+// Modera imágenes antes del análisis principal
+// Devuelve null si todo OK, o el nombre del archivo rechazado
+async function moderarImagenes(imagenes: ImagenAdjunta[]): Promise<string | null> {
+    if (!ANTHROPIC_API_KEY || imagenes.length === 0) return null
+
+    const content = [
+        {
+            type: 'text',
+            text: 'Revisá las siguientes imágenes. Respondé SOLO con "APROBADO" si todas son documentación judicial apropiada (pericias, actas, capturas de mensajes, fotos de evidencia, escritos), o "RECHAZADO" si alguna contiene contenido inapropiado (pornografía, violencia explícita, contenido que no sea documentación legal). Una sola palabra.'
+        },
+        ...imagenes.slice(0, 4).map(img => ({
+            type: 'image',
+            source: { type: 'base64', media_type: img.mediaType, data: img.data }
+        }))
+    ]
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+            'x-api-key': ANTHROPIC_API_KEY,
+            'anthropic-version': '2023-06-01',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 10,
+            messages: [{ role: 'user', content }]
+        }),
+    })
+
+    if (!response.ok) return null // si falla la moderación, no bloqueamos
+    const data = await response.json()
+    const result = data.content[0].text.trim().toUpperCase()
+    return result.startsWith('RECHAZADO') ? 'contenido_inapropiado' : null
+}
+
 async function invocarRazonamiento(
     context: string,
     imagenes?: ImagenAdjunta[],
@@ -586,6 +622,24 @@ serve(async (req: Request) => {
                 : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
+
+        // Moderación de imágenes antes del análisis principal
+        if (body.imagenes && body.imagenes.length > 0) {
+            const moderacion = await moderarImagenes(body.imagenes)
+            if (moderacion) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    fase_rechazo: 'admisibilidad',
+                    codigo: 'RECHAZADA_CONTENIDO_INAPROPIADO',
+                    fundamento: 'Las imágenes adjuntas no corresponden a documentación judicial válida. Solo se admiten imágenes de pericias, actas, capturas de mensajes y evidencia procesal.',
+                    recomendacion: 'Adjunte únicamente imágenes relacionadas con el expediente judicial.',
+                    disclaimer: DISCLAIMER
+                }), {
+                    status: 400,
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                })
+            }
+        }
 
         const razonamiento = await invocarRazonamiento(contextReasoning, body.imagenes, body.documentos_pdf)
 
