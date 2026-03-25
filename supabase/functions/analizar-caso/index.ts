@@ -46,6 +46,13 @@ interface ImagenAdjunta {
     nombre?: string
 }
 
+interface DocumentoPdf {
+    /** Base64 del PDF, sin el prefijo "data:..." */
+    data: string
+    /** Nombre original del archivo (opcional, para logs) */
+    nombre?: string
+}
+
 interface AnalizarCasoRequest {
     /** Descripción de los hechos imputados (requerido) */
     hechos: string
@@ -59,6 +66,8 @@ interface AnalizarCasoRequest {
     tipo_penal?: string
     /** Texto de documentación del expediente: pericias, declaraciones, actas (opcional) */
     documentacion_caso?: string
+    /** PDFs del expediente adjuntos (máx. 2) */
+    documentos_pdf?: DocumentoPdf[]
     /** Imágenes adjuntas: pericias escaneadas, capturas, fotos de evidencia (máx. 4) */
     imagenes?: ImagenAdjunta[]
 }
@@ -180,14 +189,19 @@ async function generarEmbedding(texto: string): Promise<number[]> {
 
 async function invocarRazonamiento(
     context: string,
-    imagenes?: ImagenAdjunta[]
+    imagenes?: ImagenAdjunta[],
+    documentosPdf?: DocumentoPdf[]
 ): Promise<Record<string, string>> {
     if (ANTHROPIC_API_KEY) {
-        // Si hay imágenes, el contenido del mensaje es un array de content blocks
-        const userContent = (imagenes && imagenes.length > 0)
+        const tieneAdjuntos = (imagenes && imagenes.length > 0) || (documentosPdf && documentosPdf.length > 0)
+        const userContent = tieneAdjuntos
             ? [
                 { type: 'text', text: context },
-                ...imagenes.slice(0, 4).map(img => ({
+                ...(documentosPdf ?? []).slice(0, 2).map(pdf => ({
+                    type: 'document',
+                    source: { type: 'base64', media_type: 'application/pdf', data: pdf.data }
+                })),
+                ...(imagenes ?? []).slice(0, 4).map(img => ({
                     type: 'image',
                     source: { type: 'base64', media_type: img.mediaType, data: img.data }
                 }))
@@ -551,6 +565,7 @@ serve(async (req: Request) => {
         ).join('\n\n')
 
         const imagenesCount = body.imagenes?.length ?? 0
+        const pdfCount = body.documentos_pdf?.length ?? 0
 
         const contextReasoning =
             `## HECHOS IMPUTADOS\n${body.hechos}\n\n` +
@@ -558,18 +573,21 @@ serve(async (req: Request) => {
             (body.etapa_procesal ? `## ETAPA PROCESAL\n${body.etapa_procesal}\n\n` : '') +
             (body.prueba_acusacion ? `## PRUEBA INVOCADA POR LA ACUSACIÓN\n${body.prueba_acusacion}\n\n` : '') +
             (body.pretension_defensiva ? `## PRETENSIÓN DEFENSIVA\n${body.pretension_defensiva}\n\n` : '') +
-            (body.documentacion_caso ? `## DOCUMENTACIÓN DEL EXPEDIENTE\n${body.documentacion_caso.slice(0, 20000)}\n\n` : '') +
+            (body.documentacion_caso ? `## DOCUMENTACIÓN DEL EXPEDIENTE (texto)\n${body.documentacion_caso.slice(0, 20000)}\n\n` : '') +
+            (pdfCount > 0
+                ? `## DOCUMENTOS PDF ADJUNTOS (${pdfCount} archivo/s)\n` +
+                  `El abogado adjuntó ${pdfCount} PDF/s del expediente. Analice su contenido completo e incorpórelo al informe defensivo.\n\n`
+                : '') +
             (imagenesCount > 0
                 ? `## IMÁGENES ADJUNTAS (${imagenesCount} imagen/es)\n` +
-                  `El abogado ha adjuntado ${imagenesCount} imagen/es para análisis. ` +
-                  `Pueden contener: pericias médico-forenses escaneadas, capturas de pantalla de conversaciones (WhatsApp, redes sociales), ` +
-                  `fotos de evidencia física, o escritos manuscritos. ` +
-                  `Analícelas en el contexto de la defensa penal e incorpore la información relevante al informe.\n\n`
+                  `El abogado ha adjuntado ${imagenesCount} imagen/es. ` +
+                  `Pueden contener pericias escaneadas, capturas de conversaciones, fotos de evidencia o escritos manuscritos. ` +
+                  `Analícelas en el contexto de la defensa penal.\n\n`
                 : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
 
-        const razonamiento = await invocarRazonamiento(contextReasoning, body.imagenes)
+        const razonamiento = await invocarRazonamiento(contextReasoning, body.imagenes, body.documentos_pdf)
 
         // ==========================================
         // FASE 4: VALIDACIÓN DE SALIDA + DETECCIÓN DE PATRONES

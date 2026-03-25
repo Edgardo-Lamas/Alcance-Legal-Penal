@@ -6,6 +6,8 @@ import './Analizar.css'
 
 const MAX_IMAGES = 4
 const MAX_SIZE_MB = 4
+const MAX_PDF = 2
+const MAX_PDF_SIZE_MB = 10
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 const etapasProcesales = [
@@ -18,6 +20,7 @@ const etapasProcesales = [
 function Analizar() {
     const navigate = useNavigate()
     const fileInputRef = useRef(null)
+    const pdfInputRef = useRef(null)
 
     const [formData, setFormData] = useState({
         hechos: '',
@@ -27,7 +30,8 @@ function Analizar() {
         pretension_defensiva: '',
         documentacion_caso: '',
     })
-    const [imagenes, setImagenes] = useState([]) // [{data, mediaType, nombre, preview}]
+    const [imagenes, setImagenes] = useState([])    // [{data, mediaType, nombre, preview}]
+    const [documentosPdf, setDocumentosPdf] = useState([]) // [{data, nombre}]
     const [isDragging, setIsDragging] = useState(false)
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -56,30 +60,41 @@ function Analizar() {
         return Object.keys(newErrors).length === 0
     }
 
-    // Valida y lee un archivo como base64, lo agrega al estado
+    // Procesa imágenes (JPG, PNG, WebP)
     const processFile = (file) => {
         if (!ACCEPTED_TYPES.includes(file.type)) {
-            setErrors(prev => ({
-                ...prev,
-                imagenes: `Formato no soportado: ${file.name}. Use JPG, PNG o WebP.`
-            }))
+            setErrors(prev => ({ ...prev, imagenes: `Formato no soportado: ${file.name}. Use JPG, PNG o WebP.` }))
             return
         }
         if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-            setErrors(prev => ({
-                ...prev,
-                imagenes: `${file.name} supera el límite de ${MAX_SIZE_MB}MB.`
-            }))
+            setErrors(prev => ({ ...prev, imagenes: `${file.name} supera el límite de ${MAX_SIZE_MB}MB.` }))
             return
         }
-
         const reader = new FileReader()
         reader.onload = (e) => {
-            const dataUrl = e.target.result      // "data:image/jpeg;base64,..."
-            const base64 = dataUrl.split(',')[1] // solo el dato, sin prefijo
+            const base64 = e.target.result.split(',')[1]
             const preview = URL.createObjectURL(file)
             setImagenes(prev => [...prev, { data: base64, mediaType: file.type, nombre: file.name, preview }])
             setErrors(prev => ({ ...prev, imagenes: null }))
+        }
+        reader.readAsDataURL(file)
+    }
+
+    // Procesa PDFs para documentación
+    const processPdf = (file) => {
+        if (file.type !== 'application/pdf') {
+            setErrors(prev => ({ ...prev, pdfs: `${file.name} no es un PDF válido.` }))
+            return
+        }
+        if (file.size > MAX_PDF_SIZE_MB * 1024 * 1024) {
+            setErrors(prev => ({ ...prev, pdfs: `${file.name} supera el límite de ${MAX_PDF_SIZE_MB}MB.` }))
+            return
+        }
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const base64 = e.target.result.split(',')[1]
+            setDocumentosPdf(prev => [...prev, { data: base64, nombre: file.name }])
+            setErrors(prev => ({ ...prev, pdfs: null }))
         }
         reader.readAsDataURL(file)
     }
@@ -88,7 +103,14 @@ function Analizar() {
         const files = Array.from(e.target.files)
         const remaining = MAX_IMAGES - imagenes.length
         files.slice(0, remaining).forEach(processFile)
-        e.target.value = '' // permite re-seleccionar el mismo archivo
+        e.target.value = ''
+    }
+
+    const handlePdfSelect = (e) => {
+        const files = Array.from(e.target.files)
+        const remaining = MAX_PDF - documentosPdf.length
+        files.slice(0, remaining).forEach(processPdf)
+        e.target.value = ''
     }
 
     const handleDragOver = (e) => {
@@ -114,6 +136,10 @@ function Analizar() {
         })
     }
 
+    const handleRemovePdf = (index) => {
+        setDocumentosPdf(prev => prev.filter((_, i) => i !== index))
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!validate()) return
@@ -122,10 +148,10 @@ function Analizar() {
         setErrors({})
 
         try {
-            // Enviar sin el campo preview (blob URL — solo útil en el browser)
             const payload = {
                 ...formData,
                 imagenes: imagenes.map(({ data, mediaType, nombre }) => ({ data, mediaType, nombre })),
+                documentos_pdf: documentosPdf.length > 0 ? documentosPdf : undefined,
             }
 
             const response = await api.analizarCaso(payload)
@@ -303,9 +329,8 @@ function Analizar() {
                         Documentación del Expediente
                     </label>
                     <p className="form-hint">
-                        Pegue aquí el texto de pericias, declaraciones, actas u otros documentos del expediente.
-                        El sistema extraerá la información relevante para el análisis defensivo.
-                        No es necesario pegar el documento completo — las partes más relevantes son suficientes.
+                        Pegue aquí el texto de pericias, declaraciones, actas u otros documentos del expediente,
+                        o adjunte hasta {MAX_PDF} PDF (máx. {MAX_PDF_SIZE_MB}MB c/u). Puede usar ambas opciones a la vez.
                     </p>
                     <textarea
                         id="documentacion_caso"
@@ -317,6 +342,50 @@ function Analizar() {
                         placeholder="Ej: Pericia médico-forense: '...el examen físico revela...', Declaración testimonial: '...la denunciante manifestó...', Acta de allanamiento: '...'"
                         disabled={isLoading}
                     />
+
+                    {/* Carga de PDFs */}
+                    <input
+                        type="file"
+                        ref={pdfInputRef}
+                        accept="application/pdf"
+                        multiple
+                        onChange={handlePdfSelect}
+                        style={{ display: 'none' }}
+                        disabled={isLoading}
+                    />
+                    {documentosPdf.length < MAX_PDF && (
+                        <button
+                            type="button"
+                            className="btn-pdf-upload"
+                            onClick={() => !isLoading && pdfInputRef.current?.click()}
+                            disabled={isLoading}
+                        >
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="12" y1="18" x2="12" y2="12"/>
+                                <line x1="9" y1="15" x2="15" y2="15"/>
+                            </svg>
+                            Adjuntar PDF del expediente
+                        </button>
+                    )}
+                    {documentosPdf.length > 0 && (
+                        <div className="pdf-list">
+                            {documentosPdf.map((pdf, i) => (
+                                <div key={i} className="pdf-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    <span className="pdf-item__nombre">{pdf.nombre.length > 30 ? pdf.nombre.slice(0, 28) + '…' : pdf.nombre}</span>
+                                    {!isLoading && (
+                                        <button type="button" className="pdf-item__remove" onClick={() => handleRemovePdf(i)}>×</button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {errors.pdfs && <span className="form-error">{errors.pdfs}</span>}
                 </div>
 
                 {/* Imágenes Adjuntas */}
@@ -324,11 +393,9 @@ function Analizar() {
                     <label className="form-label">Imágenes Adjuntas</label>
                     <p className="form-hint">
                         Adjunte hasta {MAX_IMAGES} imágenes: pericias escaneadas, capturas de WhatsApp,
-                        fotos de evidencia o escritos manuscritos. El sistema las analizará visualmente.
-                        Formatos: JPG, PNG, WebP · Máx. {MAX_SIZE_MB}MB por imagen.
+                        fotos de evidencia o escritos manuscritos. Formatos: JPG, PNG, WebP · Máx. {MAX_SIZE_MB}MB c/u.
                     </p>
 
-                    {/* Zona de carga — visible mientras no se alcanzó el límite */}
                     {imagenes.length < MAX_IMAGES && (
                         <div
                             className={`upload-zone${isDragging ? ' upload-zone--dragging' : ''}${isLoading ? ' upload-zone--disabled' : ''}`}

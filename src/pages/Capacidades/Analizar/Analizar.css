@@ -597,3 +597,62 @@
         width: 100%;
     }
 }
+
+/* PDF upload */
+.btn-pdf-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px dashed #334155;
+    border-radius: 6px;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+}
+.btn-pdf-upload:hover:not(:disabled) {
+    border-color: #c9a227;
+    color: #c9a227;
+}
+.btn-pdf-upload:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pdf-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+}
+.pdf-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    background: #1e293b;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #94a3b8;
+}
+.pdf-item__nombre {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.pdf-item__remove {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0 2px;
+}
+.pdf-item__remove:hover {
+    color: #ef4444;
+}
