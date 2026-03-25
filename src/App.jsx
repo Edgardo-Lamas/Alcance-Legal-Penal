@@ -11,6 +11,7 @@ import Resultado from './pages/Resultado/Resultado'
 import Login from './pages/Login/Login'
 import Precios from './pages/Precios/Precios'
 import Admin from './pages/Admin/Admin'
+import Historial from './pages/Historial/Historial'
 import ScrollToTop from './components/ScrollToTop'
 import DisclaimerAcceptance from './components/DisclaimerAcceptance'
 import { isDisclaimerAccepted } from './constants/disclaimer'
@@ -135,6 +136,14 @@ function App() {
                     <RequireAuth>
                         <PageLayout>
                             <Resultado />
+                        </PageLayout>
+                    </RequireAuth>
+                } />
+
+                <Route path="/historial" element={
+                    <RequireAuth>
+                        <PageLayout>
+                            <Historial />
                         </PageLayout>
                     </RequireAuth>
                 } />

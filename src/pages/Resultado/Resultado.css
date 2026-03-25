@@ -712,6 +712,137 @@
     color: #1a2744;
 }
 
+/* ==================== PATRONES PROCESALES ==================== */
+.resultado__patrones {
+    background: #fefce8;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border-bottom: none;
+    margin-bottom: 2rem;
+}
+
+.resultado__patrones .resultado__section-title {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.resultado__patrones-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #dc2626;
+    color: #fff;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    margin-left: auto;
+}
+
+.resultado__patrones-desc {
+    font-size: 0.85rem;
+    color: #78716c;
+    margin: 0 0 1.25rem 0;
+    line-height: 1.5;
+}
+
+.resultado__patrones-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.resultado__patron {
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.resultado__patron--alto {
+    background: #fef2f2;
+    border-color: #dc2626;
+}
+
+.resultado__patron--medio {
+    background: #fffbeb;
+    border-color: #f59e0b;
+}
+
+.resultado__patron--bajo {
+    background: #f0fdf4;
+    border-color: #22c55e;
+}
+
+.resultado__patron-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.resultado__patron-id {
+    font-size: 0.65rem;
+    font-weight: 700;
+    font-family: monospace;
+    background: #fff;
+    color: #64748b;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+}
+
+.resultado__patron-nombre {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a2744;
+    flex: 1;
+}
+
+.resultado__patron-nivel {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.resultado__patron-nivel--alto { background: #dc2626; color: #fff; }
+.resultado__patron-nivel--medio { background: #f59e0b; color: #fff; }
+.resultado__patron-nivel--bajo { background: #22c55e; color: #fff; }
+
+.resultado__patron-nota {
+    font-size: 0.875rem;
+    color: #334155;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
+}
+
+.resultado__patron-secciones {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.resultado__patron-secciones-label {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.resultado__patron-seccion-tag {
+    font-size: 0.65rem;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
     .resultado {
@@ -876,4 +1007,65 @@
 .feedback__enviar:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* ==================== PRINT / EXPORTAR PDF ==================== */
+@media print {
+    /* Ocultar navegación y controles */
+    .navigation, .navigation__toggle, .navigation__overlay,
+    .resultado__back, .resultado__actions, .feedback,
+    .resultado__footer { display: none !important; }
+
+    body { background: #fff !important; color: #000 !important; }
+
+    .resultado {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .resultado__main {
+        border: none;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .resultado__header {
+        border-bottom: 2px solid #1a2744;
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .resultado__title { font-size: 1.4rem; color: #000; }
+    .resultado__subtitle { color: #555; }
+
+    .resultado__encabezado-informe {
+        background: #1a2744 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-radius: 6px;
+    }
+
+    .resultado__section {
+        page-break-inside: avoid;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 1.25rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .resultado__section-title { color: #1a2744; font-size: 1rem; }
+    .resultado__content p { font-size: 0.9rem; line-height: 1.6; }
+
+    .resultado__patron,
+    .resultado__advertencia-validacion,
+    .resultado__advertencias-section,
+    .resultado__meta-tecnica {
+        page-break-inside: avoid;
+    }
+
+    .resultado__patrones {
+        background: #fffbeb !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }

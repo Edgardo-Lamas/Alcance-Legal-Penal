@@ -278,6 +278,51 @@ function Resultado() {
         )
     }
 
+    const renderPatrones = () => {
+        const patrones = informe.patrones_detectados
+        if (!patrones || patrones.length === 0) return null
+        const presentes = patrones.filter(p => p.presente)
+        if (presentes.length === 0) return null
+        const orden = { alto: 0, medio: 1, bajo: 2 }
+        const sorted = [...presentes].sort((a, b) => orden[a.nivel_alerta] - orden[b.nivel_alerta])
+        return (
+            <section className="resultado__section resultado__patrones">
+                <h2 className="resultado__section-title">
+                    <span className="resultado__section-icon">🚨</span>
+                    Patrones Procesales Detectados
+                    <span className="resultado__patrones-badge">{sorted.length} alerta{sorted.length !== 1 ? 's' : ''}</span>
+                </h2>
+                <p className="resultado__patrones-desc">
+                    El sistema identificó los siguientes patrones procesales que requieren atención defensiva prioritaria.
+                </p>
+                <div className="resultado__patrones-lista">
+                    {sorted.map(p => (
+                        <div key={p.id} className={`resultado__patron resultado__patron--${p.nivel_alerta}`}>
+                            <div className="resultado__patron-header">
+                                <span className="resultado__patron-id">{p.id}</span>
+                                <span className="resultado__patron-nombre">{p.nombre_corto}</span>
+                                <span className={`resultado__patron-nivel resultado__patron-nivel--${p.nivel_alerta}`}>
+                                    {p.nivel_alerta.toUpperCase()}
+                                </span>
+                            </div>
+                            <p className="resultado__patron-nota">{p.nota_resumen}</p>
+                            {p.secciones_relacionadas?.length > 0 && (
+                                <div className="resultado__patron-secciones">
+                                    <span className="resultado__patron-secciones-label">Ver en: </span>
+                                    {p.secciones_relacionadas.map((s, i) => (
+                                        <span key={i} className="resultado__patron-seccion-tag">
+                                            {s.replace(/_/g, ' ')}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </section>
+        )
+    }
+
     const renderAnalisis = () => (
         <>
             {renderEncabezado()}
@@ -306,6 +351,9 @@ function Resultado() {
             {renderSeccion('Contraargumentación de la Acusación', '🛡️', informe.contraargumentacion)}
             {renderSeccion('Conclusión Defensiva', '📋', informe.conclusion_defensiva)}
             {renderSeccion('Limitaciones del Análisis', '⚠️', informe.limitaciones)}
+
+            {/* Patrones procesales detectados */}
+            {renderPatrones()}
 
             {/* Disclaimer institucional */}
             {informe._disclaimer && (
@@ -520,7 +568,7 @@ function Resultado() {
                     <button className="btn btn--secondary" onClick={() => navigate('/')}>
                         Nueva Consulta
                     </button>
-                    <button className="btn btn--primary">
+                    <button className="btn btn--primary" onClick={() => window.print()}>
                         Exportar PDF
                     </button>
                 </div>

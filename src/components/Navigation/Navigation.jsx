@@ -9,6 +9,7 @@ const navItems = [
     { path: '/analizar', label: 'Analizar Caso', icon: 'analyze' },
     { path: '/auditar', label: 'Auditar Estrategia', icon: 'audit' },
     { path: '/redactar', label: 'Redactar Escrito', icon: 'draft' },
+    { path: '/historial', label: 'Historial', icon: 'historial' },
     { path: '/manual', label: 'Manual y Ayuda', icon: 'help' },
 ]
 
@@ -62,6 +63,12 @@ const icons = {
             <path d="M12 3v18" />
             <path d="M5 6l7-3 7 3" />
             <path d="M5 6v6a7 7 0 0 0 7 7 7 7 0 0 0 7-7V6" />
+        </svg>
+    ),
+    historial: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
         </svg>
     ),
     help: (

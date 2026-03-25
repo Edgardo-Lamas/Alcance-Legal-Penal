@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import exifr from 'exifr'
 import { api } from '../../../services/api'
 import { supabase } from '../../../services/supabase'
+import { useAuth } from '../../../context/AuthContext'
 import './Analizar.css'
 
 const MAX_IMAGES = 4
@@ -106,6 +107,7 @@ const etapasProcesales = [
 
 function Analizar() {
     const navigate = useNavigate()
+    const { user } = useAuth()
     const fileInputRef = useRef(null)
     const pdfInputRef = useRef(null)
 
@@ -264,8 +266,23 @@ function Analizar() {
             const response = await api.analizarCaso(payload)
 
             if (response.success) {
-                // Incrementar contador del usuario en background (no bloquea la navegación)
-                if (supabase) supabase.rpc('increment_analisis_count').catch(() => {})
+                // Guardar en historial + incrementar contador (background, no bloquea)
+                if (supabase && user) {
+                    supabase.from('analisis').insert({
+                        user_id: user.id,
+                        numero_informe: response.data.numero_informe,
+                        fecha_emision: response.data.fecha_emision || new Date().toISOString(),
+                        status: response.status,
+                        tipo_analisis: 'analizar',
+                        hechos: formData.hechos,
+                        tipo_penal: formData.tipo_penal || null,
+                        etapa_procesal: formData.etapa_procesal || null,
+                        resultado_json: response.data,
+                        criterios_utilizados: response.meta?.criterios_utilizados ?? null,
+                        pipeline_version: response.meta?.pipeline_version ?? null,
+                    }).catch(() => {})
+                    supabase.rpc('increment_analisis_count').catch(() => {})
+                }
 
                 const estadoLabels = {
                     approved: 'INFORME APROBADO',

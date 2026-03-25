@@ -1,0 +1,214 @@
+.historial {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header */
+.historial__header {
+    margin-bottom: 1.75rem;
+}
+
+.historial__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.historial__back:hover { color: #1a2744; }
+.historial__back svg { width: 18px; height: 18px; }
+
+.historial__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1a2744;
+    margin: 0 0 0.4rem 0;
+}
+
+.historial__subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Estados */
+.historial__estado {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.historial__estado--error { color: #dc2626; }
+
+.historial__vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #64748b;
+}
+
+.historial__vacio svg { color: #cbd5e1; }
+.historial__vacio p { margin: 0; font-size: 1rem; }
+
+/* Contador */
+.historial__contador {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+/* Lista */
+.historial__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Item */
+.historial__item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.historial__item:hover {
+    border-color: #c9a227;
+    box-shadow: 0 4px 16px rgba(201, 162, 39, 0.12);
+    transform: translateY(-1px);
+}
+
+.historial__item:focus-visible {
+    outline: 2px solid #c9a227;
+    outline-offset: 2px;
+}
+
+/* Header del item */
+.historial__item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.historial__numero {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #c9a227;
+    letter-spacing: 0.04em;
+    font-family: monospace;
+}
+
+.historial__status {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+.historial__status--approved { background: #dcfce7; color: #166534; }
+.historial__status--limited  { background: #fef3c7; color: #92400e; }
+.historial__status--rejected { background: #fee2e2; color: #991b1b; }
+
+/* Hechos */
+.historial__hechos {
+    font-size: 0.9rem;
+    color: #334155;
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* Footer del item */
+.historial__item-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.historial__tag {
+    font-size: 0.7rem;
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.historial__tag--etapa {
+    background: #ede9fe;
+    color: #6b21a8;
+}
+
+.historial__fecha {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.historial__arrow {
+    width: 16px;
+    height: 16px;
+    color: #cbd5e1;
+    flex-shrink: 0;
+}
+
+/* Botones */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.btn--primary {
+    background: linear-gradient(135deg, #1a2744 0%, #2d3a52 100%);
+    color: #fff;
+}
+
+.btn--primary:hover {
+    background: linear-gradient(135deg, #2d3a52 0%, #3d4a62 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .historial { padding: 1.5rem 1rem; }
+    .historial__item { padding: 1rem 1.25rem; }
+    .historial__item-footer { gap: 0.4rem; }
+    .historial__fecha { margin-left: 0; }
+}
