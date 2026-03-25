@@ -566,6 +566,40 @@
     max-width: 84px;
 }
 
+.imagen-thumb__meta {
+    font-size: 0.58rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin: 2px 0 0 0;
+    max-width: 84px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: default;
+}
+
+.imagen-thumb__meta--ok {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+}
+
+.imagen-thumb__meta--sin_exif {
+    background: rgba(239, 68, 68, 0.15);
+    color: #dc2626;
+}
+
+.imagen-thumb__meta--editada {
+    background: rgba(249, 115, 22, 0.15);
+    color: #ea580c;
+}
+
+.imagen-thumb__meta--captura {
+    background: rgba(234, 179, 8, 0.15);
+    color: #b45309;
+}
+
 .upload-limit-msg {
     font-size: 0.8rem;
     color: #92400e;

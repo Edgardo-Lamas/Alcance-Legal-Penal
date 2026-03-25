@@ -44,6 +44,8 @@ interface ImagenAdjunta {
     mediaType: 'image/jpeg' | 'image/png' | 'image/webp'
     /** Nombre original del archivo (opcional, para logs) */
     nombre?: string
+    /** Resumen de metadatos EXIF extraídos client-side — incluye alertas defensivas sobre ausencia de EXIF, software de edición, etc. */
+    metadatos_texto?: string
 }
 
 interface DocumentoPdf {
@@ -616,9 +618,13 @@ serve(async (req: Request) => {
                 : '') +
             (imagenesCount > 0
                 ? `## IMÁGENES ADJUNTAS (${imagenesCount} imagen/es)\n` +
-                  `El abogado ha adjuntado ${imagenesCount} imagen/es. ` +
-                  `Pueden contener pericias escaneadas, capturas de conversaciones, fotos de evidencia o escritos manuscritos. ` +
-                  `Analícelas en el contexto de la defensa penal.\n\n`
+                  `El abogado ha adjuntado ${imagenesCount} imagen/es. Metadatos EXIF extraídos client-side:\n\n` +
+                  (body.imagenes ?? []).slice(0, 4).map((img, i) =>
+                      `### Imagen ${i + 1}${img.nombre ? ` — ${img.nombre}` : ''}\n` +
+                      (img.metadatos_texto
+                          ? img.metadatos_texto
+                          : `- Metadatos: No disponibles\nALERTA: Sin metadatos EXIF. Posible captura de pantalla o imagen editada. Requiere pericia informática (art. 244 CPP PBA).`)
+                  ).join('\n\n') + '\n\n'
                 : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import exifr from 'exifr'
 import { api } from '../../../services/api'
 import { supabase } from '../../../services/supabase'
 import './Analizar.css'
@@ -9,6 +10,92 @@ const MAX_SIZE_MB = 4
 const MAX_PDF = 2
 const MAX_PDF_SIZE_MB = 10
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+/**
+ * Construye un resumen de metadatos EXIF para mostrar en la UI y enviar a la Edge Function.
+ * El resumen tiene valor defensivo: ausencia de EXIF = posible captura / edición = vicio procesal.
+ */
+function buildMetadataSummary(exif, filename) {
+    const sinExif = !exif || Object.keys(exif).length === 0
+
+    if (sinExif) {
+        return {
+            tipo: 'sin_exif',
+            etiqueta: 'Sin metadatos EXIF',
+            texto:
+                `Imagen: ${filename}\n` +
+                `- Dispositivo: No disponible\n` +
+                `- Fecha de captura: No disponible\n` +
+                `- GPS: No disponible\n` +
+                `- Software: No disponible\n` +
+                `ALERTA DEFENSIVA: La ausencia total de metadatos EXIF indica que esta imagen puede ser ` +
+                `(a) captura de pantalla sin certificación, ` +
+                `(b) imagen editada que perdió metadatos, o ` +
+                `(c) imagen de origen incierto. ` +
+                `Requiere pericia informática para acreditar integridad y autoría (art. 244 CPP PBA). ` +
+                `La ausencia de metadatos es un vicio en la cadena de custodia digital que la defensa debe señalar.`
+        }
+    }
+
+    const dispositivo = [exif.Make, exif.Model].filter(Boolean).join(' ') || null
+    const fechaRaw = exif.DateTimeOriginal
+    const fecha = fechaRaw
+        ? (fechaRaw instanceof Date ? fechaRaw : new Date(fechaRaw)).toLocaleString('es-AR')
+        : null
+    const software = exif.Software || null
+    const tieneGps = exif.GPSLatitude != null
+    const softwareLower = (software || '').toLowerCase()
+
+    const esEditada =
+        softwareLower.includes('photoshop') ||
+        softwareLower.includes('gimp') ||
+        softwareLower.includes('lightroom') ||
+        softwareLower.includes('snapseed') ||
+        softwareLower.includes('picsart')
+
+    const posibleCaptura =
+        !dispositivo && !fecha &&
+        (softwareLower.includes('ios') || softwareLower.includes('android') || softwareLower.includes('windows'))
+
+    let tipo, etiqueta
+    if (esEditada) {
+        tipo = 'editada'
+        etiqueta = `Editada (${software.split(' ')[0]})`
+    } else if (posibleCaptura) {
+        tipo = 'captura'
+        etiqueta = 'Posible captura'
+    } else if (dispositivo) {
+        tipo = 'ok'
+        etiqueta = dispositivo.length > 20 ? dispositivo.slice(0, 18) + '…' : dispositivo
+    } else {
+        tipo = 'sin_exif'
+        etiqueta = 'EXIF incompleto'
+    }
+
+    let alertaTexto = ''
+    if (esEditada) {
+        alertaTexto =
+            `\nALERTA DEFENSIVA: La imagen fue procesada con software de edición (${software}). ` +
+            `Esto compromete su autenticidad como prueba digital. ` +
+            `La defensa debe señalar este vicio en la cadena de custodia.`
+    } else if (posibleCaptura) {
+        alertaTexto =
+            `\nNOTA: Los metadatos sugieren captura de pantalla (software: ${software}, sin dispositivo de cámara). ` +
+            `Requiere pericia informática para acreditar integridad y autoría (art. 244 CPP PBA).`
+    }
+
+    return {
+        tipo,
+        etiqueta,
+        texto:
+            `Imagen: ${filename}\n` +
+            `- Dispositivo: ${dispositivo || 'No disponible'}\n` +
+            `- Fecha de captura: ${fecha || 'No disponible'}\n` +
+            `- GPS: ${tieneGps ? 'Presente (coordenadas registradas)' : 'No disponible'}\n` +
+            `- Software: ${software || 'No disponible'}` +
+            alertaTexto
+    }
+}
 
 const etapasProcesales = [
     { value: 'ipp', label: 'Investigación Penal Preparatoria (IPP)' },
@@ -60,8 +147,8 @@ function Analizar() {
         return Object.keys(newErrors).length === 0
     }
 
-    // Procesa imágenes (JPG, PNG, WebP)
-    const processFile = (file) => {
+    // Procesa imágenes (JPG, PNG, WebP) — extrae EXIF para análisis defensivo
+    const processFile = async (file) => {
         if (!ACCEPTED_TYPES.includes(file.type)) {
             setErrors(prev => ({ ...prev, imagenes: `Formato no soportado: ${file.name}. Use JPG, PNG o WebP.` }))
             return
@@ -70,14 +157,26 @@ function Analizar() {
             setErrors(prev => ({ ...prev, imagenes: `${file.name} supera el límite de ${MAX_SIZE_MB}MB.` }))
             return
         }
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const base64 = e.target.result.split(',')[1]
-            const preview = URL.createObjectURL(file)
-            setImagenes(prev => [...prev, { data: base64, mediaType: file.type, nombre: file.name, preview }])
-            setErrors(prev => ({ ...prev, imagenes: null }))
-        }
-        reader.readAsDataURL(file)
+
+        // Extraer metadatos EXIF antes de leer el binario
+        let exifData = null
+        try {
+            exifData = await exifr.parse(file, {
+                pick: ['Make', 'Model', 'DateTimeOriginal', 'Software', 'GPSLatitude', 'GPSLongitude', 'Artist']
+            })
+        } catch { /* archivo sin EXIF es válido */ }
+
+        const metadatos = buildMetadataSummary(exifData, file.name)
+
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader()
+            reader.onload = (e) => resolve(e.target.result.split(',')[1])
+            reader.readAsDataURL(file)
+        })
+
+        const preview = URL.createObjectURL(file)
+        setImagenes(prev => [...prev, { data: base64, mediaType: file.type, nombre: file.name, preview, metadatos }])
+        setErrors(prev => ({ ...prev, imagenes: null }))
     }
 
     // Procesa PDFs para documentación
@@ -99,11 +198,14 @@ function Analizar() {
         reader.readAsDataURL(file)
     }
 
-    const handleFileSelect = (e) => {
-        const files = Array.from(e.target.files)
+    const handleFileSelect = async (e) => {
+        const target = e.target
+        const files = Array.from(target.files)
         const remaining = MAX_IMAGES - imagenes.length
-        files.slice(0, remaining).forEach(processFile)
-        e.target.value = ''
+        for (const file of files.slice(0, remaining)) {
+            await processFile(file)
+        }
+        target.value = ''
     }
 
     const handlePdfSelect = (e) => {
@@ -120,13 +222,15 @@ function Analizar() {
 
     const handleDragLeave = () => setIsDragging(false)
 
-    const handleDrop = (e) => {
+    const handleDrop = async (e) => {
         e.preventDefault()
         setIsDragging(false)
         if (isLoading || imagenes.length >= MAX_IMAGES) return
         const files = Array.from(e.dataTransfer.files)
         const remaining = MAX_IMAGES - imagenes.length
-        files.slice(0, remaining).forEach(processFile)
+        for (const file of files.slice(0, remaining)) {
+            await processFile(file)
+        }
     }
 
     const handleRemoveImage = (index) => {
@@ -150,7 +254,10 @@ function Analizar() {
         try {
             const payload = {
                 ...formData,
-                imagenes: imagenes.map(({ data, mediaType, nombre }) => ({ data, mediaType, nombre })),
+                imagenes: imagenes.map(({ data, mediaType, nombre, metadatos }) => ({
+                    data, mediaType, nombre,
+                    metadatos_texto: metadatos?.texto
+                })),
                 documentos_pdf: documentosPdf.length > 0 ? documentosPdf : undefined,
             }
 
@@ -505,6 +612,14 @@ function Analizar() {
                                     <p className="imagen-thumb__nombre">
                                         {img.nombre.length > 14 ? img.nombre.slice(0, 12) + '…' : img.nombre}
                                     </p>
+                                    {img.metadatos && (
+                                        <p
+                                            className={`imagen-thumb__meta imagen-thumb__meta--${img.metadatos.tipo}`}
+                                            title={img.metadatos.texto}
+                                        >
+                                            {img.metadatos.etiqueta}
+                                        </p>
+                                    )}
                                 </div>
                             ))}
                         </div>
