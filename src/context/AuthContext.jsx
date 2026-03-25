@@ -41,11 +41,11 @@ export function AuthProvider({ children }) {
             return
         }
         supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', session.user.id)
-            .single()
-            .then(({ data }) => setProfile(data ?? null))
+            .rpc('get_my_profile')
+            .then(({ data, error }) => {
+                if (error) console.error('[AuthContext] profile fetch error:', error)
+                setProfile(data ?? null)
+            })
     }, [session])
 
     const signIn = async (email, password) => {
