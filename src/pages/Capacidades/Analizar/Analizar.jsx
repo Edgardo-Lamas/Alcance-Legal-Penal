@@ -265,24 +265,31 @@ function Analizar() {
 
             const response = await api.analizarCaso(payload)
 
+            if (!response) {
+                setErrors({ api: 'El servidor no respondió. Intente nuevamente.' })
+                return
+            }
+
             if (response.success) {
                 // Guardar en historial + incrementar contador (background, no bloquea)
-                if (supabase && user) {
-                    supabase.from('analisis').insert({
-                        user_id: user.id,
-                        numero_informe: response.data.numero_informe,
-                        fecha_emision: response.data.fecha_emision || new Date().toISOString(),
-                        status: response.status,
-                        tipo_analisis: 'analizar',
-                        hechos: formData.hechos,
-                        tipo_penal: formData.tipo_penal || null,
-                        etapa_procesal: formData.etapa_procesal || null,
-                        resultado_json: response.data,
-                        criterios_utilizados: response.meta?.criterios_utilizados ?? null,
-                        pipeline_version: response.meta?.pipeline_version ?? null,
-                    }).catch(() => {})
-                    supabase.rpc('increment_analisis_count').catch(() => {})
-                }
+                try {
+                    if (supabase && user) {
+                        supabase.from('analisis').insert({
+                            user_id: user.id,
+                            numero_informe: response.data?.numero_informe,
+                            fecha_emision: response.data?.fecha_emision || new Date().toISOString(),
+                            status: response.status,
+                            tipo_analisis: 'analizar',
+                            hechos: formData.hechos,
+                            tipo_penal: formData.tipo_penal || null,
+                            etapa_procesal: formData.etapa_procesal || null,
+                            resultado_json: response.data,
+                            criterios_utilizados: response.meta?.criterios_utilizados ?? null,
+                            pipeline_version: response.meta?.pipeline_version ?? null,
+                        }).catch(() => {})
+                        supabase.rpc('increment_analisis_count').catch(() => {})
+                    }
+                } catch { /* no bloquea la navegación */ }
 
                 const estadoLabels = {
                     approved: 'INFORME APROBADO',
@@ -293,7 +300,7 @@ function Analizar() {
                     state: {
                         capacidad: 'analizar',
                         data: {
-                            ...response.data,
+                            ...(response.data || {}),
                             estado: estadoLabels[response.status] || 'INFORME',
                             estado_detalle: 'Defensa Penal PBA — In dubio pro reo',
                             _status: response.status,
@@ -305,11 +312,12 @@ function Analizar() {
                 })
             } else {
                 setErrors({
-                    api: response.fundamento || response.recomendacion || 'La consulta no pudo ser procesada.'
+                    api: response.fundamento || response.recomendacion || response.mensaje || 'La consulta no pudo ser procesada.'
                 })
             }
-        } catch {
-            setErrors({ api: 'Error de conexión. Intente nuevamente.' })
+        } catch (err) {
+            console.error('[Analizar] Error inesperado:', err)
+            setErrors({ api: `Error: ${err?.message || 'Intente nuevamente.'}` })
         } finally {
             setIsLoading(false)
         }

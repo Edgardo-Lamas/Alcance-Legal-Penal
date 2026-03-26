@@ -229,12 +229,20 @@ class AlcanceLegalAPI {
                     body: JSON.stringify(data)
                 })
 
+                if (!response.ok) {
+                    const text = await response.text()
+                    console.error('[API] Edge Function HTTP error:', response.status, text)
+                    try { return JSON.parse(text) } catch { /* no JSON */ }
+                    return { success: false, fundamento: `Error del servidor (${response.status}): ${text.slice(0, 200)}` }
+                }
+
                 const result = await response.json()
                 console.log('[API] Edge Function respondió:', result.success ? 'success' : 'rechazo', result.codigo || result.status)
                 return result
 
             } catch (error) {
-                console.warn('[API] Edge Function falló, usando mock:', error.message)
+                console.error('[API] Edge Function error de red:', error.message)
+                return { success: false, fundamento: `Error de red: ${error.message}` }
             }
         }
 
