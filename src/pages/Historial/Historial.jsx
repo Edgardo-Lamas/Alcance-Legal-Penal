@@ -49,6 +49,7 @@ function Historial() {
         navigate('/resultado', {
             state: {
                 capacidad: 'analizar',
+                _fromHistorial: true,
                 data: {
                     ...item.resultado_json,
                     estado:        estadoLabels[item.status] || 'INFORME',

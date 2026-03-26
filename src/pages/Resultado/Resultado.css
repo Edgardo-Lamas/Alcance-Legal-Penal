@@ -1009,12 +1009,100 @@
     cursor: not-allowed;
 }
 
+/* ==================== INDICADOR DE PASOS ==================== */
+.resultado__pasos {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 auto 1.5rem;
+    max-width: 900px;
+    padding: 0 2rem;
+}
+
+.resultado__paso-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.resultado__paso-num {
+    font-size: 1.1rem;
+}
+
+.resultado__paso-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.resultado__paso-item--activo .resultado__paso-num,
+.resultado__paso-item--activo .resultado__paso-label {
+    color: #c9a227;
+    font-weight: 700;
+}
+
+.resultado__paso-item--inactivo .resultado__paso-num,
+.resultado__paso-item--inactivo .resultado__paso-label {
+    color: #475569;
+}
+
+.resultado__paso-linea {
+    flex: 1;
+    height: 1px;
+    background: #2d3e6b;
+}
+
+/* ==================== BADGE PRELIMINAR ==================== */
+.resultado__badge-preliminar {
+    display: inline-block;
+    background: rgba(201, 162, 39, 0.12);
+    color: #c9a227;
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    border-radius: 4px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+/* ==================== RECUADRO DE CONFIRMACIÓN ==================== */
+.resultado__confirmacion {
+    border-left: 3px solid #c9a227;
+    background: rgba(201, 162, 39, 0.06);
+    border-radius: 0 8px 8px 0;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.resultado__confirmacion-titulo {
+    color: #c9a227;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0 0 0.5rem;
+}
+
+.resultado__confirmacion-texto {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 1.25rem;
+}
+
+.resultado__confirmacion-acciones {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
 /* ==================== PRINT / EXPORTAR PDF ==================== */
 @media print {
     /* Ocultar navegación y controles */
     .navigation, .navigation__toggle, .navigation__overlay,
     .resultado__back, .resultado__actions, .feedback,
-    .resultado__footer { display: none !important; }
+    .resultado__pasos, .resultado__badge-preliminar,
+    .resultado__confirmacion, .resultado__footer { display: none !important; }
 
     body { background: #fff !important; color: #000 !important; }
 

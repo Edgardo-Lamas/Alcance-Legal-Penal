@@ -220,7 +220,8 @@ III. DERECHO
 function Resultado() {
     const location = useLocation()
     const navigate = useNavigate()
-    const { capacidad, data } = location.state || {}
+    const { capacidad, data, _fromHistorial } = location.state || {}
+    const [pasoActual, setPasoActual] = useState(_fromHistorial ? 2 : 1)
 
     if (!capacidad) {
         return (
@@ -322,6 +323,51 @@ function Resultado() {
             </section>
         )
     }
+
+    const renderIndicadorPasos = () => (
+        <div className="resultado__pasos">
+            <div className={`resultado__paso-item ${pasoActual === 1 ? 'resultado__paso-item--activo' : 'resultado__paso-item--inactivo'}`}>
+                <span className="resultado__paso-num">①</span>
+                <span className="resultado__paso-label">Análisis Preliminar</span>
+            </div>
+            <div className="resultado__paso-linea" />
+            <div className={`resultado__paso-item ${pasoActual === 2 ? 'resultado__paso-item--activo' : 'resultado__paso-item--inactivo'}`}>
+                <span className="resultado__paso-num">②</span>
+                <span className="resultado__paso-label">Estrategia Defensiva</span>
+            </div>
+        </div>
+    )
+
+    const renderPreliminar = () => (
+        <>
+            {renderEncabezado()}
+            <div className="resultado__badge-preliminar">
+                ANÁLISIS PRELIMINAR — Verificá el encuadre antes de continuar
+            </div>
+            {renderSeccion('Encuadre Procesal', '⚖️', informe.encuadre_procesal)}
+            {renderSeccion('Análisis de Prueba de Cargo', '🔬', informe.analisis_prueba_cargo)}
+            {renderSeccion('Limitaciones del Análisis', '⚠️', informe.limitaciones)}
+            <div className="resultado__confirmacion">
+                <p className="resultado__confirmacion-titulo">¿El encuadre es correcto?</p>
+                <p className="resultado__confirmacion-texto">
+                    Revisá que el sistema haya interpretado correctamente los hechos, la etapa procesal y el tipo penal imputado.
+                    Solo avanzá si el encuadre refleja fielmente la situación del caso.
+                    Si hay errores, volvé al formulario y corregí los datos antes de continuar.
+                </p>
+                <div className="resultado__confirmacion-acciones">
+                    <button
+                        className="btn btn--primary"
+                        onClick={() => { setPasoActual(2); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+                    >
+                        El encuadre es correcto — Ver Estrategia Defensiva
+                    </button>
+                    <button className="btn btn--secondary" onClick={() => navigate(-1)}>
+                        Volver a cargar datos
+                    </button>
+                </div>
+            </div>
+        </>
+    )
 
     const renderAnalisis = () => (
         <>
@@ -548,16 +594,21 @@ function Resultado() {
                 <p className="resultado__subtitle">Alcance Legal Penal — Defensa CPP PBA</p>
             </header>
 
+            {capacidad === 'analizar' && renderIndicadorPasos()}
+
             <main className="resultado__main">
-                {capacidad === 'analizar' && renderAnalisis()}
+                {capacidad === 'analizar' && pasoActual === 1 && renderPreliminar()}
+                {capacidad === 'analizar' && pasoActual === 2 && renderAnalisis()}
                 {capacidad === 'auditar' && renderAuditoria()}
                 {capacidad === 'redactar' && renderRedaccion()}
             </main>
 
-            <FeedbackWidget
-                numeroInforme={informe.numero_informe}
-                tipoAnalisis={capacidad}
-            />
+            {(capacidad !== 'analizar' || pasoActual === 2) && (
+                <FeedbackWidget
+                    numeroInforme={informe.numero_informe}
+                    tipoAnalisis={capacidad}
+                />
+            )}
 
             <footer className="resultado__footer">
                 <div className="resultado__footer-disclaimer">
@@ -568,9 +619,11 @@ function Resultado() {
                     <button className="btn btn--secondary" onClick={() => navigate('/')}>
                         Nueva Consulta
                     </button>
-                    <button className="btn btn--primary" onClick={() => window.print()}>
-                        Exportar PDF
-                    </button>
+                    {(capacidad !== 'analizar' || pasoActual === 2) && (
+                        <button className="btn btn--primary" onClick={() => window.print()}>
+                            Exportar PDF
+                        </button>
+                    )}
                 </div>
             </footer>
         </div>

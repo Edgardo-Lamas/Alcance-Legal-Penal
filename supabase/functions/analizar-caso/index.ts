@@ -255,7 +255,7 @@ async function invocarRazonamiento(
             },
             body: JSON.stringify({
                 model: 'claude-sonnet-4-6',
-                max_tokens: 4096,
+                max_tokens: 8192,
                 system: PROFILE_PENAL_PBA_CONFIG.systemPrompt,
                 messages: [{ role: 'user', content: userContent }]
             }),
@@ -266,7 +266,7 @@ async function invocarRazonamiento(
         }
 
         const data = await response.json()
-        return JSON.parse(data.content[0].text)
+        return parseJsonSafe(data.content[0].text) as Record<string, string>
     }
 
     // Fallback a OpenAI GPT-4 (solo texto — no soporta vision en este flujo)
@@ -291,7 +291,13 @@ async function invocarRazonamiento(
     }
 
     const data = await response.json()
-    return JSON.parse(data.choices[0].message.content)
+    return parseJsonSafe(data.choices[0].message.content) as Record<string, string>
+}
+
+// Helper: limpia markdown fences antes de JSON.parse
+function parseJsonSafe(raw: string): unknown {
+    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim()
+    return JSON.parse(cleaned)
 }
 
 // ============================================
@@ -339,7 +345,7 @@ async function detectarPatrones(
         }
 
         const data = await response.json()
-        return JSON.parse(data.content[0].text) as PatronDetectado[]
+        return parseJsonSafe(data.content[0].text) as PatronDetectado[]
     }
 
     // Fallback OpenAI — json_object requiere wrapper de objeto
@@ -370,8 +376,8 @@ async function detectarPatrones(
     }
 
     const data = await response.json()
-    const parsed = JSON.parse(data.choices[0].message.content)
-    return (parsed.patrones_detectados ?? parsed) as PatronDetectado[]
+    const parsed = parseJsonSafe(data.choices[0].message.content) as Record<string, unknown>
+    return ((parsed.patrones_detectados ?? parsed) as PatronDetectado[])
 }
 
 // ============================================
