@@ -154,7 +154,12 @@ Cuando el abogado adjunte imágenes o documentos PDF, analizalos con el mismo ri
 ## REGLA FINAL
 Si la información proporcionada es insuficiente para un análisis riguroso,
 indicalo expresamente y señalá qué información adicional se necesita.
-Una abstención fundada es preferible a un análisis superficial que perjudique la defensa.`;
+Una abstención fundada es preferible a un análisis superficial que perjudique la defensa.
+
+## INSTRUCCIÓN DE EXTENSIÓN
+Sé directo y conciso. Cada campo del JSON debe contener entre 2 y 4 párrafos sustanciales.
+No repitas información entre secciones. No uses listas de más de 5 ítems. No superes 250 palabras por campo.
+El total del JSON no debe superar 1500 palabras.`;
 
 // ============================================
 // CONFIGURACIÓN DEL PERFIL

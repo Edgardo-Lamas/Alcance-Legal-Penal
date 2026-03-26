@@ -255,7 +255,7 @@ async function invocarRazonamiento(
             },
             body: JSON.stringify({
                 model: 'claude-sonnet-4-6',
-                max_tokens: 8192,
+                max_tokens: 5500,
                 system: PROFILE_PENAL_PBA_CONFIG.systemPrompt,
                 messages: [{ role: 'user', content: userContent }]
             }),
