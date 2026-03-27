@@ -234,6 +234,33 @@
 .da-seccion--limita h3 { color: #fb923c; }
 .da-seccion--limita li { color: #fdba74; }
 
+.da-seccion--pi {
+    background: rgba(201, 162, 39, 0.05);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+}
+
+.da-seccion--pi h3 { color: #c9a227; }
+.da-seccion--pi li { color: #94a3b8; }
+
+.da-seccion__intro-pi {
+    margin: 0 0 0.75rem;
+    font-size: 0.82rem;
+    color: #94a3b8;
+    line-height: 1.6;
+}
+
+.da-seccion__titular-pi {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(201, 162, 39, 0.2);
+    font-size: 0.78rem;
+    color: #c9a227;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
 /* Exclusión de responsabilidad */
 .da-exclusion {
     background: rgba(220, 38, 38, 0.06);

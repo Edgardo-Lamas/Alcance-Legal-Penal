@@ -7,7 +7,7 @@
  * NO MODIFICAR sin autorización expresa.
  */
 
-export const DISCLAIMER_VERSION = '1.0'
+export const DISCLAIMER_VERSION = '1.1'
 
 /**
  * Texto completo para pantalla de aceptación
@@ -51,6 +51,19 @@ export const DISCLAIMER_COMPLETO = {
     ],
 
     exclusionResponsabilidad: 'El operador, desarrollador y proveedores del sistema no asumen responsabilidad alguna por el uso que se haga de la información proporcionada, ni por las decisiones adoptadas en base a ella.',
+
+    propiedadIntelectual: {
+        titulo: 'Propiedad Intelectual y Condiciones de Uso',
+        introduccion: 'El sistema Alcance Legal Penal, incluyendo su código fuente, metodología de análisis, prompts de procesamiento, corpus jurisprudencial compilado, interfaz y todos sus componentes, es obra intelectual protegida por la Ley 11.723 de Propiedad Intelectual de la República Argentina.',
+        condiciones: [
+            'El acceso es personal e intransferible. Queda prohibida la cesión, compartición o divulgación de credenciales de acceso a terceros.',
+            'Los informes generados son para uso profesional exclusivo del suscriptor. No pueden redistribuirse, publicarse ni comercializarse sin autorización expresa.',
+            'Queda expresamente prohibida la reproducción total o parcial del sistema, su metodología, prompts, corpus jurisprudencial o cualquier componente por cualquier medio.',
+            'Se prohíbe el uso de sistemas automatizados (scraping, bots, crawlers) para extraer contenido, datos o resultados del sistema.',
+            'El incumplimiento de estas condiciones habilita al titular a dar de baja el acceso sin previo aviso y a ejercer las acciones legales correspondientes.'
+        ],
+        titular: '© 2026 Edgardo Lamas — Studio Lamas. Todos los derechos reservados.'
+    },
 
     jurisdiccion: 'República Argentina',
     alcance: 'Criterios jurisprudenciales penales — Fuero Penal Provincia de Buenos Aires (CPP PBA)'

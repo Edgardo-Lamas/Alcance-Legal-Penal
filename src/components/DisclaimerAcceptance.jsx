@@ -139,6 +139,17 @@ function DisclaimerAcceptance({ onAccept }) {
                             <p>{DISCLAIMER_COMPLETO.exclusionResponsabilidad}</p>
                         </div>
 
+                        <div className="da-seccion da-seccion--pi">
+                            <h3>{DISCLAIMER_COMPLETO.propiedadIntelectual.titulo}</h3>
+                            <p className="da-seccion__intro-pi">{DISCLAIMER_COMPLETO.propiedadIntelectual.introduccion}</p>
+                            <ol>
+                                {DISCLAIMER_COMPLETO.propiedadIntelectual.condiciones.map((item, i) => (
+                                    <li key={i}>{item}</li>
+                                ))}
+                            </ol>
+                            <p className="da-seccion__titular-pi">{DISCLAIMER_COMPLETO.propiedadIntelectual.titular}</p>
+                        </div>
+
                         <div className="da-metadata">
                             <p><strong>Jurisdicción:</strong> {DISCLAIMER_COMPLETO.jurisdiccion}</p>
                             <p><strong>Alcance:</strong> {DISCLAIMER_COMPLETO.alcance}</p>

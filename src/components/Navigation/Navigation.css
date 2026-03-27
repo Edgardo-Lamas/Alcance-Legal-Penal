@@ -215,6 +215,12 @@
     color: #475569;
 }
 
+.navigation__copyright {
+    font-size: 0.65rem;
+    color: #2d3f55;
+    letter-spacing: 0.02em;
+}
+
 /* Firma Studio Lamas */
 .navigation__brand {
     display: flex;

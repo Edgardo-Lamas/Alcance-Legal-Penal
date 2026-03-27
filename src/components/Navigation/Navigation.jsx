@@ -172,6 +172,7 @@ function Navigation() {
                     </button>
                     <div className="navigation__badge">Fuero Penal · CPP PBA</div>
                     <span className="navigation__version">v1.0.0</span>
+                    <span className="navigation__copyright">© 2026 Edgardo Lamas</span>
 
                     {/* Firma del estudio */}
                     <div className="navigation__brand">
