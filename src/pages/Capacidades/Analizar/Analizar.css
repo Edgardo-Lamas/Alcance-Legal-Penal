@@ -815,6 +815,9 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
+    background: #070f1e;
+    min-height: 100vh;
+    color: #e2e8f0;
 }
 
 .analizar__header {
@@ -830,7 +833,7 @@
 
 .analizar__subtitle {
     font-size: 1rem;
-    color: #4a6a8a;
+    color: #94a3b8;
     margin: 0;
     line-height: 1.5;
 }
