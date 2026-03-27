@@ -271,10 +271,11 @@ function Analizar() {
             }
 
             if (response.success) {
-                // Guardar en historial + incrementar contador (background, no bloquea)
+                // Guardar en historial
+                let _historialError = null
                 try {
                     if (supabase && user) {
-                        supabase.from('analisis').insert({
+                        const { error: insertError } = await supabase.from('analisis').insert({
                             user_id: user.id,
                             numero_informe: response.data?.numero_informe,
                             fecha_emision: response.data?.fecha_emision || new Date().toISOString(),
@@ -286,12 +287,19 @@ function Analizar() {
                             resultado_json: response.data,
                             criterios_utilizados: response.meta?.criterios_utilizados ?? null,
                             pipeline_version: response.meta?.pipeline_version ?? null,
-                        }).catch(err => console.error('[Historial] Error al guardar análisis:', err))
+                        })
+                        if (insertError) {
+                            _historialError = `[${insertError.code}] ${insertError.message}`
+                            console.error('[Historial] Error al guardar:', insertError)
+                        }
                         supabase.rpc('increment_analisis_count').catch(() => {})
                     } else {
-                        console.warn('[Historial] No se guarda: supabase=' + !!supabase + ' user=' + !!user)
+                        _historialError = `supabase=${!!supabase} user=${!!user}`
+                        console.warn('[Historial] No se guarda:', _historialError)
                     }
-                } catch { /* no bloquea la navegación */ }
+                } catch (saveErr) {
+                    _historialError = saveErr?.message || 'Error desconocido'
+                }
 
                 const estadoLabels = {
                     approved: 'INFORME APROBADO',
@@ -301,6 +309,7 @@ function Analizar() {
                 navigate('/resultado', {
                     state: {
                         capacidad: 'analizar',
+                        _historialError,
                         data: {
                             ...(response.data || {}),
                             estado: estadoLabels[response.status] || 'INFORME',

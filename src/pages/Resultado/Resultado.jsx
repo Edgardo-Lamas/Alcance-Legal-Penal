@@ -220,7 +220,7 @@ III. DERECHO
 function Resultado() {
     const location = useLocation()
     const navigate = useNavigate()
-    const { capacidad, data, _fromHistorial } = location.state || {}
+    const { capacidad, data, _fromHistorial, _historialError } = location.state || {}
     const [pasoActual, setPasoActual] = useState(_fromHistorial ? 2 : 1)
 
     if (!capacidad) {
@@ -593,6 +593,12 @@ function Resultado() {
                 <h1 className="resultado__title">{titulos[capacidad]}</h1>
                 <p className="resultado__subtitle">Alcance Legal Penal — Defensa CPP PBA</p>
             </header>
+
+            {_historialError && (
+                <div style={{background:'#1a0a0a',border:'1px solid #ef4444',padding:'0.6rem 1rem',margin:'1rem 0',borderRadius:'6px',fontSize:'0.75rem',color:'#fca5a5',fontFamily:'monospace',wordBreak:'break-all'}}>
+                    ⚠ DIAGNÓSTICO HISTORIAL: {_historialError}
+                </div>
+            )}
 
             {capacidad === 'analizar' && renderIndicadorPasos()}
 
