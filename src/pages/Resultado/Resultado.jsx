@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../../services/supabase'
 import { useAuth } from '../../context/AuthContext'
+import PipelineStatus from '../../components/PipelineStatus/PipelineStatus'
 import './Resultado.css'
 
 function FeedbackWidget({ numeroInforme, tipoAnalisis }) {
@@ -222,6 +223,7 @@ function Resultado() {
     const navigate = useNavigate()
     const { capacidad, data, _fromHistorial, _historialError } = location.state || {}
     const [pasoActual, setPasoActual] = useState(_fromHistorial ? 2 : 1)
+    const [pipelineVisible, setPipelineVisible] = useState(false)
 
     if (!capacidad) {
         return (
@@ -581,6 +583,53 @@ function Resultado() {
         </>
     )
 
+    const buildFasesPipeline = () => {
+        const criterios = informe._meta?.criterios_utilizados
+        const status = informe._status
+        const advertencias = informe._advertencias || []
+        return [
+            {
+                id: 'admisibilidad',
+                nombre: 'Admisibilidad',
+                subtitulo: 'Verifica que la consulta sea penal PBA con hechos suficientes',
+                estado: 'completada',
+                detalle: 'Causa admitida — fuero penal PBA'
+            },
+            {
+                id: 'rag',
+                nombre: 'RAG Penal',
+                subtitulo: 'Recupera criterios jurídicos verificados del corpus',
+                estado: 'completada',
+                detalle: criterios != null
+                    ? `${criterios} criterio${criterios !== 1 ? 's' : ''} jurídico${criterios !== 1 ? 's' : ''} recuperado${criterios !== 1 ? 's' : ''}`
+                    : 'Criterios recuperados del corpus'
+            },
+            {
+                id: 'razonamiento',
+                nombre: 'Razonamiento LIS',
+                subtitulo: 'Razona desde la perspectiva defensiva',
+                estado: 'completada',
+                detalle: 'Razonamiento defensivo completado — in dubio pro reo'
+            },
+            {
+                id: 'validacion',
+                nombre: 'Validación de calidad',
+                subtitulo: 'Controla sesgo acusatorio y certeza excesiva',
+                estado: 'completada',
+                detalle: status === 'limited' && advertencias.length > 0
+                    ? `${advertencias.length} advertencia${advertencias.length !== 1 ? 's' : ''} registrada${advertencias.length !== 1 ? 's' : ''}`
+                    : 'Sin advertencias de sesgo acusatorio'
+            },
+            {
+                id: 'informe',
+                nombre: 'Informe + PDF',
+                subtitulo: 'Genera el informe numerado con disclaimer institucional',
+                estado: 'completada',
+                detalle: informe.numero_informe ? `N° ${informe.numero_informe}` : 'Informe generado'
+            },
+        ]
+    }
+
     return (
         <div className="resultado">
             <header className="resultado__header">
@@ -595,6 +644,38 @@ function Resultado() {
             </header>
 
             {capacidad === 'analizar' && renderIndicadorPasos()}
+
+            {/* Pipeline summary colapsable — solo para analizar */}
+            {capacidad === 'analizar' && (
+                <div className="resultado__pipeline-resumen">
+                    <button
+                        className="resultado__pipeline-toggle"
+                        onClick={() => setPipelineVisible(v => !v)}
+                        aria-expanded={pipelineVisible}
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Ver proceso ejecutado
+                        <span className="resultado__pipeline-toggle-estado">
+                            5 fases completadas
+                        </span>
+                        <svg
+                            className={`resultado__pipeline-chevron${pipelineVisible ? ' resultado__pipeline-chevron--up' : ''}`}
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                            width="14" height="14"
+                        >
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </button>
+                    {pipelineVisible && (
+                        <div className="resultado__pipeline-contenido">
+                            <PipelineStatus phases={buildFasesPipeline()} mostrarDetalle={true} />
+                        </div>
+                    )}
+                </div>
+            )}
 
             <main className="resultado__main">
                 {capacidad === 'analizar' && pasoActual === 1 && renderPreliminar()}

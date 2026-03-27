@@ -1,0 +1,185 @@
+.pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Item (fila fase) ── */
+.pipeline__item {
+    display: flex;
+    gap: 14px;
+    align-items: stretch;
+}
+
+/* ── Columna conectora (icono + línea) ── */
+.pipeline__conector-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* ── Icono de estado ── */
+.pipeline__icono {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.pipeline__icono--pendiente {
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #64748b;
+}
+
+.pipeline__icono--ejecutando {
+    background: rgba(201, 162, 39, 0.12);
+    border: 2px solid #c9a227;
+    color: #c9a227;
+}
+
+.pipeline__icono--completada {
+    background: rgba(22, 163, 74, 0.12);
+    border: 2px solid #16a34a;
+    color: #16a34a;
+}
+
+.pipeline__icono--completada svg {
+    width: 16px;
+    height: 16px;
+}
+
+.pipeline__icono--rechazada {
+    background: rgba(220, 38, 38, 0.12);
+    border: 2px solid #dc2626;
+    color: #dc2626;
+}
+
+.pipeline__icono--rechazada svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ── Pulso animado (estado ejecutando) ── */
+.pipeline__pulso {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #c9a227;
+    opacity: 0;
+    animation: pipeline-pulso 1.4s ease-out infinite;
+}
+
+@keyframes pipeline-pulso {
+    0% { transform: scale(1); opacity: 0.7; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* ── Línea conectora ── */
+.pipeline__linea {
+    width: 2px;
+    flex: 1;
+    min-height: 20px;
+    margin: 4px 0;
+    border-radius: 1px;
+    transition: background 0.4s ease;
+}
+
+.pipeline__linea--completa {
+    background: #16a34a;
+}
+
+.pipeline__linea--pendiente {
+    background: #1e293b;
+}
+
+/* ── Contenido de la fase ── */
+.pipeline__contenido {
+    flex: 1;
+    padding-bottom: 20px;
+    min-width: 0;
+}
+
+.pipeline__fase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px 0;
+}
+
+.pipeline__fase-header--clickable {
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 4px 6px;
+    margin: 0 -6px;
+    transition: background 0.15s ease;
+}
+
+.pipeline__fase-header--clickable:hover {
+    background: rgba(201, 162, 39, 0.06);
+}
+
+.pipeline__nombre {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.pipeline__nombre--pendiente { color: #475569; }
+.pipeline__nombre--ejecutando { color: #c9a227; }
+.pipeline__nombre--completada { color: #e2e8f0; }
+.pipeline__nombre--rechazada { color: #dc2626; }
+
+.pipeline__subtitulo {
+    display: block;
+    font-size: 0.75rem;
+    color: #475569;
+    line-height: 1.4;
+}
+
+/* ── Chevron ── */
+.pipeline__chevron {
+    color: #475569;
+    flex-shrink: 0;
+    margin-top: 3px;
+    transition: transform 0.2s ease;
+}
+
+.pipeline__chevron--abierto {
+    transform: rotate(180deg);
+}
+
+/* ── Detalle expandible ── */
+.pipeline__detalle {
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    animation: pipeline-detalle-in 0.2s ease;
+}
+
+@keyframes pipeline-detalle-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Print: ocultar pipeline visual ── */
+@media print {
+    .pipeline { display: none; }
+}

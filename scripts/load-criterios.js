@@ -164,7 +164,7 @@ async function insertarCriterio(registro) {
 async function cargarCorpusArray(rutaArchivo) {
     if (!fs.existsSync(rutaArchivo)) return 0
 
-    console.log(`\n📂 corpus_criterios_v1.json`)
+    console.log(`   Cargando: ${path.basename(rutaArchivo)}`)
     let raw
     try {
         raw = JSON.parse(fs.readFileSync(rutaArchivo, 'utf8'))
@@ -242,9 +242,16 @@ async function main() {
 
     let totalCargados = 0
 
-    // Fuente 1: corpus array en raíz
-    const corpusArrayPath = path.join(CORPUS_BASE_PATH, 'corpus_criterios_v1.json')
-    totalCargados += await cargarCorpusArray(corpusArrayPath)
+    // Fuente 1: todos los archivos corpus_*.json en la raíz del corpus
+    const archivosCorpus = fs.readdirSync(CORPUS_BASE_PATH)
+        .filter(f => f.startsWith('corpus_') && f.endsWith('.json'))
+        .sort()
+
+    for (const archivo of archivosCorpus) {
+        const rutaArchivo = path.join(CORPUS_BASE_PATH, archivo)
+        console.log(`\n📂 ${archivo}`)
+        totalCargados += await cargarCorpusArray(rutaArchivo)
+    }
 
     // Fuente 2: archivos individuales en subdirectorios
     const categorias = fs.readdirSync(CORPUS_BASE_PATH, { withFileTypes: true })

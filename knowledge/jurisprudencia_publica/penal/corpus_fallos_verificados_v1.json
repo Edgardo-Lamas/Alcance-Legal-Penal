@@ -1,0 +1,191 @@
+[
+  {
+    "id": "PENAL-FAL-001",
+    "fuero": "penal_pba",
+    "tema": "prision_preventiva_excepcionalidad",
+    "etiquetas": ["prision_preventiva", "excepcionalidad", "peligro_de_fuga", "entorpecimiento", "libertad_ambulatoria"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 9.3 PIDCyP; art. 7 CADH; arts. 157-178 CPP PBA",
+      "jurisprudencia_referente": "CNCP Plenario N°13, 'Díaz Bessone, Ramón Genaro s/ recurso de casación', Acuerdo N°1/2008, 30/10/2008 — Doctrina plenaria obligatoria para todos los tribunales inferiores",
+      "doctrina": "Solimine, Mauricio L.; Cafferata Nores, José I., 'Proceso Penal y Derechos Humanos'"
+    },
+    "texto_regla": "La prisión preventiva tiene carácter excepcional y no puede ser la regla general. Su única justificación constitucional son los riesgos procesales concretos: peligro de fuga o peligro de entorpecimiento de la investigación. La escala penal prevista para el delito imputado, por sí sola, no es fundamento suficiente para imponer o mantener la prisión preventiva. El art. 9.3 del PIDCyP dispone expresamente que 'la prisión preventiva no puede ser la regla general'.",
+    "aplicacion_practica": "Si el auto de prisión preventiva o su prórroga se funda principalmente en la gravedad del delito, la pena en expectativa o el monto de la escala penal, sin acreditar en concreto indicios de peligro de fuga o de entorpecimiento de la investigación, la defensa debe impugnar ese fundamento invocando la doctrina plenaria 'Díaz Bessone'. La privación de libertad debe ser el último recurso, no el primero.",
+    "cita_textual": "\"No basta en materia de excarcelación o eximición de prisión para su denegación la imposibilidad de futura condena de ejecución condicional, o que pudiere corresponderle al imputado una pena privativa de la libertad superior a ocho años (arts. 316 y 317 del C.P.P.N.), sino que deben valorarse en forma conjunta con otros parámetros tales como los establecidos en el art. 319 del ordenamiento ritual a los fines de determinar la existencia de riesgo procesal.\" — CNCP Plenario 'Díaz Bessone', 30/10/2008",
+    "referencias": [
+      "Art. 9.3 Pacto Internacional de Derechos Civiles y Políticos",
+      "Art. 7 Convención Americana sobre Derechos Humanos",
+      "Arts. 157 y 158 CPP PBA",
+      "CNCP, Plenario N°13, 'Díaz Bessone, Ramón Genaro', Acuerdo N°1/2008, 30/10/2008",
+      "Art. 18 Constitución Nacional"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://www.cij.gov.ar/nota-481-Casacion-Penal-ratifica-nueva-doctrina-en-excarcelaciones.html"
+  },
+  {
+    "id": "PENAL-FAL-002",
+    "fuero": "penal_pba",
+    "tema": "prision_preventiva_peligros_procesales_concretos",
+    "etiquetas": ["prision_preventiva", "peligro_de_fuga", "entorpecimiento", "indicios_concretos", "presuncion"],
+    "fuente": {
+      "norma": "Arts. 157, 158, 168, 171 CPP PBA; art. 18 CN; art. 8.2 CADH",
+      "jurisprudencia_referente": "Cámara de Apelación y Garantías en lo Penal de La Plata, Sala I, 'A., D. y otros s/ Incidente de apelación', Expte. N° CP 36233-4, 14/04/2023",
+      "doctrina": "Bovino, Alberto, 'El encarcelamiento preventivo en los tratados de derechos humanos'; Comisión IDH, Informe 35/07"
+    },
+    "texto_regla": "Los peligros procesales que justifican la prisión preventiva (peligro de fuga o de entorpecimiento) deben ser demostrados en concreto a partir de las constancias de la causa. No pueden presumirse iure et de iure ni derivarse automáticamente de circunstancias genéricas. Cada fundamento debe apoyarse en indicios objetivos y verificables del caso concreto.",
+    "aplicacion_practica": "Si el fiscal o el juez fundan la prisión preventiva en frases genéricas como 'por la gravedad del hecho' o 'dado el monto de la pena esperada' sin indicar qué elemento concreto del expediente revela el riesgo de fuga o el riesgo de entorpecimiento, la defensa debe impugnar ese fundamento. Las presunciones iure et de iure de peligro procesal son inconstitucionales. Deben indicarse: bienes, arraigo, vínculos, situación laboral y familiar, antecedentes, y cualquier factor concreto que habilite o descarte el riesgo.",
+    "cita_textual": "\"Los peligros procesales deben ser demostrados en concreto a partir de las constancias de la causa y no sobre argumentaciones que se erigen como presunciones iure et de iure.\" — Cámara AP La Plata Sala I, 'A., D. y otros', Expte. CP 36233-4, 14/04/2023",
+    "referencias": [
+      "Arts. 157 y 158 CPP PBA",
+      "Art. 18 Constitución Nacional",
+      "Art. 8.2 CADH",
+      "Cámara de Apelación y Garantías en lo Penal, La Plata, Sala I, Expte. CP 36233-4, 14/04/2023",
+      "Comisión IDH, Informe 35/07 sobre uso de la prisión preventiva en las Américas"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://cijur.mpba.gov.ar/novedad/4382"
+  },
+  {
+    "id": "PENAL-FAL-003",
+    "fuero": "penal_pba",
+    "tema": "tenencia_estupefacientes_consumo_personal_inconstitucionalidad",
+    "etiquetas": ["estupefacientes", "consumo_personal", "art14_ley23737", "inconstitucionalidad", "art19_CN", "autonomia_personal"],
+    "fuente": {
+      "norma": "Art. 19 CN; art. 14 segundo párrafo Ley 23.737",
+      "jurisprudencia_referente": "CSJN, 'Arriola, Sebastián y otros s/ causa N° 9080', A. 891. XLIV, 25/08/2009, Fallos 332:1963 — Fallo unánime de todos los integrantes de la Corte",
+      "doctrina": "Zaffaroni, Eugenio R.; Nino, Carlos S., 'Ética y derechos humanos'"
+    },
+    "texto_regla": "El art. 14, segundo párrafo, de la Ley 23.737 es inconstitucional cuando la tenencia de estupefacientes para consumo personal se realiza en condiciones que no traen aparejado un peligro concreto ni un daño a derechos o bienes de terceros. El art. 19 CN protege las acciones privadas que no afecten a terceros de la autoridad de los órganos estatales. El Estado no puede penalizar conductas autorreferentes que no dañan a nadie más que al propio tenedor.",
+    "aplicacion_practica": "En un caso de tenencia de estupefacientes para consumo personal, la defensa debe acreditar: (1) que la cantidad era escasa y consistente con uso propio; (2) que no hubo actos de comercialización, distribución ni exposición a terceros; (3) que la conducta no generó peligro concreto para terceros. Si se acreditan esas condiciones, corresponde plantear la inconstitucionalidad del art. 14 segundo párrafo de la Ley 23.737 invocando 'Arriola'. La distinción consumidor/traficante debe ser analizada en cada caso concreto.",
+    "cita_textual": "\"Declarar la inconstitucionalidad del art. 14, segundo párrafo de la ley 23.737 en cuanto incrimina la tenencia de estupefacientes para uso personal que se realice en condiciones tales que no traigan aparejado un peligro concreto o un daño a derechos o bienes de terceros, por afectar el art. 19 de la Constitución Nacional, en la medida en que invade la esfera de la libertad personal excluida de la autoridad de los órganos estatales.\" — CSJN, 'Arriola', Fallos 332:1963, 25/08/2009",
+    "referencias": [
+      "Art. 19 Constitución Nacional",
+      "Art. 14, segundo párrafo, Ley 23.737",
+      "CSJN, 'Arriola, Sebastián y otros s/ causa N°9080', A.891.XLIV, 25/08/2009, Fallos 332:1963",
+      "CSJN, 'Bazterrica, Gustavo Mario', Fallos 308:1392, 29/08/1986 — precedente fundador de la misma doctrina",
+      "CSJN, 'Montalvo, Ernesto Alfredo', Fallos 313:1333, 11/12/1990 — DOCTRINA SUPERADA por Arriola; si la acusación la invoca, la defensa debe señalar expresamente que fue desplazada",
+      "Art. 8 CADH — autonomía personal"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://sjconsulta.csjn.gov.ar/sjconsulta/documentos/verUnicoDocumento.html?idAnalisis=671140"
+  },
+  {
+    "id": "PENAL-FAL-004",
+    "fuero": "penal_pba",
+    "tema": "regla_exclusion_prueba_ilicita",
+    "etiquetas": ["prueba_ilicita", "regla_exclusion", "allanamiento", "nulidad", "garantias"],
+    "fuente": {
+      "norma": "Art. 18 CN; arts. 219-230 CPP PBA; art. 8 CADH",
+      "jurisprudencia_referente": "CSJN, 'Montenegro, Luciano Bernardino s/ robo', 10/12/1981, Fallos 303:1938 — leading case de la regla de exclusión en Argentina",
+      "doctrina": "Maier, Julio B.J., 'Derecho Procesal Penal', Tomo I; Carrió, Alejandro D., 'Garantías constitucionales en el proceso penal'"
+    },
+    "texto_regla": "La prueba obtenida mediante la comisión de un delito o la violación de garantías constitucionales no puede ser utilizada como elemento de cargo en el proceso penal. Otorgar valor probatorio al resultado de una violación constitucional no solo es contradictorio con el reproche que se formula, sino que compromete la buena administración de justicia al convertirla en beneficiaria del hecho ilícito. Este principio se funda en el art. 18 CN.",
+    "aplicacion_practica": "Si el allanamiento fue realizado sin orden judicial en casos que no constituyen flagrancia, o si el acta de allanamiento fue adulterada, o si el procedimiento policial previo a la detención careció de fundamentos objetivos, toda la prueba obtenida en ese procedimiento debe ser excluida. La defensa debe plantar nulidad del procedimiento y solicitar exclusión de la prueba derivada, invocando el art. 18 CN y la doctrina 'Montenegro'.",
+    "cita_textual": "\"No corresponde otorgar valor al resultado de un delito y apoyar sobre él una sentencia judicial, pues ello no solo es contradictorio con el reproche formulado sino que compromete la buena administración de justicia al pretender constituirla en beneficiaria del hecho ilícito.\" — CSJN, 'Montenegro', Fallos 303:1938, 10/12/1981",
+    "referencias": [
+      "Art. 18 Constitución Nacional",
+      "Arts. 219 a 230 CPP PBA (allanamiento)",
+      "Art. 202 CPP PBA (formas de los actos procesales)",
+      "CSJN, 'Montenegro, Luciano Bernardino s/ robo', 10/12/1981, Fallos 303:1938",
+      "CSJN, 'Fiorentino, Diego Enrique', 27/11/1984, Fallos 306:1752 — allanamiento sin orden"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "http://procesalpenaluns.blogspot.com/2011/08/fallo-montenegro-luciano-b-srobo-csjn.html"
+  },
+  {
+    "id": "PENAL-FAL-005",
+    "fuero": "penal_pba",
+    "tema": "fruto_arbol_venenoso_prueba_derivada",
+    "etiquetas": ["prueba_ilicita", "fruto_arbol_venenoso", "prueba_derivada", "nulidad", "exclusion"],
+    "fuente": {
+      "norma": "Art. 18 CN; arts. 201-209 CPP PBA; art. 8 CADH",
+      "jurisprudencia_referente": "CSJN, 'Rayford, Reginald R. y otros s/ tenencia de estupefacientes', 13/05/1986, Fallos 308:733",
+      "doctrina": "Hairabedián, Maximiliano, 'Eficacia de la prueba ilícita'; Carrió, Alejandro D."
+    },
+    "texto_regla": "La ilegalidad de un acto procesal inicial se proyecta sobre todos los actos que son su consecuencia directa o indirecta ('fruto del árbol venenoso'). La regla es la exclusión de cualquier medio probatorio obtenido por vías ilegítimas. La prueba derivada de un procedimiento ilegal —aunque ella misma no haya sido obtenida ilegalmente— queda contaminada por la ilegalidad originaria y debe ser excluida del proceso.",
+    "aplicacion_practica": "Si se declara la nulidad de una detención policial, de un allanamiento o de una intercepción de comunicaciones, la defensa debe solicitar también la exclusión de toda la prueba obtenida en consecuencia: objetos secuestrados, declaraciones prestadas luego de la detención ilegal, pericias sobre efectos incautados ilegalmente. No basta anular el acto original si la prueba derivada sigue en el expediente.",
+    "cita_textual": "\"La regla es la exclusión de cualquier medio probatorio obtenido por vías ilegítimas, porque de lo contrario se desconocería el derecho al debido proceso que tiene todo habitante de acuerdo con el art. 18 de la Constitución Nacional.\" — CSJN, 'Rayford', Fallos 308:733, 13/05/1986",
+    "referencias": [
+      "Art. 18 Constitución Nacional",
+      "Arts. 201 a 209 CPP PBA (nulidades)",
+      "CSJN, 'Rayford, Reginald R. y otros', 13/05/1986, Fallos 308:733",
+      "CSJN, 'Montenegro, Luciano Bernardino', 10/12/1981, Fallos 303:1938",
+      "CSJN, 'Daray, Carlos A.', 22/12/1994, Fallos 317:1985 — extensión de la doctrina"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://repositorio.mpd.gov.ar/jspui/bitstream/123456789/5733/1/Boletin%20sobre%20regla%20de%20exclusion.pdf"
+  },
+  {
+    "id": "PENAL-FAL-006",
+    "fuero": "penal_pba",
+    "tema": "plazo_razonable_derecho_pronunciamiento_rapido",
+    "etiquetas": ["plazo_razonable", "duracion_proceso", "defensa_en_juicio", "progresividad", "precluion"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.1 CADH; art. 14.3.c PIDCyP; arts. 56, 87 CPP PBA",
+      "jurisprudencia_referente": "CSJN, 'Mattei, Ángel s/ contrabando de importación en Abasto', 29/11/1968, Fallos 272:188 — leading case fundacional del plazo razonable en Argentina",
+      "doctrina": "Maier, Julio B.J.; Pastor, Daniel R., 'El plazo razonable en el proceso del estado de derecho'"
+    },
+    "texto_regla": "El derecho de todo imputado a obtener un pronunciamiento que defina su situación frente a la ley del modo más rápido posible integra la garantía de la defensa en juicio del art. 18 CN. Los principios de progresividad y preclusión procesal impiden que el Estado retrotraiga o anule sin culpa del imputado un proceso válidamente sustanciado. Las deficiencias del Estado en la producción de prueba no pueden perjudicar al imputado.",
+    "aplicacion_practica": "Si el proceso lleva años sin avance significativo, si se declaran nulidades de oficio para repetir etapas ya cumplidas, o si la IPP se prorroga sistemáticamente sin incorporar prueba nueva, la defensa debe plantear la violación del plazo razonable invocando 'Mattei'. La situación de incertidumbre prolongada y las restricciones a la libertad que genera el proceso penal son en sí mismas una lesión a la dignidad del imputado que el art. 18 CN prohíbe.",
+    "cita_textual": "\"Debe reputarse incluido en la garantía de la defensa en juicio consagrada por el art. 18 de la Constitución Nacional el derecho de todo imputado a obtener —luego de un juicio tramitado en legal forma— un pronunciamiento que, definiendo su posición frente a la ley y a la sociedad, ponga término, del modo más rápido posible, a la situación de incertidumbre y de innegable restricción de la libertad que comporta el enjuiciamiento penal.\" — CSJN, 'Mattei', Fallos 272:188, 29/11/1968 (considerando N°14)",
+    "referencias": [
+      "Art. 18 Constitución Nacional",
+      "Art. 8.1 Convención Americana sobre Derechos Humanos",
+      "Art. 14.3.c Pacto Internacional de Derechos Civiles y Políticos",
+      "Arts. 56 y 87 CPP PBA (plazos de investigación)",
+      "CSJN, 'Mattei, Ángel s/ contrabando', 29/11/1968, Fallos 272:188",
+      "CSJN, 'Kipperband, Benjamín', 16/03/1999, Fallos 322:360 — voto Petracchi: derecho subjetivo al juicio rápido"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://international.vlex.com/vid/argentina-corte-suprema-justicia-874414622"
+  },
+  {
+    "id": "PENAL-FAL-007",
+    "fuero": "penal_pba",
+    "tema": "plazo_razonable_insubsistencia_accion_penal",
+    "etiquetas": ["plazo_razonable", "duracion_proceso", "insubsistencia_accion", "prescripcion", "sobreseimiento"],
+    "fuente": {
+      "norma": "Art. 18 CN; art. 8.1 CADH; arts. 56, 87, 323 CPP PBA",
+      "jurisprudencia_referente": "CSJN, 'Mozzatti, Camilo y otro', 17/10/1978, Fallos 300:1102 — primer fallo que declara insubsistencia de proceso por violación del plazo razonable",
+      "doctrina": "Pastor, Daniel R., 'El plazo razonable en el proceso del estado de derecho'; Maier, Julio B.J."
+    },
+    "texto_regla": "Cuando la duración del proceso penal viola irrazonablemente las garantías constitucionales —defensa en juicio, presunción de inocencia, debido proceso— la consecuencia puede ser la declaración de insubsistencia de la acción penal o la extinción por prescripción. Un proceso que se prolonga indefinidamente agrava hasta su aniquilación el mandato constitucional de afianzar la justicia y el principio de presunción de inocencia.",
+    "aplicacion_practica": "Si la investigación penal preparatoria lleva años sin avanzar, si se han vencido los plazos legales del art. 56 CPP PBA y sus prórrogas sin ninguna actividad procesal útil, o si el caso retrocede sistemáticamente a etapas anteriores por nulidades declaradas de oficio, la defensa puede plantear el sobreseimiento por vencimiento de plazo (art. 323 inc. 6 CPP PBA) y, en subsidio, la violación del plazo razonable con efecto extintivo de la acción penal, invocando 'Mozzatti'.",
+    "cita_textual": "\"Han sido agraviados hasta su práctica aniquilación, el enfático propósito de afianzar la justicia, expuesto en el Preámbulo, y los mandatos explícitos e implícitos, que aseguran a todos los habitantes de la Nación la presunción de su inocencia y la de su defensa en juicio y debido proceso legal... toda vez que dichas garantías constitucionales se integran por una rápida y eficaz decisión judicial.\" — CSJN, 'Mozzatti', Fallos 300:1102, 17/10/1978 (considerando 3°)",
+    "referencias": [
+      "Art. 18 Constitución Nacional",
+      "Art. 8.1 Convención Americana sobre Derechos Humanos",
+      "Art. 323 inc. 6 CPP PBA (sobreseimiento por vencimiento de plazos)",
+      "Arts. 56 y 87 CPP PBA (plazos de la IPP)",
+      "CSJN, 'Mozzatti, Camilo y otro', 17/10/1978, Fallos 300:1102",
+      "CSJN, 'Mattei, Ángel', 29/11/1968, Fallos 272:188 — precedente",
+      "CSJN, 'Casiraghi', Fallos 306:1705 — confirmación de la doctrina"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "https://www.pensamientopenal.com.ar/system/files/2017/01/doctrina44782.pdf"
+  },
+  {
+    "id": "PENAL-FAL-008",
+    "fuero": "penal_pba",
+    "tema": "sobreseimiento_art323_inc6_vencimiento_IPP",
+    "etiquetas": ["sobreseimiento", "insuficiencia_probatoria", "vencimiento_plazo", "IPP", "art323_CPP_PBA"],
+    "fuente": {
+      "norma": "Art. 323 inc. 6 CPP PBA (texto según Ley 14.296, BO: 8/9/2011); art. 56 CPP PBA; art. 18 CN",
+      "jurisprudencia_referente": "Cámara de Apelaciones y Garantías en lo Penal de Pergamino, Alzada N°5663, 30/09/2019 — hace lugar al recurso de la defensa y sobresee (publicado en blogs.scba.gov.ar); Cámara Penal Bahía Blanca Sala 1, IPP 13.482 — análisis de los presupuestos del art. 323 inc. 6",
+      "doctrina": "Mateos, análisis del art. 323 inc. 6 CPP PBA, Hammurabi; D'Albora, Francisco J."
+    },
+    "texto_regla": "El art. 323 inc. 6 CPP PBA establece el sobreseimiento cuando concurren copulativamente tres requisitos: (1) haber vencido todos los términos de la IPP y sus prórrogas, (2) no existir suficiente motivo para remitir la causa a juicio, y (3) no ser razonable objetivamente prever la incorporación de nuevos elementos de cargo. Este instituto funciona como contención del poder punitivo estatal y válvula de escape que racionaliza la persecución penal cuando la acusación no pudo construir su caso en los plazos legales.",
+    "aplicacion_practica": "La defensa debe monitorear activamente los plazos de la IPP (art. 56 CPP PBA: 4 meses prorrogables). Cuando venzan todos los plazos, debe verificar si la acusación cuenta con prueba suficiente para elevar a juicio. Si no la tiene, y no hay perspectiva objetiva de obtener nuevos elementos, debe plantear el sobreseimiento art. 323 inc. 6. La oposición a la elevación a juicio (art. 337 CPP PBA) es la vía procesal adecuada en la etapa intermedia.",
+    "cita_textual": "\"Art. 323 inc. 6 CPP PBA: El sobreseimiento procederá cuando habiendo vencido todos los términos de la investigación penal preparatoria y sus prórrogas, no hubiere suficiente motivo para remitir la causa a juicio y no fuese razonable objetivamente prever la incorporación de nuevos elementos de cargo.\" — Ley 11.922 (texto según Ley 14.296)",
+    "referencias": [
+      "Art. 323 inc. 6 CPP PBA (Ley 11.922, modificado por Ley 14.296)",
+      "Art. 56 CPP PBA (plazos de la IPP)",
+      "Art. 337 CPP PBA (oposición a la elevación a juicio)",
+      "Art. 18 Constitución Nacional",
+      "Cámara AP Garantías Pergamino, Alzada N°5663, 30/09/2019",
+      "Cámara Penal Bahía Blanca Sala 1, IPP 13.482"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "http://blogs.scba.gov.ar/camarapenalpergamino/2019/09/30/elevacion-a-juicio-sobreseimiento-art-323-inc-6-c-p-p-se-hace-lugar-al-recurso-de-la-defensa-y-se-sobresee-a-los-imputados/"
+  }
+]
