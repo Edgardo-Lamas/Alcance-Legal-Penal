@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Fondo principal -->
+  <rect width="1200" height="630" fill="#0d1a2e"/>
+
+  <!-- Franja dorada izquierda -->
+  <rect x="0" y="0" width="7" height="630" fill="#c9a227"/>
+
+  <!-- Franja inferior sutil -->
+  <rect x="0" y="615" width="1200" height="15" fill="#c9a22712"/>
+
+  <!-- Línea separadora horizontal decorativa -->
+  <rect x="80" y="355" width="560" height="1" fill="#c9a22730"/>
+
+  <!-- Badge "BETA" -->
+  <rect x="80" y="76" width="96" height="26" rx="4" fill="#c9a22718" stroke="#c9a22740" stroke-width="1"/>
+  <text x="128" y="94" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#c9a227" text-anchor="middle" letter-spacing="2.5">BETA</text>
+
+  <!-- Título principal -->
+  <text x="80" y="210" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#ffffff" letter-spacing="-2">Alcance Legal</text>
+  <text x="80" y="305" font-family="Georgia, 'Times New Roman', serif" font-size="82" font-weight="700" fill="#c9a227" letter-spacing="-2">Penal</text>
+
+  <!-- Subtítulo -->
+  <text x="80" y="374" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#4a6a8a" letter-spacing="0.5">Sistema de Inteligencia Jurídica · Defensa Penal · CPP PBA</text>
+
+  <!-- Puntos destacados -->
+  <circle cx="83" cy="420" r="4" fill="#c9a227"/>
+  <text x="100" y="426" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#94a3b8">Análisis defensivo basado en jurisprudencia verificada</text>
+
+  <circle cx="83" cy="456" r="4" fill="#c9a227"/>
+  <text x="100" y="462" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#94a3b8">In dubio pro reo · Presunción de inocencia</text>
+
+  <circle cx="83" cy="492" r="4" fill="#c9a227"/>
+  <text x="100" y="498" font-family="Arial, Helvetica, sans-serif" font-size="17" fill="#94a3b8">CSJN · SCBA · CPP PBA Ley 11.922</text>
+
+  <!-- Decoración: balanza estilizada -->
+  <g opacity="0.18" stroke="#c9a227" stroke-width="2" fill="none">
+    <!-- Poste central -->
+    <line x1="1025" y1="180" x2="1025" y2="500"/>
+    <!-- Viga horizontal -->
+    <line x1="895" y1="255" x2="1155" y2="255"/>
+    <!-- Brazo izquierdo -->
+    <line x1="895" y1="255" x2="860" y2="340"/>
+    <!-- Platillo izq -->
+    <path d="M830 340 Q860 330 890 340"/>
+    <!-- Brazo derecho -->
+    <line x1="1155" y1="255" x2="1120" y2="320"/>
+    <!-- Platillo der (más bajo) -->
+    <path d="M1090 320 Q1120 310 1150 320"/>
+    <!-- Base poste -->
+    <line x1="985" y1="500" x2="1065" y2="500"/>
+  </g>
+
+  <!-- Pie de página -->
+  <text x="600" y="604" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#1e3a5f" text-anchor="middle" letter-spacing="1.5">HERRAMIENTA DE APOYO PROFESIONAL · NO CONSTITUYE ASESORAMIENTO JURÍDICO</text>
+</svg>
