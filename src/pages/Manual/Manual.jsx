@@ -54,7 +54,17 @@ const secciones = [
                     { label: 'Etapa procesal', detalle: 'IPP, Juicio Oral, Recursos o Ejecución. Afecta el foco del análisis.' },
                     { label: 'Prueba de la acusación', detalle: 'Enumere lo que tiene la fiscalía: testimonios, pericias, videos, etc. Cuanto más detalle, mejor el análisis.' },
                     { label: 'Pretensión defensiva', detalle: 'Qué busca: sobreseimiento, nulidad, absolución, reducción del tipo. Opcional pero mejora el resultado.' },
-                    { label: 'Documentación del expediente', detalle: 'Pegue texto de actas, pericias, declaraciones. No necesita el documento completo — las partes relevantes son suficientes.' },
+                    { label: 'Documentación del expediente (texto)', detalle: 'Pegue texto de actas, pericias, declaraciones. No necesita el documento completo — las partes relevantes son suficientes.' },
+                    { label: 'PDFs del expediente', detalle: 'Adjunte hasta 2 archivos PDF (máx. 10 MB c/u): pericias completas, actas, declaraciones escaneadas. El sistema los lee íntegramente.' },
+                    { label: 'Imágenes del expediente', detalle: 'Adjunte hasta 4 imágenes JPG/PNG/WebP (máx. 4 MB c/u): capturas de pantalla, fotos de evidencia, escritos manuscritos. El sistema las analiza visualmente.' },
+                ]
+            },
+            {
+                subtitulo: 'Flujo de 2 pasos',
+                tipo: 'pasos',
+                items: [
+                    { num: '1', label: 'Análisis Preliminar', detalle: 'El sistema muestra el encuadre procesal, el análisis de prueba y las limitaciones. Verifique que el sistema entendió correctamente el caso antes de continuar.' },
+                    { num: '2', label: 'Estrategia Defensiva', detalle: 'Una vez confirmado el encuadre, se despliegan las nulidades, contraargumentación, conclusión y patrones detectados. Este paso solo aparece después de su confirmación.' },
                 ]
             },
             {
@@ -66,6 +76,7 @@ const secciones = [
                     { label: 'Nulidades y vicios', detalle: 'Defectos procesales detectables en la información proporcionada.' },
                     { label: 'Contraargumentación', detalle: 'Líneas de defensa concretas con fundamento normativo.' },
                     { label: 'Conclusión defensiva', detalle: 'Síntesis con pretensión recomendada y fundamento.' },
+                    { label: 'Patrones procesales detectados', detalle: 'Alertas automáticas sobre patrones de alto riesgo: prueba digital sin pericia, cambio en la plataforma fáctica, uso problemático de Cámara Gesell, pericia psicológica de baja calidad, entre otros.' },
                 ]
             },
             {
@@ -73,7 +84,8 @@ const secciones = [
                 tipo: 'tips',
                 items: [
                     'Cargue toda la prueba que tenga la acusación, no solo la que le parece relevante.',
-                    'Si tiene imágenes (pericias, capturas de WhatsApp, escritos), adjúntelas — el sistema las analiza visualmente.',
+                    'Adjunte los PDFs de pericias completas — el sistema los lee y contrasta conclusiones contra hallazgos.',
+                    'Si tiene imágenes (capturas de WhatsApp, fotos de evidencia), adjúntelas — el sistema analiza metadatos EXIF y alerta sobre vicios en la cadena de custodia digital.',
                     'Para casos complejos, puede hacer varias consultas: una por aspecto (ej: nulidad del allanamiento por separado).',
                     'Si el resultado dice "No entregable", relea el mensaje de rechazo — generalmente es por falta de información mínima.',
                 ]
@@ -137,21 +149,87 @@ const secciones = [
                 <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
             </svg>
         ),
-        titulo: 'Adjuntar Imágenes',
+        titulo: 'Documentación Adjunta',
         bloques: [
             {
-                subtitulo: '¿Para qué sirve?',
-                tipo: 'texto',
-                texto: 'En la función Analizar Caso puede adjuntar hasta 4 imágenes. El sistema las analiza visualmente junto con el texto. Útil para pericias escaneadas, capturas de WhatsApp, fotos de evidencia o escritos manuscritos que no puede tipear.'
-            },
-            {
-                subtitulo: 'Especificaciones',
+                subtitulo: 'PDFs del expediente',
                 tipo: 'lista',
                 items: [
-                    { label: 'Formatos aceptados', detalle: 'JPG, PNG, WebP' },
-                    { label: 'Tamaño máximo', detalle: '4 MB por imagen' },
-                    { label: 'Cantidad máxima', detalle: '4 imágenes por consulta' },
+                    { label: '¿Para qué sirve?', detalle: 'Adjunte pericias completas, declaraciones testimoniales, actas de allanamiento o cualquier documento del expediente en PDF. El sistema los lee íntegramente y contrasta las conclusiones de la acusación contra los hallazgos objetivos documentados.' },
+                    { label: 'Formatos y límites', detalle: 'PDF · máx. 2 archivos · máx. 10 MB por archivo' },
+                    { label: 'Caso de uso típico', detalle: 'Pericia médico-forense: el sistema verifica si las conclusiones exceden los hallazgos, si falta metodología validada (SVA/CBCA/NICHD) o si la pericia invade la función del juez.' },
+                ]
+            },
+            {
+                subtitulo: 'Imágenes del expediente',
+                tipo: 'lista',
+                items: [
+                    { label: '¿Para qué sirve?', detalle: 'Adjunte capturas de WhatsApp, fotos de evidencia física, pericias escaneadas o escritos manuscritos. El sistema las analiza visualmente junto con el texto.' },
+                    { label: 'Formatos y límites', detalle: 'JPG, PNG, WebP · máx. 4 imágenes · máx. 4 MB por imagen' },
                     { label: 'Cómo adjuntar', detalle: 'Arrastre las imágenes a la zona de carga, o haga clic para seleccionarlas desde su dispositivo.' },
+                ]
+            },
+            {
+                subtitulo: 'Análisis de metadatos EXIF',
+                tipo: 'lista',
+                items: [
+                    { label: '¿Qué es?', detalle: 'Al adjuntar una imagen, el sistema extrae automáticamente los metadatos EXIF: dispositivo de captura, fecha y hora, software de edición, presencia de GPS.' },
+                    { label: 'Imagen sin metadatos EXIF', detalle: 'Alerta defensiva automática: puede indicar captura de pantalla sin certificación, imagen editada que perdió metadatos, o imagen de origen incierto. La defensa puede señalar este vicio en la cadena de custodia digital (art. 244 CPP PBA).' },
+                    { label: 'Imagen editada con software', detalle: 'Si los metadatos revelan edición con Photoshop, Lightroom, GIMP u otros, el sistema alerta sobre el compromiso de autenticidad como prueba digital.' },
+                    { label: 'Moderación automática', detalle: 'El sistema rechaza imágenes con contenido inapropiado. Solo se admiten imágenes vinculadas al expediente judicial.' },
+                ]
+            },
+        ]
+    },
+    {
+        id: 'historial',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+        ),
+        titulo: 'Historial de Análisis',
+        bloques: [
+            {
+                subtitulo: '¿Qué es?',
+                tipo: 'texto',
+                texto: 'Cada análisis realizado queda registrado en su historial personal. Puede consultarlo en cualquier momento desde el menú "Historial". Los registros son privados: cada usuario solo ve sus propios análisis.'
+            },
+            {
+                subtitulo: 'Cómo usarlo',
+                tipo: 'lista',
+                items: [
+                    { label: 'Acceder al historial', detalle: 'Menú lateral → "Historial". Se listan los análisis ordenados por fecha, con el número de informe, estado (Aprobado / Limitado / Rechazado) y extracto de los hechos.' },
+                    { label: 'Reabrir un análisis', detalle: 'Haga clic en cualquier entrada del historial para ver el informe completo. El sistema abre directamente en la Estrategia Defensiva (Paso 2), ya que el encuadre fue validado en su momento.' },
+                    { label: 'Exportar desde el historial', detalle: 'Una vez abierto el análisis, puede exportarlo a PDF desde el botón "Exportar PDF" en la parte inferior.' },
+                ]
+            },
+        ]
+    },
+    {
+        id: 'exportar',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+        ),
+        titulo: 'Exportar PDF',
+        bloques: [
+            {
+                subtitulo: '¿Cómo funciona?',
+                tipo: 'texto',
+                texto: 'El botón "Exportar PDF" abre el diálogo de impresión del navegador. Desde ahí puede guardar el informe como PDF o imprimirlo directamente. El diseño de impresión está optimizado: oculta la navegación y los controles de la app, dejando solo el contenido del informe.'
+            },
+            {
+                subtitulo: 'Recomendaciones',
+                tipo: 'tips',
+                items: [
+                    'En el diálogo de impresión, seleccione "Guardar como PDF" como destino para obtener un archivo digital.',
+                    'El botón "Exportar PDF" solo está disponible en el Paso 2 (Estrategia Defensiva) — no en el Paso 1 de verificación.',
+                    'En Safari (iOS/Mac), el diálogo puede abrirse como "Compartir" en lugar de "Imprimir".',
                 ]
             },
         ]
