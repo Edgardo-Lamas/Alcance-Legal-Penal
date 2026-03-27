@@ -1,6 +1,8 @@
 .manual {
     padding: 2rem 2.5rem 4rem;
     max-width: 860px;
+    background: #0f172a;
+    min-height: 100vh;
 }
 
 /* Header */
