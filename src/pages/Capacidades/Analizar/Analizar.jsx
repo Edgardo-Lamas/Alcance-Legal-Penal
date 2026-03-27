@@ -292,7 +292,7 @@ function Analizar() {
                             _historialError = `[${insertError.code}] ${insertError.message}`
                             console.error('[Historial] Error al guardar:', insertError)
                         }
-                        supabase.rpc('increment_analisis_count').catch(() => {})
+                        supabase.rpc('increment_analisis_count').then(() => {}, () => {})
                     } else {
                         _historialError = `supabase=${!!supabase} user=${!!user}`
                         console.warn('[Historial] No se guarda:', _historialError)
