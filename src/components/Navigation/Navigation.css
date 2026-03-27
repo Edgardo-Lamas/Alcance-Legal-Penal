@@ -221,6 +221,34 @@
     letter-spacing: 0.02em;
 }
 
+.navigation__install-btn {
+    background: rgba(201, 162, 39, 0.08);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    color: #c9a227;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.45rem 0.875rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.navigation__install-btn:hover {
+    background: rgba(201, 162, 39, 0.15);
+    border-color: #c9a227;
+}
+
+.navigation__install-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
 /* Firma Studio Lamas */
 .navigation__brand {
     display: flex;

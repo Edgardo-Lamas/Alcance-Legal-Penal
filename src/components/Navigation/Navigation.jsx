@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import DisclaimerModal from '../DisclaimerModal'
 import { useAuth } from '../../context/AuthContext'
+import { usePWAInstall } from '../../hooks/usePWAInstall'
 import './Navigation.css'
 
 const navItems = [
@@ -85,6 +86,7 @@ function Navigation() {
     const [showDisclaimer, setShowDisclaimer] = useState(false)
     const { user, signOut, isAdmin } = useAuth()
     const navigate = useNavigate()
+    const { puedeInstalar, instalar } = usePWAInstall()
 
     const toggleNav = () => setIsOpen(!isOpen)
     const closeNav = () => setIsOpen(false)
@@ -170,6 +172,16 @@ function Navigation() {
                     >
                         Ver Aviso Legal
                     </button>
+                    {puedeInstalar && (
+                        <button className="navigation__install-btn" onClick={instalar}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Instalar en escritorio
+                        </button>
+                    )}
                     <div className="navigation__badge">Fuero Penal · CPP PBA</div>
                     <span className="navigation__version">v1.0.0</span>
                     <span className="navigation__copyright">© 2026 Edgardo Lamas</span>

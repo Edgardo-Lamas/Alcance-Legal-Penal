@@ -1,5 +1,6 @@
 import Navigation from '../Navigation/Navigation'
 import DisclaimerBanner from '../DisclaimerBanner'
+import BetaFeedback from '../BetaFeedback/BetaFeedback'
 import './PageLayout.css'
 
 function PageLayout({ children }) {
@@ -14,6 +15,7 @@ function PageLayout({ children }) {
                     </div>
                 </main>
             </div>
+            <BetaFeedback />
         </div>
     )
 }
