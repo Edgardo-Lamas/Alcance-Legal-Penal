@@ -286,8 +286,10 @@ function Analizar() {
                             resultado_json: response.data,
                             criterios_utilizados: response.meta?.criterios_utilizados ?? null,
                             pipeline_version: response.meta?.pipeline_version ?? null,
-                        }).catch(() => {})
+                        }).catch(err => console.error('[Historial] Error al guardar análisis:', err))
                         supabase.rpc('increment_analisis_count').catch(() => {})
+                    } else {
+                        console.warn('[Historial] No se guarda: supabase=' + !!supabase + ' user=' + !!user)
                     }
                 } catch { /* no bloquea la navegación */ }
 
