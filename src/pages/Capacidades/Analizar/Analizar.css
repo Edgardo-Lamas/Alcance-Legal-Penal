@@ -806,6 +806,193 @@
 }
 
 /* ============================================
+   COMPATIBILIDAD — Redactar y otros componentes
+   que importan Analizar.css directamente
+   ============================================ */
+
+/* Contenedor legacy */
+.analizar {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.analizar__header {
+    margin-bottom: 2rem;
+}
+
+.analizar__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0 0 0.5rem 0;
+}
+
+.analizar__subtitle {
+    font-size: 1rem;
+    color: #4a6a8a;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.analizar__footer {
+    padding: 1.25rem;
+    background: #0a1525;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.analizar__footer p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #4a6a8a;
+    line-height: 1.5;
+}
+
+.analizar__footer strong {
+    color: #c8d6e8;
+}
+
+/* Checkboxes */
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: #060e1c;
+    border: 1px solid #1e3a5f;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-checkbox input {
+    display: none;
+}
+
+.form-checkbox__box {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border: 2px solid #2d4a68;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.form-checkbox__box svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0;
+    color: #000;
+}
+
+.form-checkbox span:last-child {
+    font-size: 0.875rem;
+    color: #4a6a8a;
+}
+
+.form-checkbox--checked {
+    border-color: #c9a227;
+    background: rgba(201, 162, 39, 0.08);
+}
+
+.form-checkbox--checked .form-checkbox__box {
+    background: #c9a227;
+    border-color: #c9a227;
+}
+
+.form-checkbox--checked .form-checkbox__box svg {
+    opacity: 1;
+}
+
+/* Radio group */
+.form-radio-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.form-radio {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: #060e1c;
+    border: 1px solid #1e3a5f;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-radio input {
+    display: none;
+}
+
+.form-radio span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4a6a8a;
+}
+
+.form-radio--selected {
+    border-color: #c9a227;
+    background: rgba(201, 162, 39, 0.08);
+}
+
+.form-radio--selected span {
+    color: #c9a227;
+}
+
+/* Botones genéricos (.btn) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn--primary {
+    background: linear-gradient(135deg, #c9a227 0%, #a8841e 100%);
+    color: #07100e;
+    border: none;
+}
+
+.btn--primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #d4ae35 0%, #b8942e 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.25);
+}
+
+.btn--secondary {
+    background: #0a1525;
+    color: #64748b;
+    border: 1px solid #1e3a5f;
+}
+
+.btn--secondary:hover:not(:disabled) {
+    background: #0d1e35;
+    color: #94a3b8;
+    border-color: #2d4a6a;
+}
+
+.btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ============================================
    PRINT
    ============================================ */
 

@@ -16,7 +16,7 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 
 - **Frontend**: React 19 + Vite 7 + React Router 7
 - **Backend**: Supabase Edge Functions (Deno) — `supabase/functions/analizar-caso/`
-- **DB**: Supabase PostgreSQL + pgvector (tabla `criterios_penales`)
+- **DB**: Supabase PostgreSQL + pgvector (tabla `criterios_juridicos`)
 - **Embeddings**: OpenAI `text-embedding-ada-002`
 - **LLM primario**: Claude (Anthropic) — ver `guidedPenalReasoning.ts`
 - **LLM fallback**: GPT-4 Turbo (OpenAI)
@@ -36,7 +36,7 @@ src/core/
 ├── profile.ts                    ← CONTRATO DE CONFIGURACIÓN — toca esto primero
 ├── checkAdmissibility.ts         ← Gate del pipeline, agnóstico al perfil
 ├── rag/
-│   └── retrievePenalCriteria.ts  ← RAG sobre pgvector (tabla: criterios_penales)
+│   └── retrievePenalCriteria.ts  ← RAG sobre pgvector (tabla: criterios_juridicos)
 ├── reasoning/
 │   └── guidedPenalReasoning.ts   ← LLM con system prompt penal inmutable
 ├── validation/
