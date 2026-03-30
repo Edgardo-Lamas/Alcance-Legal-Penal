@@ -471,7 +471,79 @@
     margin: 0 0 0.5rem 0;
 }
 
-/* PDF upload */
+/* PDF label badge */
+.form-label__badge {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    background: rgba(201, 162, 39, 0.15);
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    border-radius: 4px;
+    color: #c9a227;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+/* PDF dropzone */
+.pdf-dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 1.5rem 1rem;
+    border: 2px dashed #1e3a5f;
+    border-radius: 8px;
+    background: rgba(6, 14, 28, 0.6);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: center;
+}
+
+.pdf-dropzone:hover:not(.pdf-dropzone--full) {
+    border-color: rgba(201, 162, 39, 0.5);
+    background: rgba(201, 162, 39, 0.04);
+}
+
+.pdf-dropzone--dragging {
+    border-color: #c9a227;
+    background: rgba(201, 162, 39, 0.08);
+}
+
+.pdf-dropzone--full {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.pdf-dropzone__icon {
+    width: 32px;
+    height: 32px;
+    color: #3a5a80;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.pdf-dropzone:hover:not(.pdf-dropzone--full) .pdf-dropzone__icon,
+.pdf-dropzone--dragging .pdf-dropzone__icon {
+    color: #c9a227;
+}
+
+.pdf-dropzone__text {
+    font-size: 0.85rem;
+    color: #7a9ab8;
+    font-weight: 500;
+}
+
+.pdf-dropzone__sub {
+    font-size: 0.75rem;
+    color: #3a5a80;
+}
+
+/* PDF upload (legacy button — kept for fallback) */
 .btn-pdf-upload {
     display: inline-flex;
     align-items: center;

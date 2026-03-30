@@ -132,6 +132,7 @@ function Analizar() {
     const [imagenes, setImagenes] = useState([])
     const [documentosPdf, setDocumentosPdf] = useState([])
     const [isDragging, setIsDragging] = useState(false)
+    const [isPdfDragging, setIsPdfDragging] = useState(false)
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
     const [pipelineFases, setPipelineFases] = useState(
@@ -208,6 +209,22 @@ function Analizar() {
             setErrors(prev => ({ ...prev, pdfs: null }))
         }
         reader.readAsDataURL(file)
+    }
+
+    const handlePdfDragOver = (e) => {
+        e.preventDefault()
+        if (!isLoading && documentosPdf.length < MAX_PDF) setIsPdfDragging(true)
+    }
+
+    const handlePdfDragLeave = () => setIsPdfDragging(false)
+
+    const handlePdfDrop = (e) => {
+        e.preventDefault()
+        setIsPdfDragging(false)
+        if (isLoading || documentosPdf.length >= MAX_PDF) return
+        const files = Array.from(e.dataTransfer.files)
+        const remaining = MAX_PDF - documentosPdf.length
+        files.slice(0, remaining).forEach(processPdf)
     }
 
     const handleFileSelect = async (e) => {
@@ -561,27 +578,19 @@ function Analizar() {
                             />
                         </div>
 
-                        {/* Documentación del Expediente */}
+                        {/* Expediente del MEV — PDF Dropzone */}
                         <div className="form-group">
-                            <label className="form-label" htmlFor="documentacion_caso">
-                                Documentación del expediente <span className="form-label__opt">(opcional)</span>
+                            <label className="form-label">
+                                Expediente del MEV
+                                <span className="form-label__badge">PDF</span>
+                                <span className="form-label__opt">(opcional)</span>
                             </label>
                             <p className="form-hint">
-                                Pegue aquí el texto de pericias, declaraciones, actas u otros documentos del expediente,
-                                o adjunte hasta {MAX_PDF} PDF (máx. {MAX_PDF_SIZE_MB}MB c/u).
+                                Subí las piezas más relevantes del expediente desde el MEV: acta de detención,
+                                auto de procesamiento, pericia médico-forense, acta de allanamiento.
+                                Hasta {MAX_PDF} PDF · Máx. {MAX_PDF_SIZE_MB}MB c/u.
                             </p>
-                            <textarea
-                                id="documentacion_caso"
-                                name="documentacion_caso"
-                                className="form-textarea"
-                                rows="5"
-                                value={formData.documentacion_caso}
-                                onChange={handleChange}
-                                placeholder="Ej: Pericia médico-forense: '...el examen físico revela...', Declaración testimonial: '...'"
-                                disabled={isLoading}
-                            />
 
-                            {/* Carga de PDFs */}
                             <input
                                 type="file"
                                 ref={pdfInputRef}
@@ -591,22 +600,34 @@ function Analizar() {
                                 style={{ display: 'none' }}
                                 disabled={isLoading}
                             />
-                            {documentosPdf.length < MAX_PDF && (
-                                <button
-                                    type="button"
-                                    className="btn-pdf-upload"
-                                    onClick={() => !isLoading && pdfInputRef.current?.click()}
-                                    disabled={isLoading}
-                                >
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                        <polyline points="14 2 14 8 20 8"/>
-                                        <line x1="12" y1="18" x2="12" y2="12"/>
-                                        <line x1="9" y1="15" x2="15" y2="15"/>
-                                    </svg>
-                                    Adjuntar PDF del expediente
-                                </button>
-                            )}
+
+                            <div
+                                className={`pdf-dropzone${isPdfDragging ? ' pdf-dropzone--dragging' : ''}${documentosPdf.length >= MAX_PDF ? ' pdf-dropzone--full' : ''}`}
+                                onDragOver={handlePdfDragOver}
+                                onDragLeave={handlePdfDragLeave}
+                                onDrop={handlePdfDrop}
+                                onClick={() => !isLoading && documentosPdf.length < MAX_PDF && pdfInputRef.current?.click()}
+                            >
+                                <svg className="pdf-dropzone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="12" y1="18" x2="12" y2="12"/>
+                                    <line x1="9" y1="15" x2="15" y2="15"/>
+                                </svg>
+                                {documentosPdf.length >= MAX_PDF ? (
+                                    <span className="pdf-dropzone__text">Límite alcanzado ({MAX_PDF}/{MAX_PDF} PDFs)</span>
+                                ) : (
+                                    <>
+                                        <span className="pdf-dropzone__text">
+                                            {isPdfDragging ? 'Soltá el PDF aquí' : 'Arrastrá PDFs del MEV o hacé clic para seleccionar'}
+                                        </span>
+                                        <span className="pdf-dropzone__sub">
+                                            {documentosPdf.length > 0 ? `${documentosPdf.length}/${MAX_PDF} PDFs cargados` : `Hasta ${MAX_PDF} PDF · Máx. ${MAX_PDF_SIZE_MB}MB`}
+                                        </span>
+                                    </>
+                                )}
+                            </div>
+
                             {documentosPdf.length > 0 && (
                                 <div className="pdf-list">
                                     {documentosPdf.map((pdf, i) => (
@@ -624,6 +645,27 @@ function Analizar() {
                                 </div>
                             )}
                             {errors.pdfs && <span className="form-error">{errors.pdfs}</span>}
+                        </div>
+
+                        {/* Documentación del Expediente — texto */}
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="documentacion_caso">
+                                Texto del expediente <span className="form-label__opt">(opcional)</span>
+                            </label>
+                            <p className="form-hint">
+                                Pegá aquí el texto de pericias, declaraciones, actas u otros documentos
+                                copiados directamente del MEV u otra fuente.
+                            </p>
+                            <textarea
+                                id="documentacion_caso"
+                                name="documentacion_caso"
+                                className="form-textarea"
+                                rows="5"
+                                value={formData.documentacion_caso}
+                                onChange={handleChange}
+                                placeholder="Ej: Pericia médico-forense: '...el examen físico revela...', Declaración testimonial: '...'"
+                                disabled={isLoading}
+                            />
                         </div>
 
                         {/* Imágenes Adjuntas */}
