@@ -581,13 +581,13 @@ function Analizar() {
                         {/* Expediente del MEV — PDF Dropzone */}
                         <div className="form-group">
                             <label className="form-label">
-                                Expediente del MEV
+                                Documentos del expediente
                                 <span className="form-label__badge">PDF</span>
                                 <span className="form-label__opt">(opcional)</span>
                             </label>
                             <p className="form-hint">
-                                Subí las piezas más relevantes del expediente desde el MEV: acta de detención,
-                                auto de procesamiento, pericia médico-forense, acta de allanamiento.
+                                Subí pericias, actas, declaraciones u otros documentos del expediente.
+                                Podés descargarlos del MEV, de un escáner o de cualquier otra fuente.
                                 Hasta {MAX_PDF} PDF · Máx. {MAX_PDF_SIZE_MB}MB c/u.
                             </p>
 
@@ -619,7 +619,7 @@ function Analizar() {
                                 ) : (
                                     <>
                                         <span className="pdf-dropzone__text">
-                                            {isPdfDragging ? 'Soltá el PDF aquí' : 'Arrastrá PDFs del MEV o hacé clic para seleccionar'}
+                                            {isPdfDragging ? 'Soltá el PDF aquí' : 'Arrastrá documentos o hacé clic para seleccionar'}
                                         </span>
                                         <span className="pdf-dropzone__sub">
                                             {documentosPdf.length > 0 ? `${documentosPdf.length}/${MAX_PDF} PDFs cargados` : `Hasta ${MAX_PDF} PDF · Máx. ${MAX_PDF_SIZE_MB}MB`}
