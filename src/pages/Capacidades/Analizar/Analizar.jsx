@@ -121,13 +121,29 @@ function Analizar() {
     const pdfInputRef = useRef(null)
     const timeoutRefs = useRef([])
 
-    const [formData, setFormData] = useState({
-        hechos: '',
-        tipo_penal: '',
-        etapa_procesal: '',
-        prueba_acusacion: '',
-        pretension_defensiva: '',
-        documentacion_caso: '',
+    const SESSION_KEY = 'alp_form_draft'
+
+    const [formData, setFormData] = useState(() => {
+        try {
+            const saved = sessionStorage.getItem(SESSION_KEY)
+            return saved ? JSON.parse(saved) : {
+                hechos: '',
+                tipo_penal: '',
+                etapa_procesal: '',
+                prueba_acusacion: '',
+                pretension_defensiva: '',
+                documentacion_caso: '',
+            }
+        } catch {
+            return {
+                hechos: '',
+                tipo_penal: '',
+                etapa_procesal: '',
+                prueba_acusacion: '',
+                pretension_defensiva: '',
+                documentacion_caso: '',
+            }
+        }
     })
     const [imagenes, setImagenes] = useState([])
     const [documentosPdf, setDocumentosPdf] = useState([])
@@ -148,7 +164,11 @@ function Analizar() {
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
+        setFormData(prev => {
+            const next = { ...prev, [name]: value }
+            try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(next)) } catch { /* storage lleno */ }
+            return next
+        })
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: null }))
         }
@@ -204,9 +224,17 @@ function Analizar() {
         }
         const reader = new FileReader()
         reader.onload = (e) => {
-            const base64 = e.target.result.split(',')[1]
-            setDocumentosPdf(prev => [...prev, { data: base64, nombre: file.name }])
-            setErrors(prev => ({ ...prev, pdfs: null }))
+            try {
+                const base64 = e.target.result.split(',')[1]
+                if (!base64) throw new Error('Archivo vacío o corrupto')
+                setDocumentosPdf(prev => [...prev, { data: base64, nombre: file.name }])
+                setErrors(prev => ({ ...prev, pdfs: null }))
+            } catch {
+                setErrors(prev => ({ ...prev, pdfs: `No se pudo leer ${file.name}. El archivo puede estar dañado.` }))
+            }
+        }
+        reader.onerror = () => {
+            setErrors(prev => ({ ...prev, pdfs: `Error al leer ${file.name}. Intentá con otro archivo.` }))
         }
         reader.readAsDataURL(file)
     }
@@ -417,8 +445,9 @@ function Analizar() {
                 }, 1100)
                 timeoutRefs.current.push(t4)
 
-                // Navegar en +1.4s
+                // Navegar en +1.4s y limpiar borrador guardado
                 const t5 = setTimeout(() => {
+                    try { sessionStorage.removeItem(SESSION_KEY) } catch { /* ignorar */ }
                     navigate('/resultado', { state: navigateState })
                 }, 1400)
                 timeoutRefs.current.push(t5)

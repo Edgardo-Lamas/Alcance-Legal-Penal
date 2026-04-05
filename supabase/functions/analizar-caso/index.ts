@@ -163,6 +163,25 @@ interface PatronDetectado {
 // PATRONES PROCESALES PENALES (descripción compacta para el LLM)
 // ============================================
 
+// ============================================
+// CACHÉ DE EMBEDDINGS (en memoria por instancia)
+// ============================================
+
+const embeddingCache = new Map<string, number[]>()
+const CACHE_MAX_SIZE = 100
+
+function getCachedEmbedding(key: string): number[] | undefined {
+    return embeddingCache.get(key)
+}
+
+function setCachedEmbedding(key: string, embedding: number[]): void {
+    if (embeddingCache.size >= CACHE_MAX_SIZE) {
+        // Elimina el primer elemento (FIFO simple)
+        embeddingCache.delete(embeddingCache.keys().next().value)
+    }
+    embeddingCache.set(key, embedding)
+}
+
 const PATRONES_PROCESALES_DESCRIPCION = `
 PDN-001 – Prueba digital no autenticada: capturas de pantalla, WhatsApp, correo electrónico, imágenes enviadas sin pericia informática que acredite integridad y autoría. Indicadores: captura de pantalla, mensaje de WhatsApp, chat, correo electrónico, impresión de pantalla, peritaje informático. Nivel base: alto.
 PIM-002 – Prueba de imposibilidad material ignorada: coartada no tratada, testigo de descargo ignorado, registro de ingreso/cámara de seguridad/GPS no incorporado, salón no construido, obra en construcción. Nivel base: alto.
@@ -213,6 +232,14 @@ const ACUSACION_BIAS_PATTERNS = [
 // ============================================
 
 async function generarEmbedding(texto: string): Promise<number[]> {
+    // Normalizar y usar como cache key (primeros 500 chars son suficientes)
+    const cacheKey = texto.slice(0, 500).trim().toLowerCase()
+    const cached = getCachedEmbedding(cacheKey)
+    if (cached) {
+        console.log('[RAG] Embedding desde caché')
+        return cached
+    }
+
     const response = await fetch('https://api.openai.com/v1/embeddings', {
         method: 'POST',
         headers: {
@@ -230,7 +257,9 @@ async function generarEmbedding(texto: string): Promise<number[]> {
     }
 
     const data = await response.json()
-    return data.data[0].embedding
+    const embedding = data.data[0].embedding
+    setCachedEmbedding(cacheKey, embedding)
+    return embedding
 }
 
 // Modera imágenes antes del análisis principal
@@ -601,7 +630,28 @@ serve(async (req: Request) => {
             throw new Error(`Variables de entorno faltantes: ${missingEnvVars.join(', ')}`)
         }
 
+        // Extraer user_id del JWT para trazabilidad multi-tenant
+        let userId = 'anonimo'
+        try {
+            const authHeader = req.headers.get('authorization') ?? ''
+            const jwt = authHeader.replace('Bearer ', '')
+            if (jwt) {
+                const payload = JSON.parse(atob(jwt.split('.')[1]))
+                userId = payload.sub ?? 'anonimo'
+            }
+        } catch { /* JWT inválido o anon */ }
+
+        console.log(`[PIPELINE] user=${userId} ip=${clientIp}`)
+
         const body: AnalizarCasoRequest = await req.json()
+
+        // Validar tamaño de campos de texto para evitar token overflow
+        if (body.hechos?.length > 10000) {
+            throw new Error('El campo "hechos" supera el límite de 10.000 caracteres.')
+        }
+        if (body.documentacion_caso?.length > 20000) {
+            throw new Error('El campo "documentacion_caso" supera el límite de 20.000 caracteres.')
+        }
 
         // ==========================================
         // FASE 1: ADMISIBILIDAD

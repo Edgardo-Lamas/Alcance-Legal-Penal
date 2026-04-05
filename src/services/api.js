@@ -234,7 +234,16 @@ class AlcanceLegalAPI {
                     const text = await response.text()
                     console.error('[API] Edge Function HTTP error:', response.status, text)
                     try { return JSON.parse(text) } catch { /* no JSON */ }
-                    return { success: false, fundamento: `Error del servidor (${response.status}): ${text.slice(0, 200)}` }
+                    const mensajesHttp = {
+                        400: 'La consulta no pudo procesarse. Revisá los datos ingresados.',
+                        401: 'No tenés autorización para usar este servicio.',
+                        403: 'Acceso denegado. Verificá tu suscripción.',
+                        422: 'La consulta no cumple los requisitos mínimos para el análisis.',
+                        429: 'Demasiadas consultas en poco tiempo. Esperá un momento antes de reintentar.',
+                        500: 'Error interno del servidor. El equipo fue notificado. Intentá nuevamente en unos minutos.',
+                    }
+                    const msg = mensajesHttp[response.status] || 'Ocurrió un error inesperado. Intentá nuevamente.'
+                    return { success: false, fundamento: msg }
                 }
 
                 const result = await response.json()

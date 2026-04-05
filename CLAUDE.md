@@ -162,6 +162,10 @@ Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
 
 ---
 
+## Deuda técnica conocida
+
+- **Imágenes en base64**: actualmente se envían como base64 en el JSON body (+33% tamaño). Migrar a `multipart/form-data` cuando el volumen de abogados justifique el refactor (rompe la API actual).
+
 ## Roadmap acordado (próximas tareas)
 
 1. **Prueba real de extensión en MEV** — ajustar `content.js` según DOM real
