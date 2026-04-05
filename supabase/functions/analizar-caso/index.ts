@@ -645,7 +645,11 @@ serve(async (req: Request) => {
                   ).join('\n\n') + '\n\n'
                 : '') +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
-            `---\nResponde en formato JSON con las claves exactas: encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones.`
+            `## PATRONES PROCESALES — DETECCIÓN OBLIGATORIA\n` +
+            `Además del análisis principal, evaluá cada uno de estos 8 patrones procesales:\n${PATRONES_PROCESALES_DESCRIPCION}\n\n` +
+            `---\nResponde en formato JSON con las claves exactas:\n` +
+            `encuadre_procesal, analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, conclusion_defensiva, limitaciones,\n` +
+            `patrones_detectados (array con los 8 patrones evaluados, formato: [{id, nombre_corto, nivel_alerta, presente, nota_resumen, secciones_relacionadas}]).`
 
         // Moderación de imágenes antes del análisis principal
         if (body.imagenes && body.imagenes.length > 0) {
@@ -665,10 +669,19 @@ serve(async (req: Request) => {
             }
         }
 
-        const razonamiento = await invocarRazonamiento(contextReasoning, body.imagenes, body.documentos_pdf)
+        const respuestaCompleta = await invocarRazonamiento(contextReasoning, body.imagenes, body.documentos_pdf)
+
+        // Extraer patrones del resultado (vienen en la misma llamada LLM)
+        let patrones: PatronDetectado[] = []
+        if (Array.isArray(respuestaCompleta.patrones_detectados)) {
+            patrones = respuestaCompleta.patrones_detectados as PatronDetectado[]
+            delete (respuestaCompleta as Record<string, unknown>).patrones_detectados
+        }
+
+        const razonamiento = respuestaCompleta
 
         // ==========================================
-        // FASE 4: VALIDACIÓN DE SALIDA + DETECCIÓN DE PATRONES
+        // FASE 4: VALIDACIÓN DE SALIDA
         // ==========================================
         const validacion = validateOutput(razonamiento)
 
@@ -686,14 +699,6 @@ serve(async (req: Request) => {
                 status: httpStatus,
                 headers: { ...cors, 'Content-Type': 'application/json' }
             })
-        }
-
-        // Detectar patrones procesales (no bloquea el pipeline)
-        let patrones: PatronDetectado[] = []
-        try {
-            patrones = await detectarPatrones(textoConsulta, razonamiento)
-        } catch (e) {
-            console.warn('Error en detección de patrones:', e)
         }
 
         // ==========================================

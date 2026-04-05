@@ -140,7 +140,7 @@ interface SupabaseRPCResult {
  * @param profile  - Perfil jurídico activo (por defecto: PROFILE_PENAL_PBA)
  * @returns Resultado estructurado con criterios o indicador de insuficiencia
  */
-export async function retrieveCivilCriteria(
+export async function retrievePenalCriteria(
     supabase: SupabaseClient,
     query: QueryEmbedding,
     options: RetrieveOptions = {},

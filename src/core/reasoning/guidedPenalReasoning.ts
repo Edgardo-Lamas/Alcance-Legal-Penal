@@ -15,6 +15,12 @@ import { PROFILE_PENAL_PBA, ProfileDefinition, ActoJuridico } from '../profile';
 // ============================================
 // SYSTEM PROMPT — PENAL PBA (INMUTABLE EN RUNTIME)
 // ============================================
+//
+// ⚠️  FUENTE AUTORITATIVA: supabase/functions/_shared/profile-config.ts
+//     Este prompt es la referencia para el módulo frontend (testing/local).
+//     El prompt de producción está en profile-config.ts y puede diferir.
+//     Cualquier cambio sustancial debe replicarse en AMBOS archivos.
+// ============================================
 
 export const SYSTEM_PROMPT_LIS_PENAL_PBA = `Sos un Asociado Senior en Derecho Penal Argentino, especializado en DEFENSA.
 Tu función es asistir al abogado defensor: analizás causas desde la perspectiva del imputado, nunca desde la acusación.
@@ -246,7 +252,7 @@ export interface LLMClient {
  * @param profile - Perfil jurídico activo (por defecto: PROFILE_PENAL_PBA)
  * @returns Análisis defensivo estructurado o abstención fundamentada
  */
-export async function guidedCivilReasoning(
+export async function guidedPenalReasoning(
     llm: LLMClient,
     input: ReasoningInput,
     profile: ProfileDefinition = PROFILE_PENAL_PBA
@@ -282,18 +288,38 @@ export async function guidedCivilReasoning(
 // ============================================
 
 function parseReasoningResponse(raw: string): ContenidoReasoning {
+    const FALLBACK = '_No proporcionado en el análisis._';
+
+    // Intento 1: parsear como JSON (formato preferido del system prompt)
+    try {
+        const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim()
+        const parsed = JSON.parse(cleaned)
+        if (parsed && typeof parsed === 'object') {
+            return {
+                encuadre:     parsed.encuadre_procesal    || parsed.encuadre    || FALLBACK,
+                analisis:     parsed.analisis_prueba_cargo || parsed.analisis    || FALLBACK,
+                riesgos:      parsed.nulidades_y_vicios   || parsed.riesgos     || FALLBACK,
+                conclusion:   parsed.conclusion_defensiva || parsed.conclusion  || FALLBACK,
+                limitaciones: parsed.limitaciones                               || FALLBACK,
+            }
+        }
+    } catch {
+        // No es JSON — intentar con regex como fallback
+    }
+
+    // Intento 2: regex sobre markdown estructurado (fallback)
     const extractSection = (label: string): string => {
         const regex = new RegExp(`\\*\\*${label}:?\\*\\*\\s*([\\s\\S]*?)(?=\\*\\*[A-ZÁÉÍÓÚÑ]|$)`, 'i');
         const match = raw.match(regex);
-        return match?.[1]?.trim() || '_No proporcionado en el análisis._';
+        return match?.[1]?.trim() || FALLBACK;
     };
 
     return {
-        encuadre:    extractSection('Encuadre Procesal'),
-        analisis:    extractSection('Análisis de Prueba de Cargo'),
-        riesgos:     extractSection('Nulidades y Vicios'),
-        conclusion:  extractSection('Conclusión Defensiva'),
-        limitaciones: extractSection('Limitaciones')
+        encuadre:     extractSection('Encuadre Procesal'),
+        analisis:     extractSection('Análisis de Prueba de Cargo'),
+        riesgos:      extractSection('Nulidades y Vicios'),
+        conclusion:   extractSection('Conclusión Defensiva'),
+        limitaciones: extractSection('Limitaciones'),
     };
 }
 
