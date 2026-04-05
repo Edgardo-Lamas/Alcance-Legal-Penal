@@ -17,13 +17,44 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // ─── Entorno ───────────────────────────────────────────────────────────────
-const SUPABASE_URL             = Deno.env.get('SUPABASE_URL')!
+const SUPABASE_URL              = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-const OPENAI_API_KEY           = Deno.env.get('OPENAI_API_KEY')!
+const SUPABASE_ANON_KEY         = Deno.env.get('SUPABASE_ANON_KEY')!
+const OPENAI_API_KEY            = Deno.env.get('OPENAI_API_KEY')!
+const MCP_SECRET                = Deno.env.get('MCP_SECRET') ?? SUPABASE_ANON_KEY
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': 'https://claude.ai',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Vary': 'Origin',
+}
+
+// ─── Rate limiting MCP ──────────────────────────────────────────────────────
+const mcpRateMap = new Map<string, { count: number; windowStart: number }>()
+const MCP_RATE_MAX    = 30    // 30 llamadas MCP por minuto por cliente
+const MCP_RATE_WINDOW = 60_000
+
+function checkMcpRateLimit(key: string): boolean {
+    const now = Date.now()
+    const entry = mcpRateMap.get(key)
+    if (!entry || now - entry.windowStart > MCP_RATE_WINDOW) {
+        mcpRateMap.set(key, { count: 1, windowStart: now })
+        return true
+    }
+    if (entry.count >= MCP_RATE_MAX) return false
+    entry.count++
+    return true
+}
+
+// ─── Autenticación MCP ──────────────────────────────────────────────────────
+function validateAuth(req: Request): { ok: boolean; clientId: string } {
+    const auth = req.headers.get('authorization') ?? ''
+    const token = auth.startsWith('Bearer ') ? auth.slice(7) : ''
+    if (!token || token !== MCP_SECRET) {
+        return { ok: false, clientId: 'unknown' }
+    }
+    // Usa los primeros 8 chars del token como ID de cliente para rate limiting
+    return { ok: true, clientId: token.slice(0, 8) }
 }
 
 // ─── Definición de herramientas MCP ────────────────────────────────────────
@@ -229,11 +260,23 @@ serve(async (req) => {
         return jsonError(null, -32700, 'Solo se aceptan solicitudes POST')
     }
 
+    // Autenticación — excepto para initialize (handshake inicial del protocolo MCP)
     let body: { jsonrpc: string; method: string; params?: Record<string, unknown>; id?: unknown }
     try {
         body = await req.json()
     } catch {
         return jsonError(null, -32700, 'JSON inválido')
+    }
+
+    const skipAuth = body.method === 'initialize' || body.method === 'notifications/initialized'
+    if (!skipAuth) {
+        const { ok, clientId } = validateAuth(req)
+        if (!ok) {
+            return jsonError(body.id, -32001, 'No autorizado. Se requiere Bearer token válido.')
+        }
+        if (!checkMcpRateLimit(clientId)) {
+            return jsonError(body.id, -32002, 'Límite de solicitudes alcanzado. Máximo 30 por minuto.')
+        }
     }
 
     const { method, params, id } = body

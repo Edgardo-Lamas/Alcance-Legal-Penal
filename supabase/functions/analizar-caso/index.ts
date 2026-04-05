@@ -23,6 +23,29 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 
+// ============================================
+// RATE LIMITING (en memoria por instancia)
+// ============================================
+
+const rateLimitMap = new Map<string, { count: number; windowStart: number }>()
+const RATE_LIMIT_MAX      = 10   // máximo de requests
+const RATE_LIMIT_WINDOW   = 60_000 // ventana de 60 segundos
+
+function checkRateLimit(ip: string): boolean {
+    const now = Date.now()
+    const entry = rateLimitMap.get(ip)
+
+    if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW) {
+        rateLimitMap.set(ip, { count: 1, windowStart: now })
+        return true
+    }
+
+    if (entry.count >= RATE_LIMIT_MAX) return false
+
+    entry.count++
+    return true
+}
+
 // Validación temprana de variables de entorno críticas
 const missingEnvVars = [
     !OPENAI_API_KEY && 'OPENAI_API_KEY',
@@ -552,6 +575,25 @@ serve(async (req: Request) => {
 
     if (req.method === 'OPTIONS') {
         return new Response('ok', { headers: cors })
+    }
+
+    // Rate limiting por IP
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0].trim()
+        ?? req.headers.get('cf-connecting-ip')
+        ?? 'unknown'
+
+    if (!checkRateLimit(clientIp)) {
+        return new Response(
+            JSON.stringify({
+                success: false,
+                fase_rechazo: 'sistema',
+                codigo: 'RATE_LIMIT_EXCEEDED',
+                fundamento: 'Límite de solicitudes alcanzado. Máximo 10 análisis por minuto.',
+                recomendacion: 'Aguardá un momento antes de realizar otra consulta.',
+                disclaimer: DISCLAIMER
+            }),
+            { status: 429, headers: { ...cors, 'Content-Type': 'application/json' } }
+        )
     }
 
     try {
