@@ -648,6 +648,15 @@ html, body {
   line-height: 1.5;
 }
 
+.alp-hint--warning {
+  color: var(--amarillo);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.06);
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  margin-top: 0.4rem;
+}
+
 /* ── Scrollbar ───────────────────────────────────────────── */
 
 ::-webkit-scrollbar { width: 5px; }

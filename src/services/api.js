@@ -22,8 +22,9 @@ const N8N_CONFIG = {
         auditar: '/auditar-estrategia',
         redactar: '/redactar-escrito'
     },
-    // Flag para usar mocks durante desarrollo
-    useMocks: import.meta.env.VITE_USE_MOCKS !== 'false'
+    // Mocks SOLO si se activan explícitamente (VITE_USE_MOCKS=true)
+    // Por defecto: producción real
+    useMocks: import.meta.env.VITE_USE_MOCKS === 'true'
 }
 
 /**

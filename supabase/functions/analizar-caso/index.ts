@@ -21,10 +21,31 @@ const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
+const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// Validación temprana de variables de entorno críticas
+const missingEnvVars = [
+    !OPENAI_API_KEY && 'OPENAI_API_KEY',
+    !SUPABASE_URL && 'SUPABASE_URL',
+    !SUPABASE_SERVICE_ROLE_KEY && 'SUPABASE_SERVICE_ROLE_KEY',
+    !ANTHROPIC_API_KEY && 'ANTHROPIC_API_KEY',
+].filter(Boolean)
+
+if (missingEnvVars.length > 0) {
+    console.error(`[STARTUP] Variables de entorno faltantes: ${missingEnvVars.join(', ')}`)
+}
+
+// CORS restringido al dominio configurado
+function getCorsHeaders(requestOrigin: string | null) {
+    const allowed = ALLOWED_ORIGIN.split(',').map(o => o.trim())
+    const origin = requestOrigin && allowed.includes(requestOrigin)
+        ? requestOrigin
+        : allowed[0]
+    return {
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+        'Vary': 'Origin',
+    }
 }
 
 const RAG_CONFIG = {
@@ -232,10 +253,20 @@ async function invocarRazonamiento(
 ): Promise<Record<string, string>> {
     if (ANTHROPIC_API_KEY) {
         const tieneAdjuntos = (imagenes && imagenes.length > 0) || (documentosPdf && documentosPdf.length > 0)
+        const pdfsValidos = (documentosPdf ?? []).slice(0, 2).filter(pdf => {
+            // Validar header PDF (%PDF-) decodificando los primeros bytes del base64
+            try {
+                const header = atob(pdf.data.slice(0, 8))
+                return header.startsWith('%PDF-')
+            } catch {
+                return false
+            }
+        })
+
         const userContent = tieneAdjuntos
             ? [
                 { type: 'text', text: context },
-                ...(documentosPdf ?? []).slice(0, 2).map(pdf => ({
+                ...pdfsValidos.map(pdf => ({
                     type: 'document',
                     source: { type: 'base64', media_type: 'application/pdf', data: pdf.data }
                 })),
@@ -269,29 +300,8 @@ async function invocarRazonamiento(
         return parseJsonSafe(data.content[0].text) as Record<string, string>
     }
 
-    // Fallback a OpenAI GPT-4 (solo texto — no soporta vision en este flujo)
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OPENAI_API_KEY}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            model: 'gpt-4-turbo-preview',
-            response_format: { type: 'json_object' },
-            messages: [
-                { role: 'system', content: PROFILE_PENAL_PBA_CONFIG.systemPrompt },
-                { role: 'user', content: context }
-            ]
-        }),
-    })
-
-    if (!response.ok) {
-        throw new Error(`OpenAI Chat error: ${await response.text()}`)
-    }
-
-    const data = await response.json()
-    return parseJsonSafe(data.choices[0].message.content) as Record<string, string>
+    // Sin fallback a otros LLMs — el análisis defensivo debe ser siempre por Claude
+    throw new Error('ANTHROPIC_API_KEY no configurada. El análisis de defensa penal requiere Claude.')
 }
 
 // Helper: limpia markdown fences antes de JSON.parse
@@ -538,13 +548,15 @@ async function generarNumeroInforme(
 // ============================================
 
 serve(async (req: Request) => {
+    const cors = getCorsHeaders(req.headers.get('origin'))
+
     if (req.method === 'OPTIONS') {
-        return new Response('ok', { headers: corsHeaders })
+        return new Response('ok', { headers: cors })
     }
 
     try {
-        if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-            throw new Error('Variables de entorno no configuradas')
+        if (missingEnvVars.length > 0) {
+            throw new Error(`Variables de entorno faltantes: ${missingEnvVars.join(', ')}`)
         }
 
         const body: AnalizarCasoRequest = await req.json()
@@ -565,7 +577,7 @@ serve(async (req: Request) => {
             }
             return new Response(JSON.stringify(rechazo), {
                 status: 400,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                headers: { ...cors, 'Content-Type': 'application/json' }
             })
         }
 
@@ -597,7 +609,7 @@ serve(async (req: Request) => {
             }
             return new Response(JSON.stringify(rechazo), {
                 status: 422,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                headers: { ...cors, 'Content-Type': 'application/json' }
             })
         }
 
@@ -648,7 +660,7 @@ serve(async (req: Request) => {
                     disclaimer: DISCLAIMER
                 }), {
                     status: 400,
-                    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                    headers: { ...cors, 'Content-Type': 'application/json' }
                 })
             }
         }
@@ -672,7 +684,7 @@ serve(async (req: Request) => {
             const httpStatus = validacion.esViolacionScope ? 403 : 422
             return new Response(JSON.stringify(rechazo), {
                 status: httpStatus,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                headers: { ...cors, 'Content-Type': 'application/json' }
             })
         }
 
@@ -713,7 +725,7 @@ serve(async (req: Request) => {
         }
 
         return new Response(JSON.stringify(respuesta), {
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            headers: { ...cors, 'Content-Type': 'application/json' }
         })
 
     } catch (error) {
@@ -730,7 +742,7 @@ serve(async (req: Request) => {
             }),
             {
                 status: 500,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+                headers: { ...cors, 'Content-Type': 'application/json' }
             }
         )
     }
