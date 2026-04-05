@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+  Abrí este archivo en Chrome para generar los íconos PNG.
+  Hacé clic en cada botón y guardá el archivo descargado en la carpeta icons/
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Generador de íconos — ALP MEV Navigator</title>
+  <style>
+    body { font-family: sans-serif; background: #0a1525; color: #e2e8f0; padding: 2rem; }
+    h1 { margin-bottom: 1.5rem; color: #c9a84c; }
+    .row { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .item { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    button {
+      padding: 0.5rem 1rem;
+      background: #1a3a5c;
+      border: 1px solid rgba(201,168,76,0.4);
+      border-radius: 6px;
+      color: #c9a84c;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    button:hover { background: #1e4470; }
+    p { font-size: 0.75rem; color: #4a6a8a; margin-top: 1rem; max-width: 500px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <h1>Generador de íconos — Alcance Legal Penal</h1>
+  <div class="row">
+    <div class="item">
+      <canvas id="c16" width="16" height="16"></canvas>
+      <button onclick="download('c16','icon16.png')">Descargar icon16.png</button>
+    </div>
+    <div class="item">
+      <canvas id="c48" width="48" height="48"></canvas>
+      <button onclick="download('c48','icon48.png')">Descargar icon48.png</button>
+    </div>
+    <div class="item">
+      <canvas id="c128" width="128" height="128"></canvas>
+      <button onclick="download('c128','icon128.png')">Descargar icon128.png</button>
+    </div>
+  </div>
+  <p>
+    Instrucciones: abrí este archivo en Chrome → hacé clic en cada botón →
+    guardá cada archivo descargado en la carpeta <code>chrome-extension/icons/</code>
+  </p>
+
+  <script>
+    function drawIcon(canvasId, size) {
+      const canvas = document.getElementById(canvasId)
+      const ctx = canvas.getContext('2d')
+      const r = size * 0.12 // border radius
+
+      // Fondo degradado
+      const grad = ctx.createLinearGradient(0, 0, size, size)
+      grad.addColorStop(0, '#1a3a5c')
+      grad.addColorStop(1, '#0d2a4a')
+      ctx.fillStyle = grad
+
+      // Rounded rect
+      ctx.beginPath()
+      ctx.moveTo(r, 0)
+      ctx.lineTo(size - r, 0)
+      ctx.quadraticCurveTo(size, 0, size, r)
+      ctx.lineTo(size, size - r)
+      ctx.quadraticCurveTo(size, size, size - r, size)
+      ctx.lineTo(r, size)
+      ctx.quadraticCurveTo(0, size, 0, size - r)
+      ctx.lineTo(0, r)
+      ctx.quadraticCurveTo(0, 0, r, 0)
+      ctx.closePath()
+      ctx.fill()
+
+      // Borde dorado
+      ctx.strokeStyle = 'rgba(201,168,76,0.6)'
+      ctx.lineWidth = Math.max(1, size * 0.04)
+      ctx.stroke()
+
+      // Texto "ALP"
+      const fontSize = size * 0.35
+      ctx.fillStyle = '#c9a84c'
+      ctx.font = `800 ${fontSize}px -apple-system, sans-serif`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText('ALP', size / 2, size / 2)
+    }
+
+    drawIcon('c16', 16)
+    drawIcon('c48', 48)
+    drawIcon('c128', 128)
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId)
+      const link = document.createElement('a')
+      link.download = filename
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    }
+  </script>
+</body>
+</html>
