@@ -701,6 +701,22 @@
     box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
 }
 
+.btn--pdf {
+    background: linear-gradient(135deg, #c9a227 0%, #a8841e 100%);
+    color: #0f172a;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 700;
+}
+
+.btn--pdf:hover {
+    background: linear-gradient(135deg, #d4aa2a 0%, #b8921f 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(201, 162, 39, 0.35);
+}
+
 .btn--secondary {
     background: #ffffff;
     color: #64748b;
