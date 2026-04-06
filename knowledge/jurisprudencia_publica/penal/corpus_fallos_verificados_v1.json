@@ -165,6 +165,32 @@
     "_fuente_publica": "https://www.pensamientopenal.com.ar/system/files/2017/01/doctrina44782.pdf"
   },
   {
+    "id": "PENAL-FAL-009",
+    "fuero": "penal_nacional",
+    "tema": "ia_en_proceso_judicial_nulidad_requiere_perjuicio_concreto",
+    "etiquetas": ["nulidad", "inteligencia_artificial", "deliberacion_judicial", "perjuicio_concreto", "herramientas_judiciales", "motivacion_sentencia", "garantias"],
+    "fuente": {
+      "norma": "Arts. 161-164 CPP Chubut (perjuicio como requisito de nulidad); art. 18 CN; arts. 201-209 CPP PBA (equivalente en PBA)",
+      "jurisprudencia_referente": "Superior Tribunal de Justicia de la Provincia del Chubut, 'Provincia del Chubut c/ PAYALEF, Raúl Amelio s/ recurso de queja', Expte. N° 101215, 2025 — Acuerdo Plenario N° 5435/2025",
+      "doctrina": "Principio pas de nullité sans grief (no hay nulidad sin perjuicio); Maier, Julio B.J., 'Derecho Procesal Penal', Tomo I — nulidades relativas y absolutas"
+    },
+    "texto_regla": "La utilización de herramientas de inteligencia artificial como soporte en la elaboración de una resolución judicial no constituye, por sí sola, causal de nulidad de dicha resolución. Para que proceda la nulidad de un acto procesal —incluso cuando exista una irregularidad formal— es indispensable demostrar un perjuicio concreto y efectivo para la parte que la invoca. La deliberación judicial es secreta y el juez no está obligado a rendir cuentas sobre las herramientas que utilizó para elaborar su razonamiento. El control jurisdiccional de las sentencias recae sobre el razonamiento expresado y sus fundamentos, no sobre los instrumentos o métodos empleados en la elaboración. Los acuerdos plenarios o protocolos institucionales que regulan el uso de IA en el Poder Judicial no crean causales autónomas de nulidad procesal.",
+    "aplicacion_practica": "Este fallo tiene aplicación en dos escenarios defensivos opuestos: (1) Si la acusación o un tribunal pretende anular un acto procesal o una resolución fundándose exclusivamente en que se utilizó IA sin seguir un protocolo, la defensa debe oponer que la nulidad requiere demostrar perjuicio concreto — la mera irregularidad formal no alcanza. (2) Si la defensa misma contempla impugnar una sentencia adversa por uso no declarado de IA, debe acreditar en qué medida específica la herramienta distorsionó el razonamiento o produjo un perjuicio real, no solo un vicio formal. En PBA, el equivalente normativo es el art. 201 CPP PBA: las nulidades relativas requieren protesta oportuna y demostración del perjuicio; las absolutas solo proceden cuando se afectan garantías constitucionales sustanciales (art. 203 CPP PBA). NOTA JURISDICCIONAL: Fallo del STJ Chubut — no vinculante en PBA pero con valor persuasivo como precedente nacional pionero en IA judicial.",
+    "cita_textual": "\"La Cámara de Esquel declaró la nulidad de la sentencia de primera instancia por haber detectado el uso de inteligencia artificial sin cumplir el protocolo del Acuerdo Plenario N° 5435/2025. El STJ revocó esa nulidad estableciendo que: la deliberación judicial es secreta y los jueces no rinden cuentas sobre sus herramientas de trabajo; el control judicial se ejerce sobre el razonamiento expresado, no sobre los instrumentos utilizados para elaborarlo; la nulidad requiere perjuicio concreto, no puede fundarse en la mera inobservancia de un protocolo institucional; la IA es una herramienta de apoyo legítima y el juez conserva plena responsabilidad por el contenido de su decisión.\" — STJ Chubut, 'Payalef', Expte. N° 101215, 2025",
+    "referencias": [
+      "Arts. 161 a 164 CPP Chubut (nulidades — equivalente arts. 201-209 CPP PBA)",
+      "Art. 18 Constitución Nacional (defensa en juicio y debido proceso)",
+      "Art. 201 CPP PBA (nulidades relativas — perjuicio requerido)",
+      "Art. 203 CPP PBA (nulidades absolutas — garantías constitucionales)",
+      "STJ Chubut, 'Provincia del Chubut c/ PAYALEF, Raúl Amelio s/ recurso de queja', Expte. N° 101215, 2025",
+      "Acuerdo Plenario N° 5435/2025 STJ Chubut (protocolo de uso de IA en el Poder Judicial)"
+    ],
+    "_verificado": true,
+    "_fuente_publica": "STJ Chubut — Expte. N° 101215, 2025 (fallo remitido directamente)",
+    "_nota_jurisdiccion": "Fallo de jurisdicción extra-PBA. Valor persuasivo como precedente nacional pionero sobre IA en proceso penal. No vinculante en tribunales bonaerenses pero citable por analogía.",
+    "_fecha_fallo": "2025"
+  },
+  {
     "id": "PENAL-FAL-008",
     "fuero": "penal_pba",
     "tema": "sobreseimiento_art323_inc6_vencimiento_IPP",
