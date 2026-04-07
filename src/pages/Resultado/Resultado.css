@@ -717,6 +717,22 @@
     box-shadow: 0 4px 16px rgba(201, 162, 39, 0.35);
 }
 
+.btn--word {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5090 100%);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 700;
+}
+
+.btn--word:hover {
+    background: linear-gradient(135deg, #274d7a 0%, #3a63a8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(30, 58, 95, 0.40);
+}
+
 .btn--secondary {
     background: #ffffff;
     color: #64748b;

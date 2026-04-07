@@ -153,4 +153,68 @@ test.describe('Analizar Caso', () => {
         await page.waitForURL('**/', { timeout: 5_000 })
         await expect(page.getByText(TEXTOS.dashboard.titulo)).toBeVisible()
     })
+
+    // ─── Tests del botón Word ──────────────────────────────────────────────────
+
+    test('Paso 1 — NO muestra botón Word (solo Análisis Preliminar)', async ({ page }) => {
+        await gotoApp(page, '/analizar')
+        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.locator('.analizar__btn-submit').click()
+        await page.waitForURL('**/resultado**', { timeout: 15_000 })
+        await page.waitForLoadState('networkidle')
+
+        // En paso 1 el botón Word no debe estar en el DOM
+        await expect(page.locator('.btn--word')).toHaveCount(0)
+    })
+
+    test('Paso 2 — muestra botón "Descargar en Word"', async ({ page }) => {
+        await gotoApp(page, '/analizar')
+        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.locator('.analizar__btn-submit').click()
+        await page.waitForURL('**/resultado**', { timeout: 15_000 })
+        await page.waitForLoadState('networkidle')
+
+        await page.getByText(TEXTOS.resultado.paso2Btn).click()
+        await page.waitForTimeout(500)
+
+        await expect(page.locator('.btn--word')).toBeVisible()
+        await expect(page.locator('.btn--word')).toContainText('Descargar en Word')
+    })
+
+    test('click en Word — descarga .docx sin errores de consola', async ({ page }) => {
+        const consoleErrors = []
+        page.on('console', msg => {
+            if (msg.type() === 'error') consoleErrors.push(msg.text())
+        })
+
+        await gotoApp(page, '/analizar')
+        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.locator('.analizar__btn-submit').click()
+        await page.waitForURL('**/resultado**', { timeout: 15_000 })
+        await page.waitForLoadState('networkidle')
+
+        await page.getByText(TEXTOS.resultado.paso2Btn).click()
+        await page.waitForTimeout(500)
+
+        const [download] = await Promise.all([
+            page.waitForEvent('download', { timeout: 15_000 }),
+            page.locator('.btn--word').click(),
+        ])
+
+        expect(download.suggestedFilename()).toMatch(/\.docx$/)
+
+        const wordErrors = consoleErrors.filter(e =>
+            e.toLowerCase().includes('docx') || e.toLowerCase().includes('packer')
+        )
+        expect(wordErrors).toHaveLength(0)
+    })
+
+    test('botón Word NO visible sin datos reales', async ({ page }) => {
+        // Navegar a /resultado sin state → capacidad undefined → muestra "No hay resultados"
+        await gotoApp(page, '/resultado')
+        await page.waitForLoadState('networkidle')
+
+        // Sin datos de formulario el componente no renderiza los botones
+        await expect(page.locator('.btn--word')).toHaveCount(0)
+    })
 })
