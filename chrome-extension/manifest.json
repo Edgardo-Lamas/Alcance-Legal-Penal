@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Alcance Legal Penal — MEV Navigator",
   "version": "1.0.0",
-  "description": "Análisis de expedientes judiciales del MEV con IA para defensa penal en la Provincia de Buenos Aires.",
+  "description": "Copiloto de IA para abogados defensores. Analiza expedientes del MEV (SCBA) con inteligencia jurídica penal — CPP PBA.",
   "permissions": [
     "sidePanel",
     "storage",

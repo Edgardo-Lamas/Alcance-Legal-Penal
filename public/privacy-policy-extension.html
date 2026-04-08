@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidad — MEV Navigator | Alcance Legal Penal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      color: #1a1a2e;
+      line-height: 1.7;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    header {
+      border-bottom: 3px solid #c9a84c;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #c9a84c;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0d2a4a;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.4rem;
+    }
+
+    .toc {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .toc h2 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #666;
+      margin-bottom: 0.75rem;
+    }
+
+    .toc ol {
+      padding-left: 1.25rem;
+    }
+
+    .toc li {
+      margin-bottom: 0.3rem;
+    }
+
+    .toc a {
+      color: #1a3a5c;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .toc a:hover { text-decoration: underline; }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0d2a4a;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    p { margin-bottom: 0.9rem; }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    li { margin-bottom: 0.4rem; }
+
+    .highlight-box {
+      background: #f0f7ff;
+      border-left: 4px solid #1a3a5c;
+      padding: 1rem 1.25rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1rem 0;
+    }
+
+    .highlight-box strong { color: #0d2a4a; }
+
+    .no-collect {
+      background: #f0fdf4;
+      border-left: 4px solid #16a34a;
+      padding: 1rem 1.25rem;
+      border-radius: 0 6px 6px 0;
+      margin: 1rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #0d2a4a;
+      color: #fff;
+      padding: 0.6rem 0.9rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: #f8f9fa; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge--green { background: #dcfce7; color: #16a34a; }
+    .badge--blue  { background: #dbeafe; color: #1d4ed8; }
+    .badge--gray  { background: #f1f5f9; color: #64748b; }
+
+    footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.5rem;
+      margin-top: 3rem;
+      font-size: 0.82rem;
+      color: #888;
+    }
+
+    .update-date {
+      display: inline-block;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header>
+      <div class="brand">Alcance Legal Penal</div>
+      <h1>Política de Privacidad</h1>
+      <p class="subtitle">Extensión Chrome · MEV Navigator · v1.0.0</p>
+    </header>
+
+    <div class="update-date">📅 Última actualización: 7 de abril de 2026</div>
+
+    <div class="toc">
+      <h2>Contenido</h2>
+      <ol>
+        <li><a href="#que-es">Qué es MEV Navigator</a></li>
+        <li><a href="#datos-recopilados">Qué datos recopila la extensión</a></li>
+        <li><a href="#datos-mev">Datos del MEV: cómo se procesan</a></li>
+        <li><a href="#storage">Uso de chrome.storage</a></li>
+        <li><a href="#api-anthropic">Llamadas a la API de Anthropic</a></li>
+        <li><a href="#no-compartimos">Lo que NO hacemos</a></li>
+        <li><a href="#seguridad">Seguridad</a></li>
+        <li><a href="#menores">Menores de edad</a></li>
+        <li><a href="#cambios">Cambios a esta política</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ol>
+    </div>
+
+    <!-- ── 1. Qué es ── -->
+    <section id="que-es">
+      <h2>1. Qué es MEV Navigator</h2>
+      <p>
+        <strong>MEV Navigator</strong> es una extensión de Chrome desarrollada por
+        <strong>Studio Lamas</strong> como parte del sistema <strong>Alcance Legal Penal</strong>.
+        Su función es asistir a abogados defensores en el análisis de expedientes judiciales
+        disponibles en la Mesa de Entradas Virtual de la Suprema Corte de Buenos Aires
+        (<a href="https://mev.scba.gov.ar" target="_blank" rel="noopener">mev.scba.gov.ar</a>).
+      </p>
+      <p>
+        La extensión opera <strong>exclusivamente en el dominio mev.scba.gov.ar</strong>.
+        No tiene acceso a ningún otro sitio web ni a datos de otras pestañas del navegador.
+      </p>
+    </section>
+
+    <!-- ── 2. Datos recopilados ── -->
+    <section id="datos-recopilados">
+      <h2>2. Qué datos recopila la extensión</h2>
+
+      <div class="no-collect">
+        <strong>✅ Resumen ejecutivo:</strong> MEV Navigator <strong>no recopila, no almacena
+        ni envía datos a servidores propios de Alcance Legal Penal</strong>.
+        Todos los datos permanecen en tu dispositivo o se envían directamente desde
+        tu navegador a los servicios que vos mismo configuraste (Anthropic API).
+      </div>
+
+      <table>
+        <tr>
+          <th>Tipo de dato</th>
+          <th>¿Se recopila?</th>
+          <th>Dónde queda</th>
+        </tr>
+        <tr>
+          <td>Contenido del expediente judicial (carátula, actuaciones)</td>
+          <td><span class="badge badge--gray">Solo en memoria</span></td>
+          <td>RAM del navegador durante la sesión. No se persiste.</td>
+        </tr>
+        <tr>
+          <td>API Key de Anthropic</td>
+          <td><span class="badge badge--blue">Local solamente</span></td>
+          <td><code>chrome.storage.local</code> — en tu navegador. Nunca sale del dispositivo.</td>
+        </tr>
+        <tr>
+          <td>Historial de análisis (últimas 20 causas)</td>
+          <td><span class="badge badge--blue">Local solamente</span></td>
+          <td><code>chrome.storage.local</code> — en tu navegador. Podés borrarlo en cualquier momento.</td>
+        </tr>
+        <tr>
+          <td>Preferencias de configuración (modelo IA, auto-análisis)</td>
+          <td><span class="badge badge--blue">Local solamente</span></td>
+          <td><code>chrome.storage.local</code> — en tu navegador.</td>
+        </tr>
+        <tr>
+          <td>Credenciales del MEV (usuario/contraseña SCBA)</td>
+          <td><span class="badge badge--green">No se recopila</span></td>
+          <td>La extensión NUNCA accede ni almacena tus credenciales del MEV.</td>
+        </tr>
+        <tr>
+          <td>Datos de navegación, historial de Chrome</td>
+          <td><span class="badge badge--green">No se recopila</span></td>
+          <td>La extensión solo opera en mev.scba.gov.ar. No tiene acceso a otras pestañas.</td>
+        </tr>
+        <tr>
+          <td>Datos de telemetría o analítica</td>
+          <td><span class="badge badge--green">No se recopila</span></td>
+          <td>No hay tracking, analytics ni telemetría de ningún tipo.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ── 3. Datos del MEV ── -->
+    <section id="datos-mev">
+      <h2>3. Datos del MEV: cómo se procesan</h2>
+      <p>
+        Cuando abrís una causa en el MEV, la extensión lee el contenido HTML de esa página
+        para extraer la carátula (número de expediente, partes, organismo) y la lista de
+        actuaciones. Este proceso ocurre <strong>localmente en tu navegador</strong>.
+      </p>
+
+      <div class="highlight-box">
+        <strong>Flujo de datos cuando hacés "Analizar expediente con IA":</strong>
+        <ol style="margin-top: 0.5rem; margin-left: 1.25rem;">
+          <li>Los datos del expediente se formatean como texto en tu navegador.</li>
+          <li>Tu navegador envía ese texto <strong>directamente a los servidores de Anthropic</strong>
+              usando tu propia API Key.</li>
+          <li>Anthropic devuelve el análisis a tu navegador.</li>
+          <li>El análisis se muestra en el panel lateral y, opcionalmente, se guarda
+              en <code>chrome.storage.local</code> de tu navegador.</li>
+        </ol>
+        <p style="margin-top: 0.5rem; margin-bottom: 0;">
+          <strong>En ningún paso de este flujo los datos pasan por servidores de Alcance Legal Penal.</strong>
+        </p>
+      </div>
+
+      <p>
+        El tratamiento de datos enviados a Anthropic está regido por la
+        <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Política de Privacidad de Anthropic</a>.
+        Te recomendamos revisarla. Por defecto, Anthropic no usa los datos de la API
+        para entrenar modelos, salvo consentimiento explícito.
+      </p>
+    </section>
+
+    <!-- ── 4. chrome.storage ── -->
+    <section id="storage">
+      <h2>4. Uso de chrome.storage</h2>
+      <p>La extensión utiliza <code>chrome.storage.local</code> y <code>chrome.storage.session</code>
+         exclusivamente para:</p>
+      <ul>
+        <li><strong>Tu API Key de Anthropic</strong> — guardada de forma cifrada por Chrome en tu perfil local.</li>
+        <li><strong>Preferencias</strong> (modelo seleccionado, opción de auto-análisis).</li>
+        <li><strong>Historial local</strong> de los últimos 20 análisis realizados (carátula + texto del análisis). Podés borrarlo en cualquier momento desde la pestaña "Historial".</li>
+        <li><strong>Datos de sesión temporales</strong> (<code>session</code>) del expediente activo — se eliminan automáticamente al cerrar Chrome.</li>
+      </ul>
+      <p>
+        Estos datos <strong>nunca salen de tu dispositivo</strong> hacia servidores de Alcance Legal Penal.
+      </p>
+    </section>
+
+    <!-- ── 5. API Anthropic ── -->
+    <section id="api-anthropic">
+      <h2>5. Llamadas a la API de Anthropic</h2>
+      <p>
+        Al usar la función de análisis, tu navegador realiza una llamada HTTP directa a
+        <code>api.anthropic.com</code> usando la API Key que vos configuraste.
+        Esta comunicación:
+      </p>
+      <ul>
+        <li>Usa HTTPS (cifrado en tránsito).</li>
+        <li>Incluye el texto del expediente como parte del prompt.</li>
+        <li>Está sujeta a los <a href="https://www.anthropic.com/legal/usage-policy" target="_blank" rel="noopener">Términos de Uso de Anthropic</a>.</li>
+        <li>Es responsabilidad del usuario no enviar información clasificada o sujeta a secreto sumarial.</li>
+      </ul>
+      <div class="highlight-box">
+        <strong>Nota beta:</strong> En esta versión beta, las llamadas se realizan
+        directamente desde el navegador. En versiones futuras, las llamadas pasarán
+        por el backend autenticado de Alcance Legal Penal, eliminando la necesidad de
+        que el usuario gestione su propia API Key.
+      </div>
+    </section>
+
+    <!-- ── 6. Lo que NO hacemos ── -->
+    <section id="no-compartimos">
+      <h2>6. Lo que NO hacemos</h2>
+      <ul>
+        <li>❌ No enviamos datos de expedientes a servidores de Alcance Legal Penal.</li>
+        <li>❌ No vendemos, alquilamos ni compartimos tus datos con terceros.</li>
+        <li>❌ No accedemos a tus credenciales del MEV (usuario/contraseña SCBA).</li>
+        <li>❌ No tenemos acceso a los datos guardados en <code>chrome.storage</code> (solo el navegador y la extensión pueden leerlos).</li>
+        <li>❌ No rastreamos tu actividad de navegación fuera de mev.scba.gov.ar.</li>
+        <li>❌ No usamos tus datos para entrenar modelos de IA.</li>
+        <li>❌ No mostramos publicidad de ningún tipo.</li>
+      </ul>
+    </section>
+
+    <!-- ── 7. Seguridad ── -->
+    <section id="seguridad">
+      <h2>7. Seguridad</h2>
+      <p>
+        Tomamos las siguientes medidas para proteger tus datos:
+      </p>
+      <ul>
+        <li>La API Key se almacena en <code>chrome.storage.local</code>, que Chrome cifra usando las credenciales de tu perfil del sistema operativo.</li>
+        <li>La extensión usa Manifest V3, que limita los permisos y el acceso al sistema respecto a versiones anteriores.</li>
+        <li>Los permisos de host están restringidos exclusivamente a <code>mev.scba.gov.ar</code>.</li>
+        <li>No se inyecta código externo ni se cargan scripts desde CDNs externos.</li>
+      </ul>
+      <p>
+        Si encontrás una vulnerabilidad de seguridad, por favor reportala a
+        <a href="mailto:seguridad@alcancelegal.com.ar">seguridad@alcancelegal.com.ar</a>
+        antes de divulgarla públicamente.
+      </p>
+    </section>
+
+    <!-- ── 8. Menores ── -->
+    <section id="menores">
+      <h2>8. Menores de edad</h2>
+      <p>
+        Esta extensión es una herramienta profesional destinada exclusivamente a
+        abogados y profesionales del derecho. No está dirigida a menores de 18 años.
+        No recopilamos intencionalmente información de menores.
+      </p>
+    </section>
+
+    <!-- ── 9. Cambios ── -->
+    <section id="cambios">
+      <h2>9. Cambios a esta política</h2>
+      <p>
+        Podemos actualizar esta política de privacidad cuando sea necesario.
+        Los cambios significativos serán notificados a través de la descripción
+        de la extensión en Chrome Web Store o mediante las notas de la versión.
+        La fecha de "Última actualización" al inicio de este documento siempre
+        indicará cuándo fue la revisión más reciente.
+      </p>
+    </section>
+
+    <!-- ── 10. Contacto ── -->
+    <section id="contacto">
+      <h2>10. Contacto</h2>
+      <p>
+        Para consultas sobre privacidad, eliminación de datos o cualquier pregunta
+        relacionada con esta política:
+      </p>
+      <ul>
+        <li><strong>Desarrollador:</strong> Edgardo Lamas — Studio Lamas</li>
+        <li><strong>Email:</strong> <a href="mailto:privacidad@alcancelegal.com.ar">privacidad@alcancelegal.com.ar</a></li>
+        <li><strong>Producto:</strong> Alcance Legal Penal — MEV Navigator</li>
+        <li><strong>Versión de la extensión:</strong> 1.0.0</li>
+      </ul>
+      <p>
+        Responderemos consultas de privacidad dentro de los 30 días hábiles.
+      </p>
+    </section>
+
+    <footer>
+      <p>
+        © 2026 Edgardo Lamas — Studio Lamas. Todos los derechos reservados.<br/>
+        Alcance Legal Penal · CPP PBA (Ley 11.922) · Defensa Penal · Buenos Aires, Argentina.
+      </p>
+    </footer>
+
+  </div>
+</body>
+</html>

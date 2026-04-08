@@ -12,7 +12,9 @@
     "test:ui": "playwright test --ui",
     "test:report": "playwright show-report",
     "test:headed": "playwright test --headed",
-    "test:unit": "playwright test tests/unit/"
+    "test:unit": "playwright test tests/unit/",
+    "build:icons": "node scripts/generate-extension-icons.js",
+    "build:extension": "node scripts/generate-extension-icons.js && node scripts/build-extension.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",
