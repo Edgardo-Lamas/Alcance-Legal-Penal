@@ -26,7 +26,7 @@ const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || 'TU_SERVICE_KEY
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || 'TU_OPENAI_API_KEY';
 
 // Directorio base de criterios (relativo desde supabase/scripts)
-const KNOWLEDGE_DIR = '../../knowledge/jurisprudencia_publica/civil/danos_responsabilidad_extracontractual';
+const KNOWLEDGE_DIR = '../../knowledge/jurisprudencia_publica/penal';
 
 // ============================================
 // INICIALIZACIÓN DE CLIENTES

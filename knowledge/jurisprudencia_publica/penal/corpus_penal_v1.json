@@ -1,0 +1,1112 @@
+[
+  {
+    "id": "PENAL-NUL-008",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "acta_policial_irregular",
+    "criterio": "Acta policial sin testigos civiles — valor probatorio disminuido y cuestionamiento defensivo",
+    "regla_general": "El acta de procedimiento policial confeccionada sin la presencia de testigos civiles tiene valor probatorio disminuido. El art. 138 CPP PBA (Ley 11.922) establece los requisitos formales de las actas; su inobservancia genera un instrumento de menor valor. Cuando el acta es el único respaldo de un secuestro, la ausencia de testigos civiles independientes abre la hipótesis de adulteración y debilita la prueba de cargo. El principio de mínima intervención policial no habilita la construcción unilateral de la prueba.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 138 (formalidades del acta)",
+      "CPP PBA (Ley 11.922), art. 211 (exclusión de prueba ilícita)",
+      "CN, art. 18 (debido proceso)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA art. 138 (requisitos formales del acta policial); art. 211 (prueba ilícita); CN art. 18",
+      "jurisprudencia_referente": "SCBA, P. 128.489, 'Romero', 14/08/2019 — exige corroboración periférica cuando el acta policial es la única prueba; Cámara Penal La Plata, criterio reiterado sobre actas sin testigos civiles en allanamientos nocturnos",
+      "doctrina": "Hairabedián, Maximiliano, 'Eficacia de la prueba ilícita y sus derivados', pp. 80-110; Cafferata Nores, José I., 'La prueba en el proceso penal', pp. 45-60"
+    },
+    "aplicacion_practica": "La defensa debe verificar en toda acta de procedimiento: (a) si figuran testigos civiles ajenos a la fuerza policial con nombre, apellido y DNI; (b) si los testigos consignados son conocidos del imputado o vecinos que pueden ser convocados a declarar; (c) si el acta fue firmada o si los testigos se negaron a firmar y por qué. Si el acta no tiene testigos civiles, impugnar el valor probatorio del secuestro y exigir corroboración independiente. En casos de estupefacientes, la ausencia de testigos civiles en el acta de secuestro es una debilidad estructural de la prueba de cargo.",
+    "condiciones_aplicacion": [
+      "Causas donde el secuestro de elementos (sustancias, armas, etc.) se respaldó exclusivamente en un acta policial sin testigos civiles",
+      "Casos donde los únicos testigos del procedimiento son miembros de la misma fuerza policial"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el imputado estuvo presente y no objetó la ausencia de testigos en el momento",
+      "No invalida por sí sola si existen otras pruebas independientes que corroboran el secuestro"
+    ],
+    "riesgos_procesales": [
+      "Omitir cuestionar la validez del acta en la etapa de IPP y perder la oportunidad procesal",
+      "No solicitar la declaración testimonial de los supuestos testigos para exponer su inexistencia o parcialidad",
+      "No relacionar la ausencia de testigos civiles con la posibilidad de siembra o adulteración del material secuestrado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["acta_policial", "testigos_civiles", "valor_probatorio", "secuestro", "nulidad", "procedimiento_policial"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-009",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "fruto_arbol_envenenado",
+    "criterio": "Fruto del árbol envenenado — exclusión en cadena de toda prueba derivada de un acto ilícito inicial",
+    "regla_general": "Toda prueba obtenida como consecuencia directa o indirecta de un acto procesal ilícito es excluible del proceso, aunque ella misma haya sido obtenida de forma aparentemente regular. La nulidad del acto origen contamina irremediablemente sus frutos. Esta doctrina, recogida por la CSJN en 'Fiorentino' (1984), 'Montenegro' (1981) y 'Rayford' (1986), impone que cuando el acto fuente es nulo —por violar garantías constitucionales—, los elementos probatorios derivados no pueden ser utilizados para fundar una condena, salvo que su descubrimiento sea inevitable e independiente.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 211 (prueba ilícita y sus derivados)",
+      "CN, art. 18 (inviolabilidad del domicilio, garantías del proceso)",
+      "CADH, art. 8.3 (confesión bajo coacción no admisible)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA art. 211 (exclusión de prueba ilícita); CN art. 18; CADH art. 8",
+      "jurisprudencia_referente": "CSJN, 'Montenegro, Luciano Bernardino', Fallos 303:1938, 11/08/1981 — exclusión de confesión obtenida bajo tortura y toda prueba derivada; CSJN, 'Fiorentino, Diego Enrique', Fallos 306:1752, 27/11/1984 — exclusión de prueba obtenida en allanamiento sin orden; CSJN, 'Rayford, Reginald y otro', Fallos 308:733, 13/05/1986 — extensión de la exclusión a prueba derivada de registro ilegal",
+      "doctrina": "Hairabedián, Maximiliano, 'Eficacia de la prueba ilícita y sus derivados en el proceso penal', Ad-Hoc; Binder, Alberto, 'Introducción al Derecho Procesal Penal', pp. 255-280"
+    },
+    "aplicacion_practica": "La defensa debe trazar la cadena causal completa: (1) identificar el acto ilícito inicial (allanamiento sin orden, detención ilegal, confesión bajo coacción); (2) identificar qué prueba se obtuvo como consecuencia directa de ese acto; (3) identificar qué prueba adicional se obtuvo como consecuencia de la prueba derivada. Si la cadena causal une el acto ilícito con la prueba decisiva de condena, toda esa cadena cae. Excepciones: descubrimiento inevitable (la prueba se habría encontrado por medios legales independientes) y fuente independiente (la prueba se obtuvo por una vía separada del acto ilícito).",
+    "condiciones_aplicacion": [
+      "Causas en que la prueba principal fue obtenida gracias a una detención ilegal, allanamiento nulo o confesión bajo coacción",
+      "Casos donde se secuestraron elementos en un domicilio al que se accedió ilegalmente, generando luego una investigación derivada"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el descubrimiento de la prueba era inevitable por medios legales independientes (inevitable discovery)",
+      "No aplica cuando existe fuente independiente que habría conducido a la misma prueba sin el acto ilícito"
+    ],
+    "riesgos_procesales": [
+      "No identificar el acto ilícito inicial y plantear la exclusión solo de la prueba directamente obtenida, perdiendo la exclusión de los frutos derivados",
+      "No objetar oportunamente la validez del acto origen, habilitando el argumento de convalidación tácita",
+      "No refutar la excepción de 'inevitable discovery' con argumentos concretos sobre la ausencia de vías legales alternativas"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["fruto_arbol_envenenado", "exclusion_derivada", "prueba_ilicita", "Fiorentino", "Montenegro", "Rayford", "cadena_probatoria"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-010",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "autovalidacion_policial",
+    "criterio": "Autovalidación policial — el testimonio del policía no puede validar el acto procesal que él mismo protagonizó",
+    "regla_general": "El agente policial que protagonizó el procedimiento (detención, allanamiento, requisa, secuestro) no puede ser testigo hábil para validar la regularidad de ese mismo acto. El testimonio del funcionario policial sobre la legalidad del procedimiento que él realizó es un instrumento de autovalidación inaceptable en un estado de derecho. Cuando la única prueba de la regularidad de un procedimiento policial es el testimonio del propio funcionario que lo ejecutó, la defensa puede impugnar la suficiencia de esa prueba para sustentar el acto.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 138 (actas y sus requisitos de independencia)",
+      "CPP PBA (Ley 11.922), art. 211 (prueba ilícita)",
+      "CN, art. 18 (garantías del proceso penal)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA arts. 138 y 211; CN art. 18; principios del due process",
+      "jurisprudencia_referente": "SCBA, criterio sostenido en múltiples fallos sobre valoración del testimonio policial único como respaldo de procedimientos cuestionados; Cámara de Apelación y Garantías La Plata, Sala II, criterio sobre insuficiencia del testimonio policial autorreferente",
+      "doctrina": "Maier, Julio B.J., 'Derecho Procesal Penal', Tomo II, sobre valoración del testimonio policial; Cafferata Nores, 'La prueba en el proceso penal', pp. 200-215"
+    },
+    "aplicacion_practica": "Ante un procedimiento policial cuestionado (detención en flagrancia dudosa, requisa sin causa, secuestro sin testigos), si los únicos testigos de su regularidad son los propios funcionarios que lo ejecutaron, la defensa debe: (1) señalar la imposibilidad estructural de que el agente sea testigo neutral de su propio acto; (2) exigir que la acusación aporte testigos civiles independientes o prueba objetiva de la regularidad del procedimiento; (3) vincular la autovalidación con el riesgo de 'siembra' del material probatorio. Este argumento es especialmente poderoso en casos de estupefacientes donde la droga 'apareció' durante una requisa callejera sin testigos civiles.",
+    "condiciones_aplicacion": [
+      "Procedimientos policiales (requisa, detención, allanamiento) donde los únicos testigos son los propios agentes actuantes",
+      "Casos de estupefacientes donde la sustancia fue secuestrada en una requisa sin testigos independientes"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando existen cámaras de seguridad, grabaciones u otra prueba objetiva independiente del procedimiento",
+      "No invalida automáticamente el procedimiento pero sí reduce el valor probatorio del testimonio policial"
+    ],
+    "riesgos_procesales": [
+      "No cuestionar la capacidad del funcionario como testigo del acto que él mismo realizó",
+      "No pedir en la audiencia la nómina completa de los agentes intervinientes para identificar la ausencia total de testigos civiles",
+      "No vincular este argumento con la posibilidad de siembra de material probatorio"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["testimonio_policial", "autovalidacion", "requisa", "testigos_civiles", "estupefacientes", "valor_probatorio"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-011",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "flagrancia_requisitos",
+    "criterio": "Flagrancia — requisitos del art. 153 CPP PBA: percepción sensorial directa y persecución ininterrumpida",
+    "regla_general": "La flagrancia que habilita la detención y el allanamiento sin orden judicial requiere: (1) que el funcionario haya percibido directamente con sus propios sentidos la comisión del delito o la huida del autor; (2) que la persecución sea inmediata, continua e ininterrumpida desde ese momento. No existe flagrancia cuando: la 'percepción' policial se basa en información de terceros, denuncias anónimas o 'actitud sospechosa'; hubo una demora entre la supuesta observación y la detención; o la detención se fundamenta en la 'experiencia policial' sin percepción directa del hecho delictivo. Las excepciones a la garantía del art. 18 CN son de interpretación estrictamente restrictiva.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 153 (flagrancia — definición y requisitos)",
+      "CPP PBA (Ley 11.922), art. 151 (detención sin orden judicial)",
+      "CN, art. 18 (inviolabilidad del domicilio y garantías)",
+      "CADH, art. 7.3 (nadie puede ser sometido a detención arbitraria)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA art. 153 (flagrancia); art. 151 (detención); CN art. 18; CADH art. 7",
+      "jurisprudencia_referente": "SCBA, P. 134.099, 'López', 05/07/2021 — requisitos de la flagrancia en el CPP PBA; CSJN, 'Tumbeiro, Carlos Alberto', Fallos 325:2485, 03/10/2002 — la detención por 'actitud sospechosa' sin elementos objetivos viola la CN; CSJN, 'Ciraolo', Fallos 321:2947 — detención policial y exigencia de causa objetiva",
+      "doctrina": "D'Albora, Francisco, 'Código Procesal Penal de la Nación', comentario art. 284; Donna/Maiza, 'Código Procesal Penal y normas complementarias'"
+    },
+    "aplicacion_practica": "Ante una detención invocando flagrancia, la defensa debe: (1) examinar qué percibió exactamente cada agente y cuándo lo percibió; (2) verificar si hubo alguna solución de continuidad entre la supuesta observación y la detención; (3) comprobar si la 'flagrancia' se construyó retroactivamente después de un hallazgo; (4) distinguir la 'actitud sospechosa' (insuficiente) de la percepción directa del hecho delictivo (suficiente). Si la detención se fundó en un llamado anónimo, información de un tercero o mera 'actitud sospechosa' sin percepción sensorial directa del hecho, es ilegal y todo lo obtenido es excluible.",
+    "condiciones_aplicacion": [
+      "Causas donde la detención o el allanamiento se fundaron en 'flagrancia' sin orden judicial",
+      "Casos donde la detención se produjo luego de una llamada anónima, denuncia de tercero o seguimiento previo sin orden"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el funcionario presenció directamente el hecho delictivo y la detención fue inmediata",
+      "No aplica en casos de delitos en flagrancia real con testigos civiles independientes"
+    ],
+    "riesgos_procesales": [
+      "Aceptar la versión policial de la 'flagrancia' sin examinar los presupuestos fácticos exactos que la habrían habilitado",
+      "No interrogar a cada agente por separado sobre qué vio, desde dónde y en qué momento preciso",
+      "No plantear la ilegalidad de la detención como cuestión previa antes de cualquier otro planteo de fondo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["flagrancia", "detencion_sin_orden", "percepcion_sensorial", "persecucion_ininterrumpida", "art153_cpp_pba", "Tumbeiro"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-012",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "consentimiento_morador_viciado",
+    "criterio": "Consentimiento del morador para el ingreso policial — validez y vicios que lo anulan",
+    "regla_general": "El consentimiento del morador solo reemplaza la orden judicial de allanamiento cuando es libre, informado y expreso. No hay consentimiento válido cuando: el morador estaba rodeado de policías armados; no fue informado de que podía negarse; fue obtenido mediante engaño sobre la identidad o propósito de los agentes; o el morador era una persona en situación de vulnerabilidad (detenido, menor, estado de shock). La carga de probar que el consentimiento fue libre y voluntario recae íntegramente en la acusación. Un consentimiento viciado es jurídicamente equivalente a la ausencia de orden judicial.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), arts. 219 y 220 (allanamiento — excepciones y consentimiento)",
+      "CN, art. 18 (inviolabilidad del domicilio)",
+      "CADH, art. 11.2 (nadie puede ser objeto de injerencias arbitrarias en su domicilio)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 219 y 220; CN art. 18; CADH art. 11.2",
+      "jurisprudencia_referente": "CSJN, 'Fiorentino, Diego Enrique', Fallos 306:1752, 27/11/1984 — el consentimiento del morador bajo intimidación es inválido; CSJN, 'Caballero, Carlos Alberto', Fallos 315:1553 — requisitos del consentimiento válido para ingreso policial; SCBA, criterio sobre carga probatoria del consentimiento libre",
+      "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita', pp. 140-165 (consentimiento en allanamiento)"
+    },
+    "aplicacion_practica": "Si el fiscal invoca el 'consentimiento' como justificación del ingreso policial sin orden, la defensa debe: (1) indagar las circunstancias fácticas exactas del momento del consentimiento (cuántos policías había, si portaban armas visibles, qué se le dijo al morador); (2) verificar si el morador fue informado expresamente de su derecho a negarse al ingreso; (3) comprobar si el acta refleja fielmente lo ocurrido o si fue confeccionada posteriormente. Si la persona que consintió era el imputado detenido o estaba bajo intimidación de cualquier tipo, el 'consentimiento' es una ficción que no resiste control constitucional.",
+    "condiciones_aplicacion": [
+      "Causas donde el ingreso al domicilio se justificó por el supuesto consentimiento del morador",
+      "Casos donde el 'consentimiento' fue prestado por el propio imputado al momento de la detención o bajo presión policial"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el consentimiento fue documentado con testigos independientes y el morador ratificó su voluntariedad",
+      "No aplica cuando el ingreso se produjo en virtud de orden judicial válida (el consentimiento no es relevante)"
+    ],
+    "riesgos_procesales": [
+      "No cuestionar la validez del consentimiento por considerarlo un argumento menor frente a la nulidad del allanamiento",
+      "No solicitar que el morador sea convocado a declarar sobre las circunstancias en que prestó el consentimiento",
+      "No relacionar el consentimiento viciado con la exclusión de toda la prueba obtenida como resultado del ingreso"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["consentimiento_morador", "allanamiento", "vicio_consentimiento", "inviolabilidad_domicilio", "Fiorentino", "nulidad"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-013",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "orden_allanamiento_requisitos_formales",
+    "criterio": "Orden de allanamiento — requisitos formales de validez: domicilio preciso, objeto, plazo y firma judicial",
+    "regla_general": "La orden de allanamiento debe cumplir requisitos formales insalvables: (1) emanar de juez competente con firma autógrafa; (2) identificar el domicilio con precisión suficiente para que no quepan dudas sobre cuál es el lugar a allanar; (3) indicar el objeto concreto de la búsqueda; (4) establecer el plazo de ejecución; (5) indicar el día y hora habilitados. Una orden de allanamiento genérica, que no identifica el objeto de búsqueda o que contiene una descripción del domicilio inexacta o intercambiable, es inválida. El allanamiento ejecutado con una orden defectuosa en alguno de estos requisitos equivale a un allanamiento sin orden.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 221 (requisitos de la orden de allanamiento)",
+      "CPP PBA (Ley 11.922), arts. 222 y 223 (horario, plazo y modalidades)",
+      "CN, art. 18 (inviolabilidad del domicilio)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 221, 222 y 223; CN art. 18",
+      "jurisprudencia_referente": "CSJN, 'Minaglia, Mauro Omar y otro', Fallos 330:3801, 04/09/2007 — requisitos formales de la orden de allanamiento y consecuencias de su inobservancia; SCBA, criterio sobre exigencia de especificidad del objeto de búsqueda en la orden",
+      "doctrina": "Hairabedián, 'Eficacia de la prueba ilícita', pp. 120-145; D'Albora, 'Código Procesal Penal', comentario arts. 221-228"
+    },
+    "aplicacion_practica": "La defensa debe obtener copia certificada de la orden de allanamiento y verificar: (a) si identifica con exactitud el domicilio (número, piso, departamento, ciudad); (b) si indica qué se busca (no basta 'efectos vinculados al delito'); (c) si fue firmada por un juez y no por un secretario o funcionario no habilitado; (d) si fue ejecutada dentro del plazo y horario autorizados. Si la orden describe un domicilio distinto al allanado o no indica el objeto de búsqueda, cualquier elemento secuestrado en ese allanamiento es excluible. La generalidad de la orden ('cualquier objeto de valor probatorio') viola la garantía constitucional.",
+    "condiciones_aplicacion": [
+      "Causas en que se cuenta con la orden de allanamiento para su análisis formal",
+      "Casos donde el allanamiento fue ejecutado en horario o lugar distintos a los autorizados por la orden"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el allanamiento fue consentido por el morador con consentimiento válido independiente de la orden",
+      "No aplica cuando el allanamiento fue en flagrancia real y la orden fue solicitada con posterioridad como control judicial"
+    ],
+    "riesgos_procesales": [
+      "No solicitar copia certificada de la orden en la etapa temprana de la IPP",
+      "No controlar si la firma del juez es auténtica o si fue delegada a un secretario sin habilitación",
+      "No plantear la nulidad del allanamiento por defecto formal de la orden en la primera oportunidad procesal"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["orden_allanamiento", "requisitos_formales", "Minaglia", "domicilio_preciso", "objeto_busqueda", "juez_competente"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-014",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "nulidad_relativa_vs_absoluta",
+    "criterio": "Nulidades absolutas vs relativas en CPP PBA — distinción, régimen de declaración y protesta previa",
+    "regla_general": "El CPP PBA distingue entre nulidades absolutas (arts. 201 a 210) y nulidades relativas. Las absolutas: (a) pueden ser declaradas en cualquier estado del proceso; (b) no requieren protesta previa; (c) no son susceptibles de convalidación por el silencio de las partes; (d) pueden ser declaradas de oficio. Las relativas requieren: (a) protesta oportuna en la primera ocasión procesal posible; (b) demostración de perjuicio; (c) no pueden declararse de oficio. Las nulidades absolutas tutelan garantías constitucionales fundamentales (defensa en juicio, juez natural, intimación de cargos). Las relativas tutelan formas procesales de menor jerarquía.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), arts. 201 a 210 (nulidades absolutas y relativas)",
+      "CPP PBA (Ley 11.922), art. 89 (nulidades absolutas declarables de oficio)",
+      "CPP PBA (Ley 11.922), art. 101 (saneamiento y convalidación)",
+      "CN, art. 18 (garantías procesales fundamentales)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 89, 101, 201-210; CN art. 18",
+      "jurisprudencia_referente": "SCBA, P. 76.030, criterio sobre distinción nulidades absolutas/relativas en el CPP PBA; CSJN, Fallos 306:1752 ('Fiorentino') — exclusión sin necesidad de protesta previa cuando se afecta CN art. 18",
+      "doctrina": "Bertolino, Pedro J., 'El Proceso Penal en la Provincia de Buenos Aires', Ed. Depalma; Maier, Julio B.J., Tomo II, sobre teoría de las nulidades"
+    },
+    "aplicacion_practica": "Antes de plantear una nulidad, la defensa debe clasificarla: (1) Si viola una garantía constitucional (domicilio, defensa en juicio, juez natural), es nulidad absoluta — puede plantearse en cualquier etapa aunque no se haya protestado antes; (2) Si es una irregularidad formal menor (plazos, notificaciones secundarias), es nulidad relativa — debe plantearse en la primera oportunidad o se convalida. El error de plantear una nulidad absoluta como relativa (con el argumento de que 'debió haberse protestado antes') es una trampa procesal que la defensa debe evitar. La nulidad absoluta no caduca por el transcurso del tiempo ni por el silencio anterior.",
+    "condiciones_aplicacion": [
+      "Toda situación donde se plantea una nulidad procesal y la acusación opone que la defensa no protestó oportunamente",
+      "Casos donde el juez propone declarar la nulidad de oficio"
+    ],
+    "exclusiones_comunes": [
+      "Las nulidades relativas sí requieren protesta oportuna y demostración de perjuicio concreto",
+      "La nulidad absoluta no implica automáticamente la absolución; puede requerir reposición del acto"
+    ],
+    "riesgos_procesales": [
+      "Confundir el tipo de nulidad y plantear una absoluta con los requisitos formales de una relativa",
+      "Omitir agotar la instancia de nulidad antes de planteos de fondo cuando la nulidad es absoluta y podría resolver el caso",
+      "No invocar el deber del juez de declarar de oficio las nulidades absolutas cuando éste omite hacerlo"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["nulidad_absoluta", "nulidad_relativa", "protesta_previa", "convalidacion", "arts201_210_cpp", "garantias_constitucionales"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-NUL-015",
+    "fuero": "penal_pba",
+    "instituto": "nulidades_procesales",
+    "subtipo": "nulidad_intimacion_cargos",
+    "criterio": "Nulidad de la intimación de hechos — art. 308 CPP PBA: claridad, precisión y posibilidad de defensa efectiva",
+    "regla_general": "La intimación de hechos del art. 308 CPP PBA debe contener una descripción clara, circunstanciada y precisa del hecho que se atribuye: lugar, tiempo, modo y participación del imputado. Una intimación vaga, genérica o que describe el hecho con imprecisión tal que impide al imputado comprender qué conducta concreta se le reprocha viola el derecho de defensa (CN art. 18; CADH art. 8.2.b). La nulidad de la intimación defectuosa es absoluta y puede plantearse en cualquier etapa del proceso. El principio de congruencia impide que la sentencia condene por hechos distintos o con mayor extensión que los intimados.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 308 (intimación de hechos — requisitos)",
+      "CPP PBA (Ley 11.922), arts. 201 y 202 (nulidad absoluta por afectación de la defensa en juicio)",
+      "CN, art. 18 (defensa en juicio — derecho a conocer la imputación)",
+      "CADH, art. 8.2.b (derecho a conocer detalladamente la acusación)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA art. 308; arts. 201-202; CN art. 18; CADH art. 8.2.b",
+      "jurisprudencia_referente": "SCBA, criterio sobre exigencia de precisión en la intimación de hechos; CSJN, Fallos 318:1234 — la imputación debe ser precisa y circunstanciada para habilitar defensa efectiva; CIDH, 'Norín Catrimán y otros c. Chile' (2014) — derecho a conocer detalladamente la acusación",
+      "doctrina": "Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires'; Maier, Tomo I, pp. 550-580 (correlación entre acusación y sentencia)"
+    },
+    "aplicacion_practica": "En la audiencia de intimación o en la primera presentación defensiva, examinar si la descripción del hecho permite al imputado entender: qué hizo, cuándo, dónde y de qué manera. Si la intimación dice 'el imputado participó en hechos delictivos' sin especificar cuáles, cuándo o cómo, es nula. Verificar también el principio de congruencia: si el requerimiento de elevación a juicio o el debate introduce hechos no intimados o los extiende en términos de tiempo, lugar o modo, esa ampliación viola el derecho de defensa y debe impugnarse.",
+    "condiciones_aplicacion": [
+      "IPP donde la intimación de hechos es vaga, temporal o espacialmente imprecisa, o no describe la participación del imputado",
+      "Juicio oral donde la acusación amplía o modifica los hechos respecto de la intimación original"
+    ],
+    "exclusiones_comunes": [
+      "Una intimación que identifica el hecho con suficiente precisión para que el imputado pueda ejercer defensa no es nula por eventuales omisiones secundarias",
+      "La modificación menor de la calificación legal sin cambio de hechos no viola el principio de congruencia"
+    ],
+    "riesgos_procesales": [
+      "No controlar la congruencia entre la intimación, el requerimiento de elevación y la acusación en juicio oral",
+      "No plantear la nulidad de la intimación defectuosa en la primera oportunidad (aunque siendo absoluta puede plantearse después)",
+      "No relacionar la nulidad de la intimación con la imposibilidad de preparar una defensa efectiva sobre hechos imprecisos"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["intimacion_hechos", "art308_cpp", "congruencia", "defensa_en_juicio", "precision_imputacion", "nulidad_absoluta"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-GAR-013",
+    "fuero": "penal_pba",
+    "instituto": "garantias_constitucionales",
+    "subtipo": "inviolabilidad_domicilio_alcance_defensivo",
+    "criterio": "Inviolabilidad del domicilio — art. 18 CN y art. 11.2 CADH: alcance amplio y excepciones taxativas",
+    "regla_general": "La inviolabilidad del domicilio (art. 18 CN; art. 11.2 CADH) es una garantía fundamental que protege el ámbito privado del individuo frente a la intromisión estatal no autorizada judicialmente. El concepto de 'domicilio' es amplio: incluye el hogar, el lugar de trabajo, el automóvil con expectativa razonable de privacidad, habitaciones de hotel y todo espacio donde la persona tenga expectativa legítima de privacidad. Las únicas excepciones constitucionales son: orden judicial fundada, flagrancia real, consentimiento libre e informado del morador, y urgencia objetivamente demostrada. Cualquier otro ingreso es inconstitucional y genera nulidad absoluta con exclusión de toda prueba obtenida.",
+    "articulos_cpp": [
+      "CN, art. 18 (inviolabilidad del domicilio)",
+      "CADH, art. 11.2 (protección de la honra, dignidad y domicilio)",
+      "CPP PBA (Ley 11.922), arts. 219 a 228 (allanamiento — régimen legal)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CN art. 18; CADH art. 11.2; CPP PBA arts. 219-228",
+      "jurisprudencia_referente": "CSJN, 'Fiorentino', Fallos 306:1752 (1984) — alcance de la garantía; CSJN, 'Minaglia', Fallos 330:3801 (2007) — requisitos de la orden; CSJN, 'Acosta, Alejandro Esteban', Fallos 331:858 (2008) — expectativa de privacidad como criterio de aplicación",
+      "doctrina": "Binder, Alberto, 'Introducción al Derecho Procesal Penal'; Hairabedián, 'Eficacia de la prueba ilícita'"
+    },
+    "aplicacion_practica": "La defensa debe evaluar en qué espacio se produjo la intromisión policial y si el imputado tenía expectativa legítima de privacidad en ese espacio. Un automóvil en la vía pública tiene expectativa de privacidad respecto de su interior; la policía no puede ingresar sin orden o sin flagrancia. Un teléfono celular tiene expectativa de privacidad total en su contenido digital: la revisión sin orden judicial viola el art. 18 CN aunque el teléfono haya sido hallado en un procedimiento válido. Plantear siempre la expectativa de privacidad como umbral previo a la justificación del ingreso o la requisa.",
+    "condiciones_aplicacion": [
+      "Cualquier causa donde el acceso policial a un espacio privado o a objetos con contenido privado (celular, documentos) no fue autorizado judicialmente",
+      "Casos de requisa de vehículos sin orden ni flagrancia documentada"
+    ],
+    "exclusiones_comunes": [
+      "No aplica en espacios públicos sin expectativa de privacidad (vía pública, parques)",
+      "No aplica cuando el ingreso fue autorizado por orden judicial válida"
+    ],
+    "riesgos_procesales": [
+      "No ampliar el concepto de domicilio protegido para incluir vehículos, teléfonos y otros espacios con expectativa de privacidad",
+      "Limitarse a discutir la validez de la orden sin cuestionar si el espacio tenía protección constitucional en primer lugar",
+      "No invocar el estándar de 'expectativa legítima de privacidad' de la jurisprudencia de la CSJN"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["inviolabilidad_domicilio", "art18_CN", "CADH_art11", "expectativa_privacidad", "celular", "allanamiento", "garantia_fundamental"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-GAR-014",
+    "fuero": "penal_pba",
+    "instituto": "garantias_constitucionales",
+    "subtipo": "nemo_tenetur_alcance_IPP",
+    "criterio": "Derecho a no autoincriminarse — alcance en IPP: declaraciones informativas, silencio no puede perjudicar",
+    "regla_general": "El derecho a no autoincriminarse (art. 18 CN; art. 8.2.g CADH; art. 14.3.g PIDCP) se extiende a toda declaración del imputado en el proceso, incluyendo las 'declaraciones informativas' de la etapa policial. El silencio del imputado en ningún caso puede ser usado como indicio de culpabilidad ni ser valorado negativamente por el tribunal. Toda declaración prestada sin asistencia letrada, bajo coacción, engaño o sin información previa sobre el derecho a guardar silencio es nula. La renuncia al derecho al silencio debe ser expresa, libre, informada y con asesoramiento previo del defensor.",
+    "articulos_cpp": [
+      "CN, art. 18 (nadie puede ser obligado a declarar contra sí mismo)",
+      "CADH, art. 8.2.g (derecho a no ser obligado a declarar contra sí mismo)",
+      "PIDCP, art. 14.3.g (derecho a no ser obligado a confesarse culpable)",
+      "CPP PBA (Ley 11.922), art. 308 y ss. (declaración del imputado — garantías)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CN art. 18; CADH art. 8.2.g; PIDCP art. 14.3.g; CPP PBA arts. 308 y ss.",
+      "jurisprudencia_referente": "CSJN, 'Montenegro, Luciano Bernardino', Fallos 303:1938 (1981) — declaración bajo coacción inadmisible; CSJN, 'Verbitsky, Horacio', Fallos 328:1146 (2005) — protección integral del imputado detenido; SCBA, criterio sobre nulidad de declaraciones informativas sin asistencia letrada",
+      "doctrina": "Maier, Julio B.J., Tomo I, pp. 670-720 (el imputado como sujeto de derechos); Binder, 'Introducción al DPP', pp. 170-200"
+    },
+    "aplicacion_practica": "Verificar en qué momento y bajo qué condiciones el imputado realizó manifestaciones ante la policía: (1) ¿Fue informado de su derecho a guardar silencio antes de hablar? (2) ¿Estaba asistido por su defensor en ese momento? (3) ¿Las 'manifestaciones espontáneas' registradas en el acta policial son genuinamente espontáneas o fueron provocadas por preguntas de los agentes? Si el imputado hizo declaraciones en sede policial sin las garantías del art. 308, esas manifestaciones son nulas y no pueden ser usadas como prueba ni indicio. El 'relato espontáneo' transcripto en el acta policial es una figura frecuentemente usada para introducir declaraciones nulas al proceso.",
+    "condiciones_aplicacion": [
+      "Causas donde el imputado realizó manifestaciones ante la policía antes de ser asistido por defensor",
+      "Casos donde el 'relato espontáneo' consta en el acta de procedimiento policial"
+    ],
+    "exclusiones_comunes": [
+      "No aplica a declaraciones prestadas voluntariamente con asistencia letrada previa y después de ser informado de los derechos",
+      "No impide al imputado declarar voluntariamente si así lo desea con todas las garantías"
+    ],
+    "riesgos_procesales": [
+      "No controlar si las 'manifestaciones espontáneas' del acta policial fueron inducidas por preguntas de los agentes",
+      "No plantear la nulidad de las declaraciones informativas sin asistencia letrada en la primera oportunidad",
+      "No objetar cuando el tribunal valora negativamente el silencio del imputado como presunción de culpabilidad"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["nemo_tenetur", "silencio", "declaracion_informativa", "asistencia_letrada", "art18_CN", "CADH_8_2g", "relato_espontaneo"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-GAR-015",
+    "fuero": "penal_pba",
+    "instituto": "garantias_constitucionales",
+    "subtipo": "presuncion_inocencia_medidas_cautelares",
+    "criterio": "Presunción de inocencia en IPP — su vigencia plena impide presunciones de peligrosidad para medidas cautelares",
+    "regla_general": "La presunción de inocencia (art. 18 CN; art. 8.2 CADH) rige con plenitud durante toda la IPP y no puede ser disminuida por presunciones de peligrosidad procesal fundadas en la gravedad del delito imputado o en la escala penal. Toda medida cautelar personal (prisión preventiva, arresto domiciliario, prohibición de acercamiento) debe fundarse en peligros procesales concretos y demostrables, no en presunciones derivadas de la naturaleza del delito. La gravedad de la imputación no puede invertir la presunción de inocencia ni justificar por sí sola la privación de libertad durante la investigación.",
+    "articulos_cpp": [
+      "CN, art. 18 (presunción de inocencia implícita)",
+      "CADH, art. 8.2 (presunción de inocencia)",
+      "PIDCP, art. 14.2 (toda persona acusada es inocente hasta que se pruebe su culpabilidad)",
+      "CPP PBA (Ley 11.922), arts. 157 y 158 (prisión preventiva — requisitos)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CN art. 18; CADH art. 8.2; PIDCP art. 14.2; CPP PBA arts. 157-158",
+      "jurisprudencia_referente": "CNCP Plenario 'Díaz Bessone', Acuerdo N°1/2008 — la escala penal no justifica por sí sola la prisión preventiva; Comisión IDH, Informe 35/07 sobre uso de la prisión preventiva en las Américas; SCBA, criterios sobre fundamentación de la prisión preventiva",
+      "doctrina": "Bovino, Alberto, 'El encarcelamiento preventivo en los tratados de derechos humanos'; Solimine, Mauricio L., 'Encarcelamiento preventivo y excarcelación'"
+    },
+    "aplicacion_practica": "Cuando se solicita o prolonga una medida cautelar personal en IPP, la defensa debe: (1) exigir que la acusación indique concretamente qué hechos del expediente revelan el riesgo de fuga o de entorpecimiento; (2) demostrar arraigo, trabajo, familia y ausencia de antecedentes como factores que descartan el riesgo; (3) impugnar toda argumentación que derive el riesgo de fuga de la gravedad del delito o la pena en abstracto; (4) proponer medidas alternativas menos gravosas (arresto domiciliario, caución, prohibición de salida del país). La privación de libertad en IPP es la última ratio, no la primera respuesta ante una imputación grave.",
+    "condiciones_aplicacion": [
+      "Audiencias de prisión preventiva, prórroga de detención o cualquier medida cautelar personal en IPP",
+      "Recursos de apelación contra resoluciones que imponen o mantienen la prisión preventiva"
+    ],
+    "exclusiones_comunes": [
+      "No aplica en etapa de juicio oral una vez dictada condena (aunque no esté firme)",
+      "No impide medidas cautelares cuando hay peligros procesales concretos y acreditados"
+    ],
+    "riesgos_procesales": [
+      "No presentar prueba concreta del arraigo del imputado (constancias laborales, domicilio acreditado, vínculos familiares)",
+      "No impugnar de inmediato la resolución que impone o prorroga la prisión preventiva dentro del plazo de apelación",
+      "Omitir proponer medidas alternativas a la prisión preventiva en la audiencia correspondiente"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["presuncion_inocencia", "prision_preventiva", "IPP", "peligros_procesales", "arraigo", "Diaz_Bessone", "medidas_cautelares"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-GAR-016",
+    "fuero": "penal_pba",
+    "instituto": "garantias_constitucionales",
+    "subtipo": "plazo_razonable_CADH",
+    "criterio": "Plazo razonable — art. 7.5 CADH y art. 8.1 CADH: criterios CIDH para la duración del proceso penal",
+    "regla_general": "El derecho al juzgamiento en un plazo razonable (CADH arts. 7.5 y 8.1) impone al Estado la obligación de resolver la situación del imputado dentro de un tiempo que no implique una sanción encubierta. Los criterios de la CIDH para evaluar el plazo razonable son: complejidad del caso, actividad procesal del interesado, conducta de las autoridades judiciales y afectación a la situación jurídica del imputado. La demora injustificada en resolver puede generar: extinción de la acción penal por prescripción, sobreseimiento por vencimiento de plazo, o la excarcelación por exceso de plazo en prisión preventiva (art. 283 CPP PBA).",
+    "articulos_cpp": [
+      "CADH, art. 7.5 (derecho a ser juzgado en plazo razonable o ser puesto en libertad)",
+      "CADH, art. 8.1 (toda persona tiene derecho a ser oída dentro de un plazo razonable)",
+      "CPP PBA (Ley 11.922), art. 283 (plazo máximo de la investigación penal preparatoria)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CADH arts. 7.5 y 8.1; CPP PBA art. 283",
+      "jurisprudencia_referente": "CIDH, 'Suárez Rosero c. Ecuador', Sentencia 12/11/1997 — plazo razonable y derecho a ser juzgado sin dilaciones; CSJN, 'Mattei, Ángel', Fallos 272:188 (1968) — el proceso penal no puede durar eternamente; SCBA, criterios sobre vencimiento del plazo del art. 283 CPP PBA",
+      "doctrina": "Pastor, Daniel R., 'El plazo razonable en el proceso del Estado de Derecho'; Bovino, Alberto, 'Problemas del derecho procesal penal contemporáneo'"
+    },
+    "aplicacion_practica": "La defensa debe llevar un registro preciso de los plazos procesales: (1) fecha de inicio de la IPP y actos procesales relevantes; (2) vencimiento del plazo del art. 283 CPP PBA y si se solicitó prórroga fundada; (3) si el imputado está detenido, calcular el plazo de la prisión preventiva y su relación con la pena en expectativa. Si la investigación supera los plazos del art. 283 sin actividad relevante imputable a la defensa, plantear el sobreseimiento por vencimiento de plazo. Si la duración total del proceso resulta irrazonable en los términos de la CADH, plantear la violación del art. 8.1 ante tribunales nacionales y, en último caso, ante la CIDH.",
+    "condiciones_aplicacion": [
+      "Causas en que la IPP supera los plazos del art. 283 CPP PBA sin resolución",
+      "Causas de larga duración donde el imputado está privado de libertad en prisión preventiva"
+    ],
+    "exclusiones_comunes": [
+      "Las dilaciones ocasionadas por la propia defensa no computan a favor del imputado para el plazo razonable",
+      "La complejidad objetiva del caso puede justificar una duración mayor sin que ello implique violación del plazo razonable"
+    ],
+    "riesgos_procesales": [
+      "No registrar ni denunciar oportunamente los vencimientos de plazo del art. 283 CPP PBA",
+      "No diferenciar entre dilaciones imputables al Estado y dilaciones imputables a la defensa o al imputado",
+      "No vincular el exceso de plazo de la IPP con la excarcelación del imputado detenido provisionalmente"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["plazo_razonable", "CADH_7_5", "CADH_8_1", "art283_cpp", "IPP", "prision_preventiva", "CIDH", "Mattei"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-GAR-017",
+    "fuero": "penal_pba",
+    "instituto": "garantias_constitucionales",
+    "subtipo": "CSJN_Arriola_autonomia_personal",
+    "criterio": "CSJN 'Arriola' (2009) — inconstitucionalidad de la persecución penal por tenencia de estupefacientes para consumo personal en condiciones privadas",
+    "regla_general": "La CSJN declaró inconstitucional el art. 14, segundo párrafo, de la Ley 23.737 cuando la tenencia de estupefacientes se realiza para consumo personal y en condiciones que no generan peligro concreto para terceros. El art. 19 CN protege las acciones privadas que no afectan a terceros de la intervención estatal. El Estado no puede penalizar conductas autorreferentes que solo afectan al propio tenedor. La doctrina 'Arriola' es un precedente vinculante de la CSJN: la persecución penal del consumidor en condiciones privadas carece de sustento constitucional.",
+    "articulos_cpp": [
+      "CN, art. 19 (acciones privadas reservadas a Dios y exentas de la autoridad)",
+      "Ley 23.737, art. 14 segundo párrafo (tenencia para uso personal)",
+      "CADH, art. 11 (privacidad y vida privada)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CN art. 19; Ley 23.737 art. 14 segundo párrafo; CADH art. 11",
+      "jurisprudencia_referente": "CSJN, 'Arriola, Sebastián y otros s/ causa N° 9080', A. 891. XLIV, 25/08/2009, Fallos 332:1963 — fallo unánime de todos los integrantes de la Corte; CSJN, 'Bazterrica, Gustavo Mario', Fallos 308:1392 (1986) — primer precedente en el mismo sentido; CSJN, 'Colavini' (1978) — criterio superado por Bazterrica y Arriola",
+      "doctrina": "Zaffaroni, Eugenio R., 'El enemigo en el derecho penal'; Nino, Carlos S., 'Ética y derechos humanos'"
+    },
+    "aplicacion_practica": "En causas por tenencia simple (art. 14, segundo párrafo, Ley 23.737), la defensa debe acreditar: (1) que la cantidad de estupefacientes era escasa y compatible con uso personal (no con distribución); (2) que no hubo actos de venta, entrega o puesta a disposición de terceros; (3) que la conducta se realizó en un ámbito de privacidad o sin riesgo de daño a terceros. Si se acreditan esas condiciones, plantear la inconstitucionalidad del art. 14, segundo párrafo, invocando 'Arriola'. Distinguir claramente del art. 5 inc. c) (tenencia con fines de comercialización), que sí es constitucional y tiene pena más grave.",
+    "condiciones_aplicacion": [
+      "Causas por tenencia de estupefacientes donde la cantidad secuestrada es compatible con uso personal y no hay indicios de comercialización",
+      "Casos donde el imputado fue detenido en un espacio privado con estupefacientes para consumo propio"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando hay indicios de comercialización (fraccionamiento, envoltorios múltiples, dinero en efectivo, instrumentos de venta)",
+      "No aplica cuando la tenencia se produjo en un lugar público con exposición potencial a terceros"
+    ],
+    "riesgos_procesales": [
+      "No plantear oportunamente la inconstitucionalidad del art. 14 segundo párrafo y dejar que la causa avance como tenencia simple punible",
+      "No acreditar las condiciones de la tenencia (cantidad, lugar, contexto) que habilitan la aplicación de 'Arriola'",
+      "Confundir la tenencia para consumo con la tenencia para comercializar y no distinguir los tipos penales aplicables"
+    ],
+    "jurisdiccion": "argentina_nacional",
+    "alcance": "criterios_generales",
+    "tags": ["Arriola", "tenencia_consumo_personal", "art14_ley23737", "art19_CN", "inconstitucionalidad", "estupefacientes", "autonomia_personal"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-001",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "distincion_tipos_penales_art5_art14",
+    "criterio": "Ley 23.737: distinción entre art. 5 inc. c) (tenencia para comercialización) y art. 14 (tenencia simple/consumo) — elementos determinantes",
+    "regla_general": "La Ley 23.737 distingue dos tipos penales radicalmente diferentes: (a) art. 5 inc. c): tenencia con fines de comercialización — pena de 4 a 15 años; y (b) art. 14 primer párrafo: tenencia simple — pena de 1 a 6 años; y segundo párrafo: tenencia para consumo personal — despenalizada por 'Arriola' en condiciones privadas. La diferencia sustancial entre el art. 5 inc. c) y el art. 14 es la finalidad: para calificar como art. 5 inc. c) debe acreditarse el dolo de comercializar, no basta con la mera tenencia de una cantidad que 'podría' destinarse a la venta. La carga de probar el dolo de comercialización recae exclusivamente en la acusación.",
+    "articulos_cpp": [
+      "Ley 23.737, art. 5 inc. c) (tenencia con fines de comercialización — 4 a 15 años)",
+      "Ley 23.737, art. 14 primer párrafo (tenencia simple — 1 a 6 años)",
+      "Ley 23.737, art. 14 segundo párrafo (tenencia para consumo personal)",
+      "CN, art. 18 (principio de culpabilidad — el dolo debe probarse)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "Ley 23.737, arts. 5 inc. c) y 14; CN art. 18",
+      "jurisprudencia_referente": "CSJN, 'Arriola', Fallos 332:1963 (2009) — distinción consumidor/traficante; SCBA, criterios sobre acreditación del dolo de comercialización en causas de estupefacientes; Cámara Penal Departamental La Plata, múltiples precedentes sobre recalificación de art. 5 a art. 14",
+      "doctrina": "Cornejo, Abel, 'Estupefacientes y precursores', Ed. Rubinzal-Culzoni; Romero Villanueva, Horacio, 'Ley de estupefacientes comentada'"
+    },
+    "aplicacion_practica": "Ante una imputación por art. 5 inc. c), la defensa debe: (1) exigir que la acusación indique qué elementos concretos del expediente prueban el dolo de comercialización (no la mera tenencia); (2) verificar si hay actos positivos de venta, entrega o negociación documentados; (3) si la única 'prueba' es la cantidad de droga, argumentar que la cantidad no determina por sí sola la finalidad de comercializar; (4) solicitar la recalificación al art. 14 primer o segundo párrafo según las circunstancias. La condena por art. 5 inc. c) sin prueba del dolo de comercialización viola el principio de culpabilidad.",
+    "condiciones_aplicacion": [
+      "Toda causa iniciada por art. 5 inc. c) de la Ley 23.737 donde la prueba del dolo de comercialización es débil o se basa exclusivamente en la cantidad secuestrada",
+      "Casos donde el imputado es usuario habitual y la cantidad es compatible con abasto para consumo propio"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando hay actos de venta documentados (filmaciones, escuchas, testigos de las transacciones)",
+      "No aplica cuando se secuestran instrumentos de pesaje, fraccionamiento, envoltorios múltiples o listas de clientes"
+    ],
+    "riesgos_procesales": [
+      "No pedir la recalificación de art. 5 inc. c) a art. 14 cuando los elementos objetivos no acreditan la finalidad de comercializar",
+      "Aceptar implícitamente que la cantidad de droga es prueba suficiente del dolo de comercialización",
+      "No ofrecer prueba pericial sobre el perfil de consumo del imputado para acreditar que la cantidad corresponde a su consumo personal"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["art5_inc_c", "art14_ley23737", "dolo_comercializacion", "tenencia_simple", "recalificacion", "estupefacientes", "carga_prueba"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-002",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "prueba_dolo_comercializacion",
+    "criterio": "Dolo de comercialización en Ley 23.737 — elementos probatorios necesarios para acreditar el art. 5 inc. c)",
+    "regla_general": "El dolo de comercialización (art. 5 inc. c) Ley 23.737) requiere prueba de la intención de destinar la sustancia al mercado. Los elementos que permiten inferir dolo de comercialización son: (a) actos positivos de venta o entrega documentados; (b) fraccionamiento de la droga en dosis individuales; (c) presencia de materiales de empaque (bolsitas, envolturas, balanzas); (d) dinero en efectivo en cantidad inconsistente con el nivel socioeconómico del imputado; (e) comunicaciones (mensajes, llamadas) que revelan transacciones; (f) múltiples personas acudiendo al domicilio en intervalos cortos. Ninguno de estos elementos es prueba suficiente por sí solo; su valoración debe ser conjunta y contextualizada.",
+    "articulos_cpp": [
+      "Ley 23.737, art. 5 inc. c) (tenencia para comercialización)",
+      "CPP PBA (Ley 11.922), art. 210 (valoración de la prueba — sana crítica racional)",
+      "CN, art. 18 (principio de culpabilidad — dolo como elemento del tipo subjetivo)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "Ley 23.737 art. 5 inc. c); CPP PBA art. 210; CN art. 18",
+      "jurisprudencia_referente": "SCBA, P. 128.847, 'González', 18/03/2020 — acreditación del dolo de comercialización en estupefacientes; Cámara Penal La Plata, criterio sobre insuficiencia de la cantidad para probar comercialización; CNCP, Sala IV, criterios sobre elementos probatorios del art. 5 inc. c)",
+      "doctrina": "Cornejo, Abel, 'Estupefacientes y precursores', pp. 80-130; Romero Villanueva, 'Ley de estupefacientes comentada', pp. 40-75"
+    },
+    "aplicacion_practica": "Ante una imputación por art. 5 inc. c), la defensa debe hacer una auditoría de la prueba de cargo: (1) ¿Se documentó algún acto de venta? (2) ¿La droga estaba fraccionada en dosis o en bruto? (3) ¿Hay materiales de venta (balanza, bolsitas)? (4) ¿El dinero es explicable por la actividad laboral del imputado? (5) ¿Las comunicaciones telefónicas revelan transacciones o son compatibles con obtención para consumo? Si el expediente no acredita positivamente la finalidad de comercializar sino que se limita a señalar la cantidad de droga, argumentar que la calificación debe ser art. 14 (tenencia simple o para consumo).",
+    "condiciones_aplicacion": [
+      "Causas por art. 5 inc. c) donde los únicos 'indicios' de comercialización son la cantidad de droga y/o la presencia de dinero en efectivo",
+      "Casos donde se imputa comercialización sin haber documentado ningún acto de venta"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando existe prueba directa de actos de venta (testigos, filmaciones, escuchas telefónicas con transacciones)",
+      "No aplica cuando se secuestra la droga ya fraccionada en múltiples dosis junto con instrumentos de pesaje"
+    ],
+    "riesgos_procesales": [
+      "No hacer una auditoría sistemática de cada elemento de prueba para evaluar si acredita el dolo de comercialización",
+      "No peritar la cantidad de droga para demostrar que es compatible con el consumo personal del imputado en un período determinado",
+      "No cuestionar la valoración policial de los 'indicios' de comercialización sin respaldo pericial independiente"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["dolo_comercializacion", "art5_inc_c", "estupefacientes", "indicios", "prueba_cargo", "fraccionamiento", "ley23737"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-003",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "cantidad_droga_indicio_insuficiente",
+    "criterio": "Cantidad y peso de la droga — indicios insuficientes por sí solos para acreditar el dolo de comercialización",
+    "regla_general": "La cantidad o el peso de los estupefacientes secuestrados, por sí solos, no constituyen prueba suficiente del dolo de comercialización requerido por el art. 5 inc. c) de la Ley 23.737. Toda inferencia que parte de 'tenía demasiada cantidad para ser solo consumo' es un razonamiento presuntivo que invierte la carga de la prueba: el imputado no debe probar que la cantidad corresponde a su consumo; la acusación debe probar que la finalidad era comercializar. La jurisprudencia reconoce que personas con adicción grave pueden tener en su poder cantidades que parecen incompatibles con el consumo personal pero que en realidad están destinadas al autoabastecimiento.",
+    "articulos_cpp": [
+      "Ley 23.737, art. 5 inc. c) (tenencia para comercialización)",
+      "Ley 23.737, art. 14 (tenencia simple y para consumo personal)",
+      "CN, art. 18 (presunción de inocencia — carga de la prueba en la acusación)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "Ley 23.737 arts. 5 inc. c) y 14; CN art. 18",
+      "jurisprudencia_referente": "CSJN, 'Arriola', Fallos 332:1963 (2009) — la distinción consumidor/traficante debe hacerse en el caso concreto; SCBA, P. 134.721, criterio sobre insuficiencia de la cantidad como único indicio de comercialización; Cámara Penal La Plata, precedentes sobre recalificación cuando solo se acredita la cantidad",
+      "doctrina": "Cornejo, Abel, 'Estupefacientes y precursores', pp. 95-110; Romero Villanueva, 'Ley de estupefacientes comentada'"
+    },
+    "aplicacion_practica": "Si la acusación funda la imputación por art. 5 inc. c) exclusivamente en la cantidad de droga secuestrada, la defensa debe: (1) acreditar la condición de usuario/adicto del imputado mediante informe médico o pericial toxicológico; (2) calcular cuánto tiempo alcanza la cantidad secuestrada para el consumo personal del imputado según su nivel de adicción; (3) solicitar pericia sobre el perfil de consumo; (4) proponer la recalificación al art. 14. La ausencia de todo otro indicio objetivo de comercialización (sin fraccionamiento, sin instrumentos de venta, sin comunicaciones de venta, sin dinero inexplicable) hace insostenible la calificación por art. 5 inc. c).",
+    "condiciones_aplicacion": [
+      "Causas donde el único indicio de comercialización es la cantidad de droga secuestrada",
+      "Casos donde no hay fraccionamiento, instrumentos de venta ni comunicaciones de transacciones"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando la cantidad es tan elevada que excede cualquier posibilidad de autoabastecimiento incluso para un adicto grave",
+      "No aplica cuando la cantidad va acompañada de otros indicios objetivos de comercialización"
+    ],
+    "riesgos_procesales": [
+      "No ofrecer pericia toxicológica que acredite la condición de usuario y el nivel de consumo del imputado",
+      "No calcular el período que alcanza la cantidad secuestrada para el consumo personal, dejando ese análisis a la acusación",
+      "Aceptar sin cuestionar la premisa de que 'tanta cantidad no puede ser para consumo personal'"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["cantidad_droga", "indicio_insuficiente", "art5_inc_c", "art14", "consumo_personal", "estupefacientes", "presuncion_inocencia"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-004",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "dinero_efectivo_no_prueba_comercializacion",
+    "criterio": "Dinero en efectivo — no prueba comercialización de estupefacientes sin contexto que lo vincule",
+    "regla_general": "La presencia de dinero en efectivo en el domicilio o en la persona del imputado no constituye prueba del dolo de comercialización de estupefacientes si no existe una vinculación concreta y demostrada entre ese dinero y actos de venta. El dinero en efectivo es un elemento lícito de la vida cotidiana y su origen puede ser laboral, comercial o de ahorro personal. Para que el dinero configure un indicio de comercialización de drogas, la acusación debe demostrar: (a) que el monto es incompatible con los ingresos legítimos del imputado, (b) que no hay fuente lícita que lo explique, y (c) que existen otros elementos que relacionen ese dinero con las ventas imputadas.",
+    "articulos_cpp": [
+      "Ley 23.737, art. 5 inc. c) (tenencia para comercialización)",
+      "CN, art. 18 (presunción de inocencia — el dinero lícito no puede ser confiscado sin prueba de origen ilícito)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "Ley 23.737 art. 5 inc. c); CN art. 18",
+      "jurisprudencia_referente": "Cámara Penal Departamental La Plata, criterio sobre insuficiencia del dinero como indicio único de comercialización; CNCP, Sala II, precedentes sobre valoración del dinero en causas de estupefacientes; doctrina judicial uniforme sobre necesidad de contextualizar el indicio económico",
+      "doctrina": "Cornejo, 'Estupefacientes y precursores', pp. 110-125"
+    },
+    "aplicacion_practica": "Cuando la acusación menciona el dinero en efectivo como indicio de comercialización, la defensa debe: (1) acreditar la fuente lícita del dinero (recibos de sueldo, actividad comercial, préstamo, ahorro); (2) señalar que el monto es compatible con los ingresos del imputado; (3) cuestionar que el dinero no estaba cerca de la droga ni de instrumentos de venta; (4) pedir que la acusación explique de qué transacciones concretas provendría ese dinero. Si el imputado trabaja en negro o informalmente, ofrecer testimonios de empleadores o clientes que acrediten los ingresos legítimos.",
+    "condiciones_aplicacion": [
+      "Causas donde la acusación incluye el hallazgo de dinero en efectivo como indicio de comercialización de estupefacientes",
+      "Casos donde el imputado tiene actividad laboral o comercial lícita que explica la tenencia de efectivo"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el dinero estaba fraccionado en billetes de baja denominación junto con droga fraccionada y materiales de venta",
+      "No aplica cuando hay comunicaciones que vinculan el dinero con transacciones de venta específicas"
+    ],
+    "riesgos_procesales": [
+      "No acreditar la fuente lícita del dinero y dejarlo como indicio sin respuesta",
+      "No pedir que la acusación explique la vinculación concreta entre el dinero y actos de venta específicos",
+      "No cuestionar si el monto hallado es realmente incompatible con el nivel económico del imputado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["dinero_efectivo", "indicio_comercializacion", "art5_inc_c", "estupefacientes", "fuente_licita", "presuncion_inocencia"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-005",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "testimonio_policial_unico_estupefacientes",
+    "criterio": "Testimonio policial único — insuficiencia para acreditar comercialización de estupefacientes según criterio SCBA",
+    "regla_general": "El testimonio del funcionario policial que realizó el procedimiento no es prueba suficiente por sí solo para acreditar la comercialización de estupefacientes. El SCBA ha establecido que el testimonio policial autorreferente —quien narra un procedimiento que él mismo protagonizó— tiene valor probatorio limitado y requiere corroboración con prueba independiente. En causas de estupefacientes donde la única prueba del hecho es el relato policial (sin filmaciones, sin testigos civiles, sin escuchas telefónicas, sin actos de venta documentados), la condena no puede alcanzar el estándar de certeza apodíctica requerido.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 210 (valoración de la prueba — sana crítica racional)",
+      "Ley 23.737, art. 5 inc. c) y art. 14",
+      "CN, art. 18 (certeza para condenar)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA art. 210; Ley 23.737 arts. 5 y 14; CN art. 18",
+      "jurisprudencia_referente": "SCBA, P. 134.099, criterio sobre valoración del testimonio policial en estupefacientes; Cámara Penal La Plata, precedentes sobre insuficiencia del testimonio policial único para condena por comercialización; doctrina judicial sobre autovalidación policial en causas de estupefacientes",
+      "doctrina": "Maier, Tomo II, sobre valoración del testimonio policial; Cafferata Nores, 'La prueba en el proceso penal'"
+    },
+    "aplicacion_practica": "Ante una causa de estupefacientes respaldada exclusivamente en el relato de los agentes policiales actuantes, la defensa debe: (1) verificar si existe alguna prueba independiente que corrobore el procedimiento descrito por la policía; (2) señalar que el agente policial tiene interés en la causa (carrera, mérito, posible responsabilidad por procedimiento nulo); (3) solicitar la declaración de testigos civiles que hayan presenciado el procedimiento; (4) pedir filmaciones de cámaras cercanas que contradigan o corroboren el relato policial. Si no hay más prueba que el testimonio policial, argumentar que no se alcanza el estándar de certeza y que rige el in dubio pro reo.",
+    "condiciones_aplicacion": [
+      "Causas de estupefacientes donde la única prueba de la comercialización o del procedimiento de detención es el relato de los policías actuantes",
+      "Casos donde no hay filmaciones, testigos civiles ni otras pruebas objetivas del procedimiento"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando el testimonio policial está corroborado por filmaciones, testigos civiles, escuchas o prueba pericial independiente",
+      "El testimonio policial no es inválido por ser policial; lo que se cuestiona es su suficiencia cuando es la única prueba"
+    ],
+    "riesgos_procesales": [
+      "No cuestionar explícitamente la falta de corroboración independiente del relato policial",
+      "No solicitar las filmaciones de cámaras de seguridad cercanas al lugar del procedimiento en tiempo útil (antes de que sean sobreescritas)",
+      "No señalar el potencial conflicto de interés del testigo policial en la valoración de su propio procedimiento"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["testimonio_policial", "estupefacientes", "corroboracion_independiente", "certeza_condena", "in_dubio", "art5_inc_c", "autovalidacion"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-006",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "recalificacion_art14_consumo_personal",
+    "criterio": "Recalificación de art. 5 inc. c) a art. 14 segundo párrafo — vía defensiva para consumidores imputados por comercialización",
+    "regla_general": "La recalificación del tipo penal del art. 5 inc. c) (tenencia para comercialización) al art. 14 segundo párrafo (tenencia para consumo personal) es una estrategia defensiva legítima y de alta eficacia cuando la prueba de cargo no acredita el dolo de comercialización. La diferencia de penas es sustancial: art. 5 inc. c) prevé 4 a 15 años de prisión; art. 14 primer párrafo 1 a 6 años; y el art. 14 segundo párrafo fue declarado inconstitucional por 'Arriola' en condiciones de privacidad. La recalificación no requiere probar la inocencia sino demostrar que la prueba acusatoria es insuficiente para acreditar el elemento subjetivo del tipo más grave.",
+    "articulos_cpp": [
+      "Ley 23.737, art. 5 inc. c) y art. 14",
+      "CN, art. 18 (principio de culpabilidad — el tipo subjetivo debe probarse)",
+      "CSJN, 'Arriola', Fallos 332:1963 (inconstitucionalidad del art. 14 segundo párrafo)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "Ley 23.737 arts. 5 inc. c) y 14; CSJN 'Arriola'",
+      "jurisprudencia_referente": "Múltiples precedentes de Cámaras Penales PBA sobre recalificación de art. 5 inc. c) a art. 14 por insuficiencia probatoria del dolo de comercialización; CNCP, Sala IV, precedentes sobre recalificación en beneficio del imputado cuando no se acredita la finalidad comercial",
+      "doctrina": "Cornejo, 'Estupefacientes y precursores', pp. 130-160; Romero Villanueva, 'Ley de estupefacientes comentada', pp. 60-90"
+    },
+    "aplicacion_practica": "La estrategia de recalificación debe plantearse en: (1) la audiencia de prisión preventiva (para reducir la escala penal y facilitar la excarcelación); (2) el control de la acusación; (3) la defensa en juicio oral; (4) los recursos. La recalificación al art. 14 segundo párrafo combinada con la inconstitucionalidad del tipo penal por 'Arriola' puede conducir a la absolución cuando la tenencia fue en condiciones de privacidad. Documentar: condición de adicto/usuario del imputado, cantidad compatible con consumo, ausencia de indicios de comercialización.",
+    "condiciones_aplicacion": [
+      "Causas donde la acusación es por art. 5 inc. c) pero la prueba del dolo de comercialización es débil o inexistente",
+      "Casos donde el imputado es usuario habitual o adicto con historial documentable"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando hay prueba directa e inequívoca de actos de comercialización",
+      "No aplica cuando las circunstancias del procedimiento (lugar, cantidad fraccionada, materiales) acreditan objetivamente la finalidad comercial"
+    ],
+    "riesgos_procesales": [
+      "No plantear la recalificación en la audiencia de prisión preventiva, perdiendo la oportunidad de obtener excarcelación bajo la escala del art. 14",
+      "No acreditar la condición de usuario/adicto del imputado, dejando sin sustento la recalificación al art. 14 segundo párrafo",
+      "No vincular la recalificación con la doctrina 'Arriola' para plantear la inconstitucionalidad y obtener la absolución"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["recalificacion", "art14_ley23737", "art5_inc_c", "consumo_personal", "Arriola", "estupefacientes", "estrategia_defensiva"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-ESTUP-007",
+    "fuero": "penal_pba",
+    "instituto": "estupefacientes",
+    "subtipo": "tenencia_privada_Arriola_aplicacion",
+    "criterio": "Tenencia de estupefacientes en ámbito privado — aplicación directa de 'Arriola': condiciones y acreditación",
+    "regla_general": "La doctrina 'Arriola' (CSJN, Fallos 332:1963, 2009) exige para su aplicación que concurran acumulativamente: (1) tenencia de estupefacientes para consumo personal del propio tenedor; (2) realización en condiciones que no generen peligro concreto para terceros; (3) ausencia de exposición de terceros a la sustancia. La doctrina no se aplica automáticamente: cada caso requiere acreditar estas condiciones. La defensa tiene la carga de presentar los elementos fácticos que permitan al tribunal aplicar el estándar constitucional. Si se acreditan las condiciones, la norma penal (art. 14 segundo párrafo) no puede aplicarse por ser inconstitucional en ese caso concreto.",
+    "articulos_cpp": [
+      "CN, art. 19 (acciones privadas exentas de la autoridad de los órganos del Estado)",
+      "Ley 23.737, art. 14 segundo párrafo (tenencia para uso personal)",
+      "CADH, art. 11 (protección de la vida privada)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CN art. 19; Ley 23.737 art. 14; CADH art. 11",
+      "jurisprudencia_referente": "CSJN, 'Arriola, Sebastián y otros s/ causa N° 9080', A. 891. XLIV, 25/08/2009, Fallos 332:1963; CSJN, 'Bazterrica, Gustavo Mario', Fallos 308:1392 (1986) — primer precedente en el mismo sentido",
+      "doctrina": "Zaffaroni, 'El enemigo en el derecho penal'; Nino, 'Ética y derechos humanos', pp. 200-230"
+    },
+    "aplicacion_practica": "Para aplicar 'Arriola', la defensa debe acreditar ante el tribunal: (1) que la droga era para consumo personal exclusivo del imputado (declaración del propio imputado, informes médicos o toxicológicos, contexto de consumo personal); (2) que la tenencia se produjo en un domicilio privado o en condiciones que no exponían a terceros; (3) que no hubo terceros en el lugar al momento del procedimiento o que los terceros no tuvieron acceso a la sustancia. Ofrecer: informe de organismo de salud sobre el perfil de consumo del imputado; declaración de médico tratante si existe; constancias de tratamientos de desintoxicación. El tribunal debe declarar la inconstitucionalidad del tipo penal en el caso concreto.",
+    "condiciones_aplicacion": [
+      "Imputados por art. 14 segundo párrafo de la Ley 23.737 que son consumidores y tenían la sustancia en ámbito privado sin acceso de terceros",
+      "Casos donde el procedimiento policial se desarrolló en el domicilio del imputado sin otras personas presentes"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando la tenencia fue en la vía pública o en lugar con acceso de menores u otras personas vulnerables",
+      "No aplica cuando la cantidad excede lo razonable para consumo personal incluso para un adicto grave",
+      "No aplica cuando hay indicios de distribución aunque sea gratuita entre conocidos"
+    ],
+    "riesgos_procesales": [
+      "No acreditar las condiciones fácticas que habilitan la aplicación de 'Arriola', planteándolo como argumento abstracto",
+      "No solicitar expresamente la declaración de inconstitucionalidad del art. 14 segundo párrafo en el caso concreto",
+      "No proponer alternativas de abordaje de salud pública como medida alternativa a la pena"
+    ],
+    "jurisdiccion": "argentina_nacional",
+    "alcance": "criterios_generales",
+    "tags": ["Arriola", "tenencia_privada", "art14_segundo_parrafo", "art19_CN", "inconstitucionalidad", "consumo_personal", "ambito_privado"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-IPP-001",
+    "fuero": "penal_pba",
+    "instituto": "etapas_procesales",
+    "subtipo": "estandar_probatorio_IPP",
+    "criterio": "Estándar probatorio en IPP — mérito suficiente para imputar: probabilidad, no certeza",
+    "regla_general": "Durante la Investigación Penal Preparatoria (IPP), el estándar probatorio para imputar y mantener la investigación es la probabilidad positiva, no la certeza requerida para condenar. Para imputar se requiere que existan elementos que permitan afirmar que el hecho existió y que el imputado participó en él con una probabilidad superior a la improbabilidad. Sin embargo, la probabilidad suficiente para imputar no es suficiente para elevar a juicio ni para condenar: cada etapa procesal tiene su propio umbral probatorio. La defensa puede impugnar el mérito en IPP si los elementos son insuficientes para alcanzar el umbral de probabilidad requerido.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 157 (mérito para prisión preventiva)",
+      "CPP PBA (Ley 11.922), art. 334 (requerimiento de elevación a juicio — mérito suficiente)",
+      "CPP PBA (Ley 11.922), art. 323 (sobreseimiento — cuando no hay mérito)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA arts. 157, 334 y 323",
+      "jurisprudencia_referente": "SCBA, criterio sobre distinción de estándares probatorios según la etapa procesal; Cámara Penal La Plata, precedentes sobre control del mérito en IPP; CSJN, 'Casal', Fallos 328:3399 — distinción entre certeza de condena y probabilidad de la imputación",
+      "doctrina": "Maier, Tomo I, pp. 480-520 (estándares de prueba por etapa); Binder, 'Introducción al DPP', pp. 165-185"
+    },
+    "aplicacion_practica": "La defensa debe conocer en qué etapa está y cuál es el umbral probatorio que opera: (1) En IPP: probabilidad positiva para imputar, mérito suficiente para prisión preventiva; (2) Para elevar a juicio: el fiscal debe tener elementos suficientes para sostener la acusación ante un tribunal; (3) Para condenar: certeza apodíctica. Si en cualquier etapa la acusación no alcanza el umbral requerido, la defensa puede y debe plantear el sobreseimiento o la falta de mérito según corresponda. El control del estándar probatorio es una herramienta defensiva continua durante todo el proceso.",
+    "condiciones_aplicacion": [
+      "Toda etapa de la IPP donde la defensa evalúa si los elementos de prueba justifican la continuación de la investigación",
+      "Audiencias de prisión preventiva donde se discute el mérito suficiente para la medida cautelar"
+    ],
+    "exclusiones_comunes": [
+      "No aplica en juicio oral donde el estándar es la certeza para condenar, no la probabilidad de IPP",
+      "El umbral de IPP no puede usarse para sostener una condena"
+    ],
+    "riesgos_procesales": [
+      "Confundir los estándares probatorios de las distintas etapas y no controlar si la acusación alcanza el nivel requerido en cada una",
+      "No plantear el sobreseimiento cuando en IPP los elementos son insuficientes para mantener la probabilidad positiva",
+      "No diferencia la ausencia de prueba (base de sobreseimiento) de la insuficiencia de prueba (base de in dubio en juicio)"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["estandar_probatorio", "IPP", "probabilidad", "certeza", "merito_suficiente", "imputacion", "sobreseimiento"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-IPP-002",
+    "fuero": "penal_pba",
+    "instituto": "etapas_procesales",
+    "subtipo": "sobreseimiento_art323",
+    "criterio": "Sobreseimiento — art. 323 CPP PBA: causales, efectos de cosa juzgada y momento procesal oportuno",
+    "regla_general": "El sobreseimiento (art. 323 CPP PBA) es la resolución que pone fin al proceso con efecto de cosa juzgada material a favor del imputado. Sus causales son taxativas: inc. 1°) el hecho investigado no existe o no constituye delito; inc. 2°) el imputado no participó en el hecho; inc. 3°) existe una causa de justificación, inimputabilidad, inculpabilidad o excusa absolutoria; inc. 4°) la acción penal se extinguió (prescripción, muerte del imputado, etc.); inc. 5°) existe cosa juzgada. El sobreseimiento puede pedirse en cualquier etapa de la IPP y la defensa debe identificar la causal concreta para no confundir sus efectos. Una vez firme, impide perseguir al imputado por el mismo hecho.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 323 (causales de sobreseimiento)",
+      "CPP PBA (Ley 11.922), arts. 324 a 327 (procedimiento, recursos y efectos)",
+      "CN, art. 18 (garantía del ne bis in idem)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 323 a 327; CN art. 18",
+      "jurisprudencia_referente": "SCBA, P. 76.131, criterio sobre efectos del sobreseimiento firme; Cámara Penal La Plata, precedentes sobre distinción entre las causales del art. 323 y sus diferentes efectos prácticos",
+      "doctrina": "Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires', comentario arts. 323-327; Maier, Tomo II, sobre el sobreseimiento como resolución favorable"
+    },
+    "aplicacion_practica": "La defensa debe identificar la causal correcta para el sobreseimiento: (1) si no hay hecho o el hecho no es delito (inc. 1°), el sobreseimiento es más amplio y definitivo; (2) si la prueba no es suficiente para elevar a juicio (falta de mérito), hay que plantear también el sobreseimiento en la audiencia preliminar o al momento del requerimiento; (3) si hay prescripción de la acción (inc. 4°), verificar la fecha de comisión del hecho y el plazo prescriptivo del tipo penal imputado. El sobreseimiento firme tiene efecto de cosa juzgada material: ninguna nueva persecución es posible por el mismo hecho.",
+    "condiciones_aplicacion": [
+      "Toda IPP donde la prueba no alcanza el mérito para elevar a juicio o donde concurre alguna de las causales del art. 323",
+      "Causas con prescripción inminente o ya cumplida de la acción penal"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando la investigación está en etapa inicial y los elementos son insuficientes para evaluar el mérito (en ese caso, lo que procede es continuar la investigación)",
+      "El sobreseimiento por falta de mérito (cuando la prueba es insuficiente para elevar pero no se puede afirmar que el hecho no ocurrió) tiene efectos diferentes al sobreseimiento por hecho inexistente"
+    ],
+    "riesgos_procesales": [
+      "No identificar correctamente la causal del sobreseimiento y perder sus efectos específicos",
+      "No controlar el plazo de prescripción de la acción y perder la posibilidad de sobreseimiento por esa causal",
+      "No plantear el sobreseimiento en la audiencia preliminar cuando la prueba es manifiestamente insuficiente para el juicio"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["sobreseimiento", "art323_cpp", "cosa_juzgada", "causales_sobreseimiento", "ne_bis_in_idem", "prescripcion", "IPP"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-IPP-003",
+    "fuero": "penal_pba",
+    "instituto": "etapas_procesales",
+    "subtipo": "prision_preventiva_proporcionalidad",
+    "criterio": "Prisión preventiva — proporcionalidad y razonabilidad: la restricción de libertad no puede superar la pena que se podría imponer",
+    "regla_general": "La prisión preventiva debe ser proporcional: su duración y rigurosidad no puede exceder la pena que eventualmente podría imponerse al imputado si fuera condenado. Si el tiempo de prisión preventiva se aproxima o supera la pena probable en caso de condena (considerando la pena en expectativa, los atenuantes y la posible condicionalidad), la prisión preventiva se convierte en una pena anticipada que viola la presunción de inocencia. El criterio de proporcionalidad es independiente del criterio de peligro procesal: aunque exista peligro de fuga, si la pena probable es leve, la prisión preventiva prolongada es desproporcionada.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), arts. 157 y 158 (prisión preventiva y sus límites)",
+      "CPP PBA (Ley 11.922), art. 169 (excarcelación — criterios)",
+      "CADH, art. 7.5 (privación de libertad provisional debe ser razonable)",
+      "CIDH, Resolución 1/2008 — principios y buenas prácticas sobre protección de personas privadas de libertad"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA arts. 157, 158 y 169; CADH art. 7.5; PIDCP art. 9.3",
+      "jurisprudencia_referente": "CNCP Plenario 'Díaz Bessone', Acuerdo N°1/2008; Comisión IDH, Informe 35/07 — la proporcionalidad como límite de la prisión preventiva; SCBA, criterios sobre prisión preventiva y pena probable",
+      "doctrina": "Bovino, 'El encarcelamiento preventivo en los tratados de derechos humanos'; Solimine, 'Encarcelamiento preventivo y excarcelación'"
+    },
+    "aplicacion_practica": "Cuando el imputado lleva tiempo detenido preventivamente, la defensa debe calcular: (1) cuál es la pena mínima y máxima del delito imputado; (2) si hay atenuantes que reduzcan la pena probable; (3) si la condena podría ser condicional; (4) cuánto tiempo lleva en prisión preventiva. Si el tiempo de detención se acerca a la pena probable o la supera, plantear: (a) excarcelación por proporcionalidad; (b) morigeración a arresto domiciliario; (c) nulidad de la prórroga de la prisión preventiva. La proporcionalidad es un argumento adicional —no excluyente— del argumento de ausencia de peligros procesales.",
+    "condiciones_aplicacion": [
+      "Imputados que llevan tiempo prolongado en prisión preventiva en relación con la pena esperada",
+      "Causas donde la pena probable en caso de condena sería condicional o de corta duración"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando la pena probable es elevada y el tiempo de prisión preventiva es breve en relación a ella",
+      "El criterio de proporcionalidad no opera de forma mecánica: debe evaluarse en el contexto global del caso"
+    ],
+    "riesgos_procesales": [
+      "No calcular la relación entre el tiempo de prisión preventiva y la pena probable para presentarla como argumento de proporcionalidad",
+      "No solicitar la morigeración de la prisión preventiva a arresto domiciliario como alternativa intermedia",
+      "No relacionar la proporcionalidad con los tratados internacionales de derechos humanos que la fundamentan"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["prision_preventiva", "proporcionalidad", "pena_probable", "excarcelacion", "Diaz_Bessone", "CADH", "morigeracion"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-IPP-004",
+    "fuero": "penal_pba",
+    "instituto": "etapas_procesales",
+    "subtipo": "excarcelacion_criterios",
+    "criterio": "Excarcelación — arts. 169 y 189 CPP PBA: criterios, requisitos y vías para obtener la libertad durante el proceso",
+    "regla_general": "La excarcelación (arts. 169 y 189 CPP PBA) es el derecho del imputado a obtener su libertad durante el proceso mediante la constitución de una caución o el cumplimiento de las condiciones que fije el tribunal. Es excarcelable el imputado cuando: la pena en expectativa no supere los ocho años o permita condena de ejecución condicional; o cuando el tiempo de prisión preventiva supere el que correspondería cumplir en caso de condena con la pena máxima; o cuando no existan peligros procesales que justifiquen la detención. La excarcelación puede otorgarse bajo caución juratoria, real o personal según las circunstancias del caso.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 169 (excarcelación — causales)",
+      "CPP PBA (Ley 11.922), art. 189 (eximición de prisión)",
+      "CPP PBA (Ley 11.922), arts. 190 a 196 (cauciones)",
+      "CADH, art. 7.5 (derecho a ser juzgado en plazo razonable o ser puesto en libertad)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 169, 189, 190-196; CADH art. 7.5",
+      "jurisprudencia_referente": "SCBA, criterio sobre la excarcelación como regla y la detención como excepción; Cámara de Apelación y Garantías La Plata, precedentes sobre excarcelación bajo distintas causales del art. 169; CNCP Plenario 'Díaz Bessone' (aplicado por analogía)",
+      "doctrina": "Solimine, Mauricio L., 'Encarcelamiento preventivo y excarcelación', Ed. Ad-Hoc; Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires'"
+    },
+    "aplicacion_practica": "La estrategia de excarcelación debe evaluar: (1) si la pena en expectativa permite condena condicional (delitos con pena máxima de 3 años permiten condena condicional, art. 26 CP); (2) si el imputado tiene antecedentes que impedirían la condicionalidad; (3) si el tiempo de prisión preventiva se acerca al mínimo de la pena; (4) qué caución puede ofrecer el imputado (juratoria = simple promesa de presentarse; real = depósito de dinero o bienes; personal = fiadores). Presentar prueba concreta de arraigo: domicilio fijo, trabajo, familia en la jurisdicción, ausencia de antecedentes, ausencia de bienes en el exterior.",
+    "condiciones_aplicacion": [
+      "Imputados detenidos preventivamente en causas con pena en expectativa que permite condena condicional",
+      "Imputados cuyo tiempo de detención preventiva se aproxima al mínimo legal de la pena del delito imputado"
+    ],
+    "exclusiones_comunes": [
+      "No procede excarcelación cuando hay peligros procesales concretos no contrarrestados por las condiciones del imputado",
+      "No aplica cuando el imputado tiene condena anterior que impide la condicionalidad y el delito tiene pena elevada"
+    ],
+    "riesgos_procesales": [
+      "No identificar la causal concreta de excarcelación del art. 169 aplicable al caso, presentando un pedido genérico",
+      "No ofrecer prueba documental del arraigo en el momento de solicitar la excarcelación",
+      "No proponer el tipo de caución más adecuado a la situación económica del imputado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["excarcelacion", "art169_cpp", "art189_cpp", "caucion", "arraigo", "libertad_proceso", "pena_probable"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-IPP-005",
+    "fuero": "penal_pba",
+    "instituto": "etapas_procesales",
+    "subtipo": "plazo_investigacion_art283",
+    "criterio": "Plazo máximo de la IPP — art. 283 CPP PBA: vencimiento, prórroga y consecuencias defensivas",
+    "regla_general": "El art. 283 CPP PBA establece plazos máximos para la Investigación Penal Preparatoria: la investigación debe concluir en un plazo razonable y el juez puede fijar el plazo de conclusión. Vencido el plazo sin que el fiscal haya requerido la elevación a juicio, la defensa puede solicitar el sobreseimiento. Los plazos del art. 283 son una concreción del derecho al plazo razonable de los arts. 7.5 y 8.1 CADH. La dilación injustificada de la IPP habilita tanto el sobreseimiento por vencimiento de plazo como el planteo de violación del plazo razonable ante instancias superiores.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 283 (plazo máximo de la investigación penal preparatoria)",
+      "CADH, arts. 7.5 y 8.1 (plazo razonable)",
+      "CPP PBA, art. 323 inc. 4° (sobreseimiento por extinción de la acción penal)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA art. 283; CADH arts. 7.5 y 8.1; CPP PBA art. 323",
+      "jurisprudencia_referente": "SCBA, criterio sobre consecuencias del vencimiento del plazo del art. 283; Cámara Penal La Plata, precedentes sobre sobreseimiento por vencimiento de plazo de IPP; CSJN, 'Mattei', Fallos 272:188 — la duración del proceso tiene límites constitucionales",
+      "doctrina": "Pastor, 'El plazo razonable en el proceso del Estado de Derecho'; Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires'"
+    },
+    "aplicacion_practica": "La defensa debe: (1) registrar la fecha de inicio de la IPP y calcular el plazo del art. 283; (2) identificar si el plazo ha vencido o está próximo a vencer; (3) si el plazo venció y el fiscal no requirió la elevación, solicitar el sobreseimiento; (4) si el imputado está detenido y el plazo del art. 283 venció, el argumento de plazo razonable refuerza el pedido de excarcelación. Los plazos del art. 283 CPP PBA no se computan si la dilación fue provocada por planteos de la propia defensa, pero sí se computan cuando la demora es imputable al fiscal o al juez.",
+    "condiciones_aplicacion": [
+      "IPP que supera los plazos del art. 283 sin que el fiscal haya requerido la elevación a juicio",
+      "Causas con imputados detenidos preventivamente donde se superan los plazos de investigación"
+    ],
+    "exclusiones_comunes": [
+      "No aplica cuando la dilación es atribuible a planteos de la defensa que postergaron la investigación",
+      "La complejidad de la causa puede justificar la solicitud de prórroga del plazo del art. 283"
+    ],
+    "riesgos_procesales": [
+      "No controlar los plazos del art. 283 durante la IPP y perder la oportunidad de plantear el vencimiento",
+      "No distinguir entre dilaciones imputables al Estado (relevantes para el plazo razonable) y dilaciones imputables a la defensa",
+      "No relacionar el vencimiento del plazo del art. 283 con la excarcelación del imputado detenido"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["art283_cpp", "plazo_IPP", "sobreseimiento_vencimiento", "plazo_razonable", "CADH", "excarcelacion", "Mattei"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-REC-001",
+    "fuero": "penal_pba",
+    "instituto": "recursos",
+    "subtipo": "apelacion_IPP_art439",
+    "criterio": "Apelación en IPP — art. 439 CPP PBA: resoluciones apelables, plazo y efectos suspensivos",
+    "regla_general": "El recurso de apelación en la etapa de IPP (art. 439 CPP PBA) procede contra resoluciones expresamente declaradas apelables por la ley y contra aquellas que causen gravamen irreparable. Son apelables: el auto de prisión preventiva y sus prórrogas, el auto de procesamiento, la denegatoria de excarcelación, las resoluciones sobre medidas cautelares, el sobreseimiento, el auto de elevación a juicio y resoluciones sobre nulidades. El plazo general de apelación es de tres días desde la notificación. El efecto suspensivo depende de la naturaleza de la resolución apelada.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), art. 439 (apelación — resoluciones apelables)",
+      "CPP PBA (Ley 11.922), arts. 440 a 443 (procedimiento del recurso de apelación)",
+      "CPP PBA (Ley 11.922), art. 432 (principios generales de los recursos)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 432, 439-443",
+      "jurisprudencia_referente": "Cámara de Apelación y Garantías en lo Penal de La Plata, criterios sobre admisibilidad formal del recurso de apelación; SCBA, precedentes sobre el concepto de 'gravamen irreparable' como causal de apelabilidad",
+      "doctrina": "Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires', comentario arts. 439-443; Maier, Tomo II, sobre los recursos penales"
+    },
+    "aplicacion_practica": "La defensa debe: (1) verificar que la resolución que pretende apelar está incluida en las apelables del art. 439 o causa gravamen irreparable; (2) interponer el recurso dentro de los tres días del día siguiente a la notificación; (3) decidir si interpone el recurso con fundamentación in extenso o solicita plazo adicional para fundarlo ante la Cámara; (4) verificar si el recurso tiene efecto suspensivo (importante en resoluciones sobre libertad). El apelante debe indicar con precisión cuál es el agravio y por qué la resolución es errónea. La apelación de la prisión preventiva tiene efecto suspensivo: mientras se resuelve, el imputado permanece en la situación anterior.",
+    "condiciones_aplicacion": [
+      "Toda resolución de primera instancia en IPP que cause gravamen al imputado y sea apelable por art. 439 CPP PBA",
+      "Autos de prisión preventiva, denegatorias de excarcelación, sobreseimientos denegados, resoluciones sobre nulidades"
+    ],
+    "exclusiones_comunes": [
+      "No todas las resoluciones son apelables: las de mero trámite no lo son si no causan gravamen irreparable",
+      "La apelación no procede cuando la ley prevé un recurso específico distinto (ej.: casación)"
+    ],
+    "riesgos_procesales": [
+      "Dejar vencer el plazo de tres días para apelar por no computar correctamente desde la notificación",
+      "No fundar el recurso con la precisión necesaria sobre cuál es el agravio y en qué consiste el error de la resolución impugnada",
+      "No verificar el efecto (suspensivo o no) del recurso antes de presentarlo, para no perjudicar la situación del imputado"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["apelacion", "art439_cpp", "IPP", "prision_preventiva", "gravamen_irreparable", "plazo_recurso", "excarcelacion"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-REC-002",
+    "fuero": "penal_pba",
+    "instituto": "recursos",
+    "subtipo": "casacion_bonaerense_motivos",
+    "criterio": "Casación Penal Bonaerense — SCBA Sala Penal: motivos de procedencia, control de arbitrariedad y doctrina 'Casal'",
+    "regla_general": "El recurso de casación ante la Sala Penal del SCBA (arts. 450 y ss. CPP PBA) procede por: (1) inobservancia de normas procesales establecidas bajo pena de nulidad; (2) inobservancia o errónea aplicación de la ley sustantiva; (3) arbitrariedad de la sentencia. La doctrina 'Casal' (CSJN, 2005) exige que el tribunal de casación agote el máximo rendimiento revisorio posible, incluyendo el control de la valoración probatoria, limitado solo por lo que fue exclusivo de la inmediación. La casación bonaerense no puede limitarse al error formal o jurídico: debe revisar la sentencia en toda su extensión.",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), arts. 450 a 466 (recurso de casación)",
+      "CADH, art. 8.2.h (derecho al recurso amplio contra la sentencia condenatoria)",
+      "CSJN, 'Casal, Matías Eugenio', Fallos 328:3399 (2005)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+      "norma": "CPP PBA arts. 450-466; CADH art. 8.2.h; PIDCP art. 14.5",
+      "jurisprudencia_referente": "CSJN, 'Casal, Matías Eugenio', Fallos 328:3399, 20/09/2005 — la casación debe agotar el máximo rendimiento revisorio; SCBA, criterios sobre admisibilidad y procedencia del recurso de casación penal; CIDH, 'Mohamed c. Argentina', 23/11/2012",
+      "doctrina": "Pastor, Daniel R., 'La nueva imagen de la casación penal'; Maier, Tomo II, sobre los recursos extraordinarios"
+    },
+    "aplicacion_practica": "El recurso de casación debe: (1) identificar con precisión cuál de los motivos del art. 450 CPP PBA funda el recurso; (2) si se invoca arbitrariedad, demostrar que el razonamiento del tribunal viola la lógica, la experiencia o ignora prueba decisiva; (3) si se invoca errónea aplicación de ley, señalar exactamente qué norma se aplicó mal y cómo debió aplicarse; (4) pedir revisión amplia en los términos de 'Casal'. El defensor debe hacer un análisis pormenorizado de cada prueba que considera mal valorada, no una impugnación genérica. La casación bonaerense tiene plazo de 10 días para interponer y debe fundarse al momento de la interposición.",
+    "condiciones_aplicacion": [
+      "Sentencias condenatorias o resoluciones definitivas que causan gravamen irreparable en causas penales en PBA",
+      "Casos donde la sentencia contiene errores de valoración probatoria, de aplicación del derecho o vicios de razonamiento"
+    ],
+    "exclusiones_comunes": [
+      "No procede casación contra resoluciones de mero trámite o provisorias que no tengan carácter de definitivas",
+      "La casación no es una tercera instancia: no puede reexaminar cuestiones de hecho que dependen exclusivamente de la inmediación del juicio oral"
+    ],
+    "riesgos_procesales": [
+      "No identificar con precisión los motivos de casación y presentar un recurso genérico que no pasa el control de admisibilidad",
+      "Dejar vencer el plazo de 10 días para la presentación del recurso",
+      "No invocar la doctrina 'Casal' para exigir el máximo rendimiento revisorio de la Sala Penal del SCBA"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["casacion", "SCBA", "Casal", "arbitrariedad", "control_probatorio", "art450_cpp", "revision_amplia"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-REC-003",
+    "fuero": "penal_pba",
+    "instituto": "recursos",
+    "subtipo": "recurso_extraordinario_federal_penal",
+    "criterio": "Recurso extraordinario federal en materia penal — art. 14 Ley 48: procedencia, cuestión federal y arbitrariedad",
+    "regla_general": "El recurso extraordinario federal (art. 14, Ley 48) procede ante la CSJN cuando: (1) existe cuestión federal (interpretación de la CN, tratados internacionales o leyes federales); (2) la sentencia del tribunal superior de la causa es contraria al derecho federal invocado; (3) la sentencia es arbitraria (Fallos: doctrina de la arbitrariedad). En materia penal, las causales más frecuentes son: violación de garantías constitucionales (arts. 17, 18 y 19 CN; arts. CADH y PIDCP incorporados por art. 75 inc. 22 CN), arbitrariedad en la valoración probatoria, y aplicación inconstitucional de tipos penales. El REF debe ser precedido del recurso de casación (agotamiento de la instancia ordinaria).",
+    "articulos_cpp": [
+      "Ley 48, art. 14 (recurso extraordinario federal ante CSJN)",
+      "CN, arts. 17, 18 y 19 (garantías cuya violación habilita el REF)",
+      "CN, art. 75 inc. 22 (jerarquía constitucional de los tratados)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "Ley 48 art. 14; CN arts. 17, 18, 19 y 75 inc. 22",
+      "jurisprudencia_referente": "CSJN, 'Casal', Fallos 328:3399 — el REF procede para revisar la valoración probatoria cuando se viola el derecho de defensa; CSJN, doctrina de la arbitrariedad desde 'Colalillo' (1957); CSJN, Acordada 4/2007 — requisitos formales del REF",
+      "doctrina": "Hitters, Juan Carlos, 'Técnica de los recursos extraordinarios y de la casación'; Sagüés, Néstor Pedro, 'El recurso extraordinario'"
+    },
+    "aplicacion_practica": "El REF es el último recurso interno antes de acudir a organismos internacionales (CIDH). La defensa debe: (1) verificar que se agotaron todos los recursos ordinarios (casación) y que el tribunal superior de la causa ya se pronunció; (2) identificar la cuestión federal concreta (qué norma constitucional o convencional fue violada); (3) demostrar que la resolución impugnada fue contraria al derecho federal; (4) respetar los requisitos formales de la Acordada 4/2007 (extensión, carátula, etc.); (5) interponer dentro de los 10 días de notificada la sentencia de casación. El rechazo en CSJN por falta de fundamentación deja abierta la vía ante la CIDH.",
+    "condiciones_aplicacion": [
+      "Condenas firmes de primera instancia confirmadas en casación que involucren violación de garantías constitucionales",
+      "Casos donde la SCBA resolvió en contra del imputado en cuestiones de derecho constitucional o convencional"
+    ],
+    "exclusiones_comunes": [
+      "No procede REF si no se agotó previamente el recurso de casación (salvo el caso de salto de instancia)",
+      "No procede REF si la cuestión es de puro derecho local o procesal sin contenido constitucional"
+    ],
+    "riesgos_procesales": [
+      "No identificar la cuestión federal concreta y presentar un REF basado en disconformidad con la valoración probatoria sin anclaje constitucional",
+      "No respetar los requisitos formales de la Acordada 4/2007 (extensión máxima, carátula, etc.) que causan rechazo in limine",
+      "Dejar vencer el plazo de 10 días para interponer el REF después de la sentencia de casación"
+    ],
+    "jurisdiccion": "argentina_nacional",
+    "alcance": "criterios_generales",
+    "tags": ["REF", "recurso_extraordinario_federal", "CSJN", "cuestion_federal", "arbitrariedad", "Ley48", "garantias_constitucionales"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  },
+  {
+    "id": "PENAL-REC-004",
+    "fuero": "penal_pba",
+    "instituto": "recursos",
+    "subtipo": "queja_apelacion_denegada",
+    "criterio": "Queja por apelación o casación denegada — recurso directo ante la Cámara o SCBA para que revise la denegatoria",
+    "regla_general": "Cuando el juez de primera instancia deniega la concesión del recurso de apelación, o cuando el tribunal de casación deniega el REF, el agraviado puede ocurrir en queja directamente ante el tribunal superior (Cámara o SCBA respectivamente). La queja tiene por objeto que el tribunal superior revise si la denegatoria fue correcta o si el recurso debió ser concedido. La queja no suspende la ejecución de la resolución recurrida, salvo que el tribunal superior lo disponga expresamente. El plazo para interponer la queja es breve (generalmente 3 días ante la Cámara; 5 días ante SCBA por denegatoria del REF).",
+    "articulos_cpp": [
+      "CPP PBA (Ley 11.922), arts. 444 a 447 (queja por recurso denegado)",
+      "Ley 48, art. 15 (queja por denegatoria del REF)",
+      "CPP PBA, art. 432 (principio de doble instancia — fundamento de la queja)"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+      "norma": "CPP PBA arts. 444-447; Ley 48 art. 15",
+      "jurisprudencia_referente": "Cámara de Apelación y Garantías PBA, criterios sobre admisibilidad de la queja por recurso denegado; CSJN, criterios sobre la queja por denegatoria del REF (art. 15, Ley 48)",
+      "doctrina": "Bertolino, 'El Proceso Penal en la Provincia de Buenos Aires', comentario arts. 444-447; Hitters, 'Técnica de los recursos extraordinarios'"
+    },
+    "aplicacion_practica": "Ante una denegatoria de apelación o casación, la defensa debe: (1) verificar el plazo para interponer la queja (3 días ante Cámara por denegatoria de apelación; 5 días ante SCBA por denegatoria del REF); (2) fundamentar por qué la resolución que denegó el recurso fue errónea (el recurso cumplía los requisitos de admisibilidad); (3) presentar copia de la resolución denegatoria y del recurso que fue denegado; (4) solicitar que se conceda el recurso y que se suspenda la ejecución de la resolución impugnada mientras se tramita la queja. La queja es especialmente relevante cuando se rechaza la apelación de una prisión preventiva: permite que la Cámara revise la denegatoria de forma urgente.",
+    "condiciones_aplicacion": [
+      "Recursos de apelación o casación denegados por el tribunal inferior cuando la defensa considera que el recurso era admisible",
+      "Denegatoria del recurso extraordinario federal que el defensor considera injustificada"
+    ],
+    "exclusiones_comunes": [
+      "La queja no es un nuevo recurso de fondo: solo tiene por objeto que el tribunal superior revise si la denegatoria fue correcta",
+      "Si el recurso original efectivamente no cumplía los requisitos de admisibilidad, la queja tampoco prosperará"
+    ],
+    "riesgos_procesales": [
+      "Dejar vencer el breve plazo para interponer la queja (3 o 5 días según el caso)",
+      "No acompañar copia del recurso denegado y de la resolución denegatoria, causando inadmisibilidad de la queja",
+      "No solicitar la suspensión de la ejecución de la resolución recurrida mientras se tramita la queja"
+    ],
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "tags": ["queja", "apelacion_denegada", "casacion_denegada", "REF_denegado", "recurso_directo", "SCBA", "admisibilidad"],
+    "version": "1.0",
+    "fecha_actualizacion": "2026-04-07"
+  }
+]
