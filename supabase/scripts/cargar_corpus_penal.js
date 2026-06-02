@@ -84,7 +84,7 @@ async function procesarCriterio(criterio, indice, total) {
         alcance:          criterio.alcance          || 'criterios_generales',
         criterio:         criterio.criterio,
         regla_general:    criterio.regla_general,
-        articulos_ccyc:   criterio.articulos_cpp    || [],   // columna genérica en tabla
+        articulos_cpp:    criterio.articulos_cpp    || [],
         nivel_autoridad:  criterio.nivel_autoridad  || 'orientativo',
         data:             criterio,                          // JSON completo
         embedding:        embedding,

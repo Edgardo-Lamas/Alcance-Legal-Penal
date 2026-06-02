@@ -6,6 +6,14 @@
 ;(function () {
   'use strict'
 
+  // ── Constantes Supabase ───────────────────────────────────
+  const SUPABASE_URL = 'https://bwwlgfgjxslbavhfuhia.supabase.co'
+  const SUPABASE_ANON_KEY = [
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+    'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3d2xnZmdqeHNsYmF2aGZ1aGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMTcyOTMsImV4cCI6MjA4OTc5MzI5M30',
+    'kGWlM2Ekk5PJFQYz7sxsxN_TJpaUAlaKvYCa4VqEizw'
+  ].join('.')
+
   // ── Estado ───────────────────────────────────────────────
 
   let state = {
@@ -13,10 +21,9 @@
     isCausa: false,
     mevData: null,
     config: {
-      apiKey: '',
-      modelo: 'claude-sonnet-4-5-20251001',
       autoAnalizar: false,
     },
+    session: null, // access_token, email, user_id
     historial: [],
     analysisInProgress: false,
   }
@@ -30,9 +37,10 @@
   // ── Inicialización ────────────────────────────────────────
 
   async function init() {
-    await loadConfig()
+    await loadConfigAndSession()
     await loadHistorial()
     setupTabs()
+    setupAuthListeners()
     setupConfigListeners()
     setupAnalisisListeners()
     setupDocumentosListeners()
@@ -41,45 +49,171 @@
     renderHistorial()
   }
 
-  // ── Config ────────────────────────────────────────────────
+  // ── Config y Sesión ───────────────────────────────────────
 
-  async function loadConfig() {
+  async function loadConfigAndSession() {
     return new Promise((resolve) => {
-      chrome.storage.local.get(['alpConfig'], (result) => {
+      chrome.storage.local.get(['alpConfig', 'alpSession'], (result) => {
         if (result.alpConfig) {
           state.config = { ...state.config, ...result.alpConfig }
-          applyConfigToUI()
         }
+        if (result.alpSession) {
+          state.session = result.alpSession
+        }
+        applyConfigToUI()
+        applySessionToUI()
         resolve()
       })
     })
   }
 
   function applyConfigToUI() {
-    $('input-api-key').value = state.config.apiKey || ''
-    $('select-modelo').value = state.config.modelo || 'claude-sonnet-4-5-20251001'
-    $('toggle-auto-analizar').checked = state.config.autoAnalizar || false
+    const toggle = $('toggle-auto-analizar')
+    if (toggle) toggle.checked = state.config.autoAnalizar || false
+  }
+
+  function applySessionToUI() {
+    const secLogin = $('section-login')
+    const secAuth = $('section-authenticated')
+    const displayEmail = $('user-email-display')
+
+    if (state.session && state.session.access_token) {
+      if (secLogin) secLogin.classList.add('hidden')
+      if (secAuth) secAuth.classList.remove('hidden')
+      if (displayEmail) displayEmail.textContent = state.session.email || 'Conectado'
+    } else {
+      if (secLogin) secLogin.classList.remove('hidden')
+      if (secAuth) secAuth.classList.add('hidden')
+    }
   }
 
   function saveConfig() {
-    const key = $('input-api-key').value.trim()
-    const modelo = $('select-modelo').value
     const autoAnalizar = $('toggle-auto-analizar').checked
-    state.config = { apiKey: key, modelo, autoAnalizar }
+    state.config = { autoAnalizar }
     chrome.storage.local.set({ alpConfig: state.config }, () => {
       const saved = $('config-saved')
-      saved.classList.remove('hidden')
-      setTimeout(() => saved.classList.add('hidden'), 2000)
+      if (saved) {
+        saved.classList.remove('hidden')
+        setTimeout(() => saved.classList.add('hidden'), 2000)
+      }
     })
   }
 
-  function setupConfigListeners() {
-    $('btn-guardar-config').addEventListener('click', saveConfig)
-    $('btn-toggle-key').addEventListener('click', () => {
-      const input = $('input-api-key')
-      input.type = input.type === 'password' ? 'text' : 'password'
+  // ── Autenticación Supabase ────────────────────────────────
+
+  function setupAuthListeners() {
+    const btnLogin = $('btn-login')
+    const btnLogout = $('btn-logout')
+
+    if (btnLogin) {
+      btnLogin.addEventListener('click', handleLogin)
+    }
+    if (btnLogout) {
+      btnLogout.addEventListener('click', handleLogout)
+    }
+
+    // Permitir login presionando Enter
+    const passwordInput = $('login-password')
+    if (passwordInput) {
+      passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleLogin()
+      })
+    }
+  }
+
+  async function handleLogin() {
+    const email = $('login-email').value.trim()
+    const password = $('login-password').value
+
+    const errorContainer = $('login-error')
+    const errorMsg = $('login-error-msg')
+    const btnLogin = $('btn-login')
+
+    if (errorContainer) errorContainer.classList.add('hidden')
+
+    if (!email || !password) {
+      showLoginError('Ingresá correo electrónico y contraseña.')
+      return
+    }
+
+    btnLogin.disabled = true
+    btnLogin.textContent = 'Ingresando...'
+
+    try {
+      const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}))
+        const msg = errData.error_description || errData.error?.message || 'Error al iniciar sesión'
+        throw new Error(msg === 'Invalid login credentials' ? 'Credenciales de acceso inválidas.' : msg)
+      }
+
+      const data = await response.json()
+      
+      state.session = {
+        access_token: data.access_token,
+        email: data.user?.email || email,
+        user_id: data.user?.id
+      }
+
+      chrome.storage.local.set({ alpSession: state.session }, () => {
+        applySessionToUI()
+        // Limpiar campos
+        $('login-email').value = ''
+        $('login-password').value = ''
+      })
+
+    } catch (err) {
+      showLoginError(err.message)
+    } finally {
+      btnLogin.disabled = false
+      btnLogin.textContent = 'Ingresar'
+    }
+  }
+
+  function handleLogout() {
+    // Intenta notificar al backend de Supabase (fire and forget)
+    if (state.session && state.session.access_token) {
+      fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${state.session.access_token}`
+        }
+      }).catch(() => {})
+    }
+
+    state.session = null
+    chrome.storage.local.remove(['alpSession'], () => {
+      applySessionToUI()
     })
-    $('btn-config').addEventListener('click', () => switchTab('config'))
+  }
+
+  function showLoginError(msg) {
+    const errorContainer = $('login-error')
+    const errorMsg = $('login-error-msg')
+    if (errorContainer && errorMsg) {
+      errorContainer.classList.remove('hidden')
+      errorMsg.textContent = msg
+    }
+  }
+
+  function setupConfigListeners() {
+    const btnGuardar = $('btn-guardar-config')
+    if (btnGuardar) {
+      btnGuardar.addEventListener('click', saveConfig)
+    }
+    const btnConfig = $('btn-config')
+    if (btnConfig) {
+      btnConfig.addEventListener('click', () => switchTab('config'))
+    }
   }
 
   // ── Estado del MEV ────────────────────────────────────────
@@ -154,7 +288,7 @@
       renderCaratulaPreview(data.caratula)
       renderDocumentos(data.actuaciones)
 
-      if (state.config.autoAnalizar && state.config.apiKey) {
+      if (state.config.autoAnalizar && state.session && state.session.access_token) {
         runAnalysis()
       }
     }
@@ -193,15 +327,24 @@
   // ── Análisis con IA ───────────────────────────────────────
 
   function setupAnalisisListeners() {
-    $('btn-analizar').addEventListener('click', runAnalysis)
-    $('btn-reextraer').addEventListener('click', requestExtraction)
-    $('btn-copiar-analisis').addEventListener('click', copyAnalysis)
+    const btnAnalizar = $('btn-analizar')
+    if (btnAnalizar) {
+      btnAnalizar.addEventListener('click', runAnalysis)
+    }
+    const btnReextraer = $('btn-reextraer')
+    if (btnReextraer) {
+      btnReextraer.addEventListener('click', requestExtraction)
+    }
+    const btnCopiar = $('btn-copiar-analisis')
+    if (btnCopiar) {
+      btnCopiar.addEventListener('click', copyAnalysis)
+    }
   }
 
   async function runAnalysis() {
     if (state.analysisInProgress) return
-    if (!state.config.apiKey) {
-      showError('Configurá tu API Key de Anthropic en la pestaña Config.')
+    if (!state.session || !state.session.access_token) {
+      showError('Debés iniciar sesión en la pestaña Config antes de analizar.')
       switchTab('config')
       return
     }
@@ -214,14 +357,32 @@
     hideError()
     $('analisis-resultado').classList.add('hidden')
     $('analisis-loading').classList.remove('hidden')
-    setLoadingMsg('Preparando análisis...')
+    setLoadingMsg('Preparando datos del expediente...')
 
     try {
-      const prompt = buildPrompt(state.mevData)
-      setLoadingMsg('Analizando con IA (puede tardar hasta 30s)...')
-      const result = await callClaude(prompt)
-      renderAnalisis(result)
-      guardarEnHistorial(state.mevData, result)
+      const c = state.mevData.caratula || {}
+      const acts = state.mevData.actuaciones || []
+
+      // Hechos para admisibilidad (mínimo 20 caracteres)
+      const hechos = `Causa penal: "${c.caratula || 'Sin carátula'}" (Expediente Nro: ${c.numeroExpediente || 'No especificado'}). Imputado/a: ${c.imputado || 'No especificado'}. Delito investigado: ${c.delito || 'No especificado'}. Etapa: ${c.etapaProcesal || 'IPP'}. Cautelar: ${c.cautelar || 'No especificada'}.`
+
+      // Actuaciones estructuradas en texto plano
+      const documentacion_caso = acts.slice(0, 35).map((a, i) =>
+        `Actuación ${i + 1}: [${a.fecha || 'Sin fecha'}] - Tipo: ${a.tipo || 'N/A'} - Autor: ${a.autor || 'N/A'}${a.descripcion ? ` - Detalle: ${a.descripcion}` : ''}`
+      ).join('\n')
+
+      const apiData = {
+        hechos,
+        documentacion_caso,
+        tipo_penal: c.delito || 'No especificado',
+        etapa_procesal: c.etapaProcesal || 'IPP',
+        prueba_acusacion: acts.filter(a => a.tienePdf).map(a => a.tipo).slice(0, 5).join(', ') || 'Actuaciones del expediente'
+      }
+
+      setLoadingMsg('Analizando expediente con IA en el backend (hasta 45s)...')
+      const resultText = await callEdgeFunction(apiData)
+      renderAnalisis(resultText)
+      guardarEnHistorial(state.mevData, resultText)
     } catch (err) {
       showError(`Error en el análisis: ${err.message}`)
     } finally {
@@ -230,94 +391,43 @@
     }
   }
 
-  function buildPrompt(data) {
-    const c = data.caratula || {}
-    const acts = data.actuaciones || []
-
-    const actuacionesText = acts.slice(0, 30).map((a, i) =>
-      `${i + 1}. [${a.fecha || 'sin fecha'}] ${a.tipo || 'Actuación'} ${a.autor ? `(${a.autor})` : ''} ${a.tienePdf ? '📄' : ''}`
-    ).join('\n')
-
-    return `Analizá el siguiente expediente judicial del MEV de la SCBA:
-
-## DATOS DE CARÁTULA
-- Carátula: ${c.caratula || 'No disponible'}
-- Número de expediente: ${c.numeroExpediente || 'No disponible'}
-- Fuero: ${c.fuero || 'Penal'}
-- Departamento judicial: ${c.departamento || 'No disponible'}
-- Organismo: ${c.organismo || 'No disponible'}
-- Juez/a: ${c.juez || 'No disponible'}
-- Fiscal: ${c.fiscal || 'No disponible'}
-- Defensor/a: ${c.defensor || 'No disponible'}
-- Imputado/a: ${c.imputado || 'No disponible'}
-- Delito imputado: ${c.delito || 'No disponible'}
-- Etapa procesal: ${c.etapaProcesal || 'No disponible'}
-- Situación del imputado: ${c.situacion || 'No disponible'}
-- Cautelar vigente: ${c.cautelar || 'No disponible'}
-
-## ACTUACIONES DEL EXPEDIENTE (${data.totalActuaciones || acts.length} total)
-${actuacionesText || 'No se pudieron extraer las actuaciones.'}
-
----
-
-Por favor realizá el análisis completo en las 5 fases indicadas.`
-  }
-
-  async function callClaude(userPrompt) {
-    const SYSTEM_PROMPT = `Sos un asistente de defensa penal especializado en CPP PBA (Ley 11.922).
-Trabajás EXCLUSIVAMENTE desde la perspectiva de la defensa.
-El principio in dubio pro reo y la presunción de inocencia son tu punto de partida.
-
-Analizá el expediente en 5 fases y respondé con el siguiente formato exacto:
-
-**FASE 1 — Encuadre procesal**
-[etapa, situación del imputado, tribunal, fiscal, plazos, cautelares]
-
-**FASE 2 — Análisis de prueba de cargo**
-[contradicciones, prueba ilícita (art. 211 CPP PBA), cadena de custodia, testigos con interés]
-
-**FASE 3 — Nulidades y vicios procesales**
-[detención sin orden (art. 151), allanamiento irregular (art. 219), declaración sin letrado, violación art. 18 CN]
-
-**FASE 4 — Contraargumentación defensiva**
-[artículos CPP PBA, CP, jurisprudencia SCBA y CSJN aplicables]
-
-**FASE 5 — Recomendación estratégica**
-[nulidad, excarcelación (art. 169), sobreseimiento (art. 323), recurso extraordinario, CIDH]
-
-Referencias obligatorias:
-- Hábeas corpus: Ley 23.098 y art. 18 CN (NUNCA art. 405 CPP PBA)
-- Excarcelación: arts. 169 y 189 CPP PBA
-- Nulidades absolutas: arts. 201-210 CPP PBA (no requieren protesta previa)
-- Prisión preventiva: art. 157 CPP PBA — impugnar por art. 439 CPP PBA
-
-Cuando no hay información suficiente para una fase, indicalo claramente y señalá qué documentos del expediente se necesitarían para completar ese análisis.`
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+  async function callEdgeFunction(apiData) {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/analizar-caso`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': state.config.apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
+        'Authorization': `Bearer ${state.session.access_token}`
       },
-      body: JSON.stringify({
-        model: state.config.modelo,
-        max_tokens: 4096,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt }],
-      }),
+      body: JSON.stringify(apiData)
     })
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}))
-      if (response.status === 401) throw new Error('API Key inválida. Verificá la configuración.')
-      if (response.status === 429) throw new Error('Límite de API alcanzado. Esperá un momento.')
-      throw new Error(err?.error?.message || `Error ${response.status} de la API`)
+      const errText = await response.text()
+      let errMsg = `Error ${response.status} del servidor`
+      try {
+        const parsedErr = JSON.parse(errText)
+        errMsg = parsedErr.fundamento || parsedErr.error?.message || errMsg
+      } catch {}
+      throw new Error(errMsg)
     }
 
-    const data = await response.json()
-    return data.content?.[0]?.text || 'Sin respuesta de la IA.'
+    const res = await response.json()
+    if (!res.success) {
+      throw new Error(res.fundamento || 'El análisis fue rechazado por el sistema.')
+    }
+
+    const data = res.data || {}
+    
+    // Reconstruye el texto plano con marcas **FASE X** para compatibilidad con parseAnalisisFases
+    const textResult = 
+      `**FASE 1 — Encuadre procesal**\n${data.encuadre_procesal || 'No disponible.'}\n\n` +
+      `**FASE 2 — Análisis de prueba de cargo**\n${data.analisis_prueba_cargo || 'No disponible.'}\n\n` +
+      `**FASE 3 — Nulidades y vicios procesales**\n${data.nulidades_y_vicios || 'No disponible.'}\n\n` +
+      `**FASE 4 — Contraargumentación defensiva**\n${data.contraargumentacion || 'No disponible.'}\n\n` +
+      `**FASE 5 — Recomendación estratégica**\n${data.conclusion_defensiva || 'No disponible.'}\n\n` +
+      `**Limitaciones**\n${data.limitaciones || 'No disponible.'}`
+
+    return textResult
   }
 
   function renderAnalisis(text) {

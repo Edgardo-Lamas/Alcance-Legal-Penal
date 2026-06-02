@@ -148,38 +148,58 @@
   <!-- ══════════════════════════════════════════════════════ -->
   <div class="alp-panel hidden" id="tab-config">
     <div class="alp-config">
-      <div class="alp-config__section">
-        <h3 class="alp-config__title">API de Anthropic</h3>
+      <!-- Estado: No autenticado (Login Form) -->
+      <div class="alp-config__section" id="section-login">
+        <h3 class="alp-config__title">Iniciar Sesión</h3>
+        
         <div class="alp-form-group">
-          <label class="alp-label">API Key</label>
-          <div class="alp-input-wrap">
-            <input
-              type="password"
-              id="input-api-key"
-              class="alp-input"
-              placeholder="sk-ant-..."
-              autocomplete="off"
-            />
-            <button class="alp-btn alp-btn--icon alp-btn--inset" id="btn-toggle-key" title="Mostrar/ocultar">
-              <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
-            </button>
-          </div>
-          <p class="alp-hint">Tu API Key se guarda localmente en este navegador. Las llamadas se realizan directamente a Anthropic desde tu dispositivo.</p>
-          <p class="alp-hint alp-hint--warning">⚠ Versión beta — no compartir esta clave con terceros. En la versión final las llamadas pasarán por el backend de Alcance Legal Penal.</p>
+          <label class="alp-label" for="login-email">Correo Electrónico</label>
+          <input
+            type="email"
+            id="login-email"
+            class="alp-input"
+            placeholder="abogado@alcancelegal.com.ar"
+            autocomplete="email"
+          />
         </div>
 
         <div class="alp-form-group">
-          <label class="alp-label">Modelo</label>
-          <select id="select-modelo" class="alp-select">
-            <option value="claude-sonnet-4-5-20251001">claude-sonnet-4-5 (recomendado)</option>
-            <option value="claude-opus-4-5">claude-opus-4-5 (máxima capacidad)</option>
-            <option value="claude-haiku-4-5">claude-haiku-4-5 (más rápido)</option>
-          </select>
+          <label class="alp-label" for="login-password">Contraseña</label>
+          <input
+            type="password"
+            id="login-password"
+            class="alp-input"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
         </div>
 
-        <div class="alp-form-group">
+        <button class="alp-btn alp-btn--primary alp-btn--full" id="btn-login">
+          Ingresar
+        </button>
+
+        <div class="hidden alp-error" id="login-error" style="margin-top: 0.85rem;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="login-error-msg"></span>
+        </div>
+        
+        <p class="alp-hint" style="margin-top: 1rem;">
+          Iniciá sesión con tu cuenta de Alcance Legal Penal. Tus credenciales se validan de forma segura contra Supabase Auth.
+        </p>
+      </div>
+
+      <!-- Estado: Autenticado (Session Dashboard) -->
+      <div class="alp-config__section hidden" id="section-authenticated">
+        <h3 class="alp-config__title">Cuenta Conectada</h3>
+        
+        <div class="alp-form-group" style="margin-bottom: 1.25rem;">
+          <span class="alp-label">Usuario</span>
+          <div style="font-size: 0.85rem; font-weight: 600; color: var(--blanco); word-break: break-all;" id="user-email-display">-</div>
+        </div>
+
+        <div class="alp-form-group" style="margin-bottom: 1.25rem;">
           <label class="alp-toggle">
             <input type="checkbox" id="toggle-auto-analizar" />
             <span class="alp-toggle__track"></span>
@@ -187,10 +207,16 @@
           </label>
         </div>
 
-        <button class="alp-btn alp-btn--primary alp-btn--full" id="btn-guardar-config">
-          Guardar configuración
-        </button>
-        <div class="alp-config__saved hidden" id="config-saved">✓ Configuración guardada</div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="alp-btn alp-btn--primary" id="btn-guardar-config" style="flex: 1;">
+            Guardar
+          </button>
+          <button class="alp-btn alp-btn--ghost" id="btn-logout">
+            Salir
+          </button>
+        </div>
+        
+        <div class="alp-config__saved hidden" id="config-saved" style="margin-top: 0.75rem;">✓ Configuración guardada</div>
       </div>
 
       <div class="alp-config__section alp-config__section--info">
