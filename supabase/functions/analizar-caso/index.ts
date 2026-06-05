@@ -136,6 +136,7 @@ interface AnalizarCasoResponse {
     disclaimer: typeof DISCLAIMER
     meta: {
         criterios_utilizados: number
+        criterios_raw_rag?: number
         pipeline_version: string
         timestamp: string
     }
@@ -360,6 +361,91 @@ async function invocarRazonamiento(
 function parseJsonSafe(raw: string): unknown {
     const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim()
     return JSON.parse(cleaned)
+}
+
+// ============================================
+// CAPA 2 — VALIDACIÓN DE ANALOGÍA FÁCTICA
+// ============================================
+//
+// Segundo filtro del sistema de doble validación de jurisprudencia.
+// Cada criterio RAG recuperado se evalúa contra los hechos concretos
+// de la causa: ¿son análogos los hechos determinantes del fallo?
+// Nunca bloquea el pipeline — en caso de error devuelve todos los criterios.
+
+interface CriterioConAnalogia {
+    id: string
+    criterio: string
+    regla_general: string
+    articulos_cpp: string[]
+    similarity: number
+    analogia: 'directa' | 'parcial' | 'doble_filo' | 'inaplicable'
+    razon_analogia: string
+}
+
+async function validarAnalogiaFactica(
+    criterios: Array<{ id: string; criterio: string; regla_general: string; articulos_cpp: string[]; similarity: number }>,
+    body: AnalizarCasoRequest
+): Promise<CriterioConAnalogia[]> {
+    const fallback = (): CriterioConAnalogia[] =>
+        criterios.map(c => ({ ...c, analogia: 'directa' as const, razon_analogia: '' }))
+
+    if (!ANTHROPIC_API_KEY || criterios.length === 0) return fallback()
+
+    const criteriosList = criterios.map((c, i) =>
+        `${i + 1}. ID: ${c.id}\n   Criterio: ${c.criterio}\n   Regla: ${c.regla_general}`
+    ).join('\n\n')
+
+    const prompt =
+        `Causa: ${body.hechos.slice(0, 600)}\n` +
+        (body.tipo_penal           ? `Tipo penal: ${body.tipo_penal}\n` : '') +
+        (body.pretension_defensiva ? `Pretensión defensiva: ${body.pretension_defensiva}\n` : '') +
+        (body.prueba_acusacion     ? `Prueba cuestionada: ${body.prueba_acusacion.slice(0, 300)}\n` : '') +
+        `\nEvaluá cada criterio: ¿son los hechos determinantes del fallo análogos a esta causa?\n\n` +
+        criteriosList +
+        `\n\nResponde SOLO con JSON array (sin texto extra):\n` +
+        `[{"id":"...","analogia":"directa|parcial|doble_filo|inaplicable","razon":"una oración"}]\n\n` +
+        `- directa: hechos análogos, beneficia claramente a la defensa\n` +
+        `- parcial: analogía limitada, aplicar con precaución\n` +
+        `- doble_filo: puede ser utilizado en contra si se invoca sin cuidado\n` +
+        `- inaplicable: los hechos son distintos, no hay analogía real`
+
+    try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'x-api-key': ANTHROPIC_API_KEY,
+                'anthropic-version': '2023-06-01',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'claude-haiku-4-5-20251001',
+                max_tokens: 1024,
+                messages: [{ role: 'user', content: prompt }]
+            }),
+        })
+
+        if (!resp.ok) {
+            console.warn('[CAPA2] Haiku no disponible, usando criterios sin filtrar')
+            return fallback()
+        }
+
+        const data = await resp.json()
+        const validaciones = parseJsonSafe(data.content[0].text) as Array<{
+            id: string; analogia: 'directa' | 'parcial' | 'doble_filo' | 'inaplicable'; razon: string
+        }>
+
+        const vMap = new Map(validaciones.map(v => [v.id, v]))
+
+        return criterios
+            .filter(c => vMap.get(c.id)?.analogia !== 'inaplicable')
+            .map(c => {
+                const v = vMap.get(c.id)
+                return { ...c, analogia: v?.analogia ?? 'directa', razon_analogia: v?.razon ?? '' }
+            })
+    } catch {
+        console.warn('[CAPA2] Error en validación de analogía, usando criterios sin filtrar')
+        return fallback()
+    }
 }
 
 // ============================================
@@ -676,16 +762,21 @@ serve(async (req: Request) => {
         // ==========================================
         // FASE 2: RAG PENAL
         // ==========================================
-        const textoConsulta = [
-            body.hechos,
-            body.tipo_penal ? `Tipo penal: ${body.tipo_penal}` : '',
-            body.etapa_procesal ? `Etapa: ${body.etapa_procesal}` : '',
-            body.prueba_acusacion ? `Prueba de cargo: ${body.prueba_acusacion}` : '',
-            body.pretension_defensiva ? `Pretensión: ${body.pretension_defensiva}` : '',
-            body.documentacion_caso ? `Documentación del expediente: ${body.documentacion_caso.slice(0, 8000)}` : '',
-        ].filter(Boolean).join('\n\n')
+        //
+        // El query del RAG se construye con orden de prioridad explícita:
+        // pretension_defensiva primero (señal más fuerte), luego tipo_penal,
+        // etapa, y núcleo de hechos. La documentacion_caso se excluye
+        // deliberadamente: es extensa, diluye la señal semántica y el LLM
+        // la lee completa en Fase 3. Dos filtros > uno solo al final.
+        const queryRAG = [
+            body.pretension_defensiva ? `Objetivo defensivo: ${body.pretension_defensiva}` : '',
+            body.tipo_penal           ? `Tipo penal imputado: ${body.tipo_penal}` : '',
+            body.etapa_procesal       ? `Etapa procesal: ${body.etapa_procesal}` : '',
+            `Hechos: ${body.hechos.slice(0, 400)}`,
+            body.prueba_acusacion     ? `Prueba de cargo: ${body.prueba_acusacion.slice(0, 200)}` : '',
+        ].filter(Boolean).join('\n')
 
-        const embedding = await generarEmbedding(textoConsulta)
+        const embedding = await generarEmbedding(queryRAG)
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
         const rag = await retrieveCriteria(supabase, embedding)
@@ -706,10 +797,28 @@ serve(async (req: Request) => {
         }
 
         // ==========================================
+        // FASE 2.5: CAPA 2 — VALIDACIÓN DE ANALOGÍA FÁCTICA
+        // ==========================================
+        // Haiku evalúa si los hechos determinantes de cada criterio RAG
+        // son análogos a los de esta causa. Excluye inaplicables y anota
+        // parciales y doble-filo para que el LLM principal los trate correctamente.
+        const criteriosValidados = await validarAnalogiaFactica(rag.criterios, body)
+        console.log(`[CAPA2] ${rag.criterios.length} criterios RAG → ${criteriosValidados.length} validados`)
+
+        // ==========================================
         // FASE 3: RAZONAMIENTO GUIADO (LIS)
         // ==========================================
-        const criteriosTexto = rag.criterios.map((c) =>
-            `### Criterio: ${c.criterio} (${c.id})\n**Regla:** ${c.regla_general}\n**Artículos:** ${c.articulos_cpp?.join(', ') || 'N/A'}`
+        const ANALOGIA_LABEL: Record<string, string> = {
+            'directa':    '✓ Aplicable directamente a esta causa',
+            'parcial':    '⚡ Aplicable con precaución — analogía limitada',
+            'doble_filo': '⚠️ DOBLE FILO — puede ser usado en contra si se invoca sin cuidado',
+        }
+        const criteriosTexto = criteriosValidados.map((c) =>
+            `### Criterio: ${c.criterio} (${c.id})\n` +
+            `**Regla:** ${c.regla_general}\n` +
+            `**Artículos:** ${c.articulos_cpp?.join(', ') || 'N/A'}\n` +
+            `**Analogía con esta causa:** ${ANALOGIA_LABEL[c.analogia] ?? c.analogia}` +
+            (c.razon_analogia ? ` — ${c.razon_analogia}` : '')
         ).join('\n\n')
 
         const imagenesCount = body.imagenes?.length ?? 0
@@ -815,7 +924,8 @@ serve(async (req: Request) => {
             advertencias: validacion.status === 'limited' ? validacion.advertencias : undefined,
             disclaimer: DISCLAIMER,
             meta: {
-                criterios_utilizados: rag.criterios.length,
+                criterios_utilizados: criteriosValidados.length,
+                criterios_raw_rag: rag.criterios.length,
                 pipeline_version: `1.0-lis-${PROFILE_PENAL_PBA_CONFIG.id}`,
                 timestamp: new Date().toISOString()
             }

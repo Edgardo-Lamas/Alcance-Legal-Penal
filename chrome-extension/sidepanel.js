@@ -267,6 +267,33 @@
     })
   }
 
+  // P7: Banner de sesión expirada
+  function showSessionExpiredBanner() {
+    let banner = $('mev-session-expired')
+    if (!banner) {
+      banner = document.createElement('div')
+      banner.id = 'mev-session-expired'
+      banner.style.cssText = 'background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 12px;margin:8px 0;font-size:12px;display:flex;flex-direction:column;gap:6px;'
+      banner.innerHTML = `
+        <strong style="color:#856404">⚠️ Sesión del MEV expirada</strong>
+        <span style="color:#664d03">El MEV redirigió al login. Iniciá sesión nuevamente en la pestaña del MEV.</span>
+        <button id="btn-reabrir-mev" style="align-self:flex-start;padding:4px 10px;background:#ffc107;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;">Ir al MEV →</button>
+      `
+      const container = document.querySelector('.alp-main') || document.body
+      container.prepend(banner)
+
+      document.getElementById('btn-reabrir-mev').addEventListener('click', () => {
+        chrome.tabs.create({ url: 'https://mev.scba.gov.ar' })
+      })
+    }
+    banner.style.display = 'flex'
+  }
+
+  function hideSessionExpiredBanner() {
+    const banner = $('mev-session-expired')
+    if (banner) banner.style.display = 'none'
+  }
+
   function handleMevData(data) {
     if (!data || data.error) {
       setStatus('error', data?.error || 'Error al leer el MEV')
@@ -275,11 +302,13 @@
     }
 
     if (data.pageType === 'login') {
-      setStatus('warning', 'Debés loguearte en el MEV primero')
+      setStatus('warning', 'Sesión del MEV expirada')
+      showSessionExpiredBanner()
       showSection('mev-sin-causa')
-      $('mev-sin-causa').querySelector('p').textContent = 'Iniciá sesión en el MEV para continuar.'
       return
     }
+
+    hideSessionExpiredBanner()
 
     if (data.pageType === 'causa') {
       state.mevData = data

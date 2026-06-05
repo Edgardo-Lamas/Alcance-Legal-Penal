@@ -54,12 +54,17 @@
 
   function detectPageType() {
     const url = window.location.href
-    const title = document.title.toLowerCase()
     const body = document.body.innerText.toLowerCase()
 
-    if (url.includes('loguin') || body.includes('contraseña') && body.includes('usuario') && !body.includes('carátula')) {
+    // P7: Detectar login / sesión expirada con múltiples señales
+    const hasLoginForm = !!(
+      document.querySelector('input[name*="suar" i], input[name*="assword" i], input[id*="suar" i], input[id*="login" i]')
+    )
+    const hasLoginKeywords = body.includes('contraseña') && body.includes('usuario') && !body.includes('carátula')
+    if (url.includes('loguin') || url.includes('login') || hasLoginForm || hasLoginKeywords) {
       return 'login'
     }
+
     if (
       url.includes('causas') || url.includes('expediente') ||
       url.includes('actuacion') || url.includes('principal') ||
@@ -201,20 +206,50 @@
       })
     }
 
-    // Fallback: busca links de PDF directamente en la página
-    if (actuaciones.length === 0) {
-      const allPdfLinks = document.querySelectorAll('a[href*=".pdf"], a[href*="pdf"], a[href*="descargar"]')
-      allPdfLinks.forEach((link) => {
-        actuaciones.push({
-          fecha: null,
-          tipo: link.textContent.trim() || link.title || 'Documento',
-          autor: null,
-          descripcion: null,
-          tienePdf: true,
-          urlPdf: link.href,
-        })
+    // P5: Segundo barrido — capturar links de documentos fuera de tablas
+    // y filas ocultas por paginación ASP (display:none / visibility:hidden).
+    // El MEV clásico oculta filas antiguas en vez de eliminarlas del DOM.
+    const yaRegistrados = new Set(actuaciones.map((a) => a.urlPdf).filter(Boolean))
+
+    // Filas de tablas ocultas por ASP
+    document.querySelectorAll('tr').forEach((tr) => {
+      const style = window.getComputedStyle(tr)
+      if (style.display !== 'none' && style.visibility !== 'hidden') return
+
+      const cells = Array.from(tr.querySelectorAll('td'))
+      if (cells.length < 2) return
+      const pdfLinks = tr.querySelectorAll('a[href*="pdf" i], a[href*="download" i], a[href*="descargar" i]')
+      const urlPdf = pdfLinks.length > 0 ? (pdfLinks[0].href || null) : null
+      if (urlPdf && yaRegistrados.has(urlPdf)) return
+
+      const fechaCell = cells.find((c) => /\d{2}[\/\-]\d{2}[\/\-]\d{4}/.test(c.textContent))
+      actuaciones.push({
+        fecha: fechaCell?.textContent.trim() || null,
+        tipo: cells[1]?.textContent.trim() || 'Documento (paginado)',
+        autor: null,
+        descripcion: null,
+        tienePdf: urlPdf !== null,
+        urlPdf,
+        oculto: true,
       })
-    }
+      if (urlPdf) yaRegistrados.add(urlPdf)
+    })
+
+    // Links de documentos en cualquier parte de la página (fuera de tablas)
+    document.querySelectorAll('a').forEach((link) => {
+      const href = link.href || ''
+      const isDoc = /\.(pdf|doc|docx)/i.test(href) || /download|descargar|getdoc/i.test(href)
+      if (!isDoc || yaRegistrados.has(href)) return
+      actuaciones.push({
+        fecha: null,
+        tipo: link.textContent.trim() || link.title || 'Documento',
+        autor: null,
+        descripcion: null,
+        tienePdf: true,
+        urlPdf: href,
+      })
+      yaRegistrados.add(href)
+    })
 
     return actuaciones
   }
@@ -258,6 +293,41 @@
 
     return { pageType: 'other', url: window.location.href }
   }
+
+  // ── P6: Interceptor de popups ─────────────────────────────
+  // El MEV abre documentos con window.open() o target="_blank".
+  // El browser bloquea esos popups. Los interceptamos y pedimos
+  // al background que abra una pestaña real sin restricción.
+
+  function interceptPopups() {
+    // Interceptar target="_blank" en links de documentos
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a')
+      if (!link) return
+      const href = link.href
+      if (!href || href === '#' || href.startsWith('javascript')) return
+
+      const isDoc = /\.(pdf|doc|docx)/i.test(href) || /download|descargar|getdoc/i.test(href)
+      const isBlank = link.target === '_blank' || link.target === 'popup'
+      if (!isDoc && !isBlank) return
+
+      e.preventDefault()
+      e.stopPropagation()
+      chrome.runtime.sendMessage({ type: 'OPEN_IN_TAB', url: href })
+    }, true)
+
+    // Interceptar window.open para evitar que el bloqueador lo capture
+    const _open = window.open.bind(window)
+    window.open = function (url, target, features) {
+      if (url && typeof url === 'string' && url.startsWith('http')) {
+        chrome.runtime.sendMessage({ type: 'OPEN_IN_TAB', url })
+        return null
+      }
+      return _open(url, target, features)
+    }
+  }
+
+  interceptPopups()
 
   // ── Comunicación con background/side panel ────────────────
 

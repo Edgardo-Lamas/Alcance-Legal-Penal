@@ -38,6 +38,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true // respuesta asíncrona
   }
 
+  // P6: Abrir URL en nueva pestaña (elude el bloqueador de popups)
+  if (message.type === 'OPEN_IN_TAB') {
+    if (message.url) {
+      chrome.tabs.create({ url: message.url, active: false })
+    }
+    sendResponse({ ok: true })
+    return true
+  }
+
   if (message.type === 'GET_TAB_STATUS') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0]

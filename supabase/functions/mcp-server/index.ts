@@ -100,8 +100,8 @@ Usar siempre que el usuario comparta hechos de una causa penal para analizar.`,
 const TOOL_BUSCAR_JURISPRUDENCIA = {
     name: 'buscar_jurisprudencia',
     description: `Busca criterios jurisprudenciales y doctrinarios en el corpus penal PBA verificado.
-Útil para encontrar precedentes de la SCBA y CSJN aplicables a un instituto procesal específico,
-antes o después de analizar una causa.`,
+Útil para encontrar precedentes de la SCBA y CSJN aplicables a un instituto procesal específico.
+Para mejores resultados, incluir pretension_defensiva y hechos_clave cuando se tiene contexto de la causa.`,
     inputSchema: {
         type: 'object',
         properties: {
@@ -113,12 +113,122 @@ antes o después de analizar una causa.`,
                 type: 'string',
                 description: 'Filtro por instituto procesal: nulidades, excarcelacion, prueba, garantias',
             },
+            pretension_defensiva: {
+                type: 'string',
+                description: 'Objetivo concreto de la defensa para esta causa (ej: "nulidad del reconocimiento en rueda", "excarcelación por exceso de plazo")',
+            },
+            hechos_clave: {
+                type: 'string',
+                description: 'Hechos más relevantes de la causa para afinar la analogía fáctica (máx. 300 chars)',
+            },
         },
         required: ['consulta'],
     },
 }
 
+const TOOL_GUARDAR_BRIEF = {
+    name: 'guardar_brief_expediente',
+    description: `Guarda o actualiza el brief estructurado de un expediente en Supabase.
+Llamar siempre al cerrar una sesión de trabajo con una causa para preservar el contexto.
+En la próxima sesión, obtener_brief_expediente recupera este resumen sin necesidad de releer PDFs.`,
+    inputSchema: {
+        type: 'object',
+        properties: {
+            numero_expediente: {
+                type: 'string',
+                description: 'Número de expediente (ej: "LP-12345-2023", "IPP 23456/2024")',
+            },
+            nombre_imputado: { type: 'string', description: 'Nombre completo del imputado/condenado' },
+            condena_o_situacion: { type: 'string', description: 'Condena o situación procesal actual (ej: "3 años, TOC 1 Lomas, 12/03/2023, firme")' },
+            delito: { type: 'string', description: 'Tipo penal imputado o delito condenado (art. CP)' },
+            etapa_procesal: { type: 'string', description: 'Etapa actual: IPP, intermedia, juicio_oral, ejecucion, recursos' },
+            defensor: { type: 'string', description: 'Nombre del defensor y matrícula si se conoce' },
+            situacion_actual: { type: 'string', description: 'Última resolución o estado del expediente con fecha' },
+            obstaculo_central: { type: 'string', description: 'Principal argumento o hecho adverso que enfrenta la defensa' },
+            proximo_paso: { type: 'string', description: 'Acción procesal pendiente más urgente' },
+            notas: { type: 'string', description: 'Información adicional relevante: unidad penitenciaria, vencimiento de plazos, contactos' },
+        },
+        required: ['numero_expediente'],
+    },
+}
+
+const TOOL_OBTENER_BRIEF = {
+    name: 'obtener_brief_expediente',
+    description: `Recupera el brief guardado de un expediente para retomar el trabajo sin releer PDFs.
+Llamar al inicio de cualquier sesión de trabajo con una causa conocida.`,
+    inputSchema: {
+        type: 'object',
+        properties: {
+            numero_expediente: {
+                type: 'string',
+                description: 'Número de expediente a recuperar',
+            },
+        },
+        required: ['numero_expediente'],
+    },
+}
+
 // ─── Handlers de herramientas ───────────────────────────────────────────────
+
+async function ejecutarGuardarBrief(args: Record<string, string>): Promise<string> {
+    const { numero_expediente, ...resto } = args
+    if (!numero_expediente) return 'Error: numero_expediente es requerido.'
+
+    const datos = {
+        nombre_imputado:      resto.nombre_imputado      || null,
+        condena_o_situacion:  resto.condena_o_situacion  || null,
+        delito:               resto.delito               || null,
+        etapa_procesal:       resto.etapa_procesal       || null,
+        defensor:             resto.defensor             || null,
+        situacion_actual:     resto.situacion_actual     || null,
+        obstaculo_central:    resto.obstaculo_central    || null,
+        proximo_paso:         resto.proximo_paso         || null,
+        notas:                resto.notas                || null,
+    }
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    const { data, error } = await supabase.rpc('upsert_brief_expediente', {
+        p_numero_expediente: numero_expediente,
+        p_datos: datos,
+    })
+
+    if (error) return `Error al guardar el brief: ${error.message}`
+
+    const fechaSesion = new Date(data.ultima_sesion).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })
+    return `✅ Brief guardado para expediente **${numero_expediente}**\nÚltima sesión registrada: ${fechaSesion}\n\nEn la próxima sesión, usá \`obtener_brief_expediente\` con este número para retomar sin releer los documentos.`
+}
+
+async function ejecutarObtenerBrief(args: Record<string, string>): Promise<string> {
+    const { numero_expediente } = args
+    if (!numero_expediente) return 'Error: numero_expediente es requerido.'
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+    const { data, error } = await supabase
+        .from('briefs_expediente')
+        .select('*')
+        .eq('numero_expediente', numero_expediente)
+        .maybeSingle()
+
+    if (error) return `Error al recuperar el brief: ${error.message}`
+    if (!data) return `No se encontró brief guardado para el expediente "${numero_expediente}". Si es la primera sesión con esta causa, trabajá normalmente y guardá el brief al finalizar.`
+
+    const d = data.datos as Record<string, string | null>
+    const fechaSesion = new Date(data.ultima_sesion).toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' })
+
+    const campos = [
+        d.nombre_imputado     ? `**Imputado/Condenado:** ${d.nombre_imputado}` : '',
+        d.condena_o_situacion ? `**Condena/Situación:** ${d.condena_o_situacion}` : '',
+        d.delito              ? `**Delito:** ${d.delito}` : '',
+        d.etapa_procesal      ? `**Etapa procesal:** ${d.etapa_procesal}` : '',
+        d.defensor            ? `**Defensor:** ${d.defensor}` : '',
+        d.situacion_actual    ? `**Situación actual:** ${d.situacion_actual}` : '',
+        d.obstaculo_central   ? `**Obstáculo central:** ${d.obstaculo_central}` : '',
+        d.proximo_paso        ? `**Próximo paso:** ${d.proximo_paso}` : '',
+        d.notas               ? `**Notas:** ${d.notas}` : '',
+    ].filter(Boolean).join('\n')
+
+    return `## Brief — Expediente ${numero_expediente}\n*Última sesión: ${fechaSesion}*\n\n${campos}`
+}
 
 async function ejecutarAnalizarCaso(args: Record<string, string>): Promise<string> {
     const resp = await fetch(`${SUPABASE_URL}/functions/v1/analizar-caso`, {
@@ -172,6 +282,14 @@ ${data.advertencias?.length ? `\n⚠️ Advertencias: ${data.advertencias.join('
 }
 
 async function ejecutarBuscarJurisprudencia(args: Record<string, string>): Promise<string> {
+    // Capa 1: si hay contexto de causa, construir query contextualizado.
+    // Pretension defensiva y hechos clave al frente — señal semántica más fuerte.
+    const queryEmbedding = [
+        args.pretension_defensiva ? `Objetivo defensivo: ${args.pretension_defensiva}` : '',
+        args.consulta,
+        args.hechos_clave         ? `Hechos: ${args.hechos_clave.slice(0, 300)}` : '',
+    ].filter(Boolean).join('\n')
+
     // Generar embedding de la consulta via OpenAI
     const embeddingResp = await fetch('https://api.openai.com/v1/embeddings', {
         method: 'POST',
@@ -180,7 +298,7 @@ async function ejecutarBuscarJurisprudencia(args: Record<string, string>): Promi
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-            input: args.consulta,
+            input: queryEmbedding,
             model: 'text-embedding-ada-002',
         }),
     })
@@ -205,9 +323,12 @@ async function ejecutarBuscarJurisprudencia(args: Record<string, string>): Promi
         return `No se encontraron criterios jurisprudenciales para: "${args.consulta}". Probá con otros términos o ampliá la consulta.`
     }
 
-    const resultados = criterios.map((c: Record<string, string>, i: number) =>
-        `### ${i + 1}. ${c.nombre || c.instituto || 'Criterio'}\n${c.contenido || c.texto || ''}\n${c.fuente ? `*Fuente: ${c.fuente}*` : ''}`
-    ).join('\n\n')
+    const resultados = criterios.map((c: Record<string, unknown>, i: number) => {
+        const data = c.data as Record<string, unknown> | null
+        const fuente = data?.fuente as Record<string, string> | null
+        const fuenteTexto = fuente?.norma || fuente?.jurisprudencia_referente || ''
+        return `### ${i + 1}. ${c.criterio || c.instituto || 'Criterio'}\n${c.regla_general || ''}\n${fuenteTexto ? `*Fuente: ${fuenteTexto}*` : ''}`
+    }).join('\n\n')
 
     return `## Jurisprudencia encontrada para: "${args.consulta}"\n\n${resultados}\n\n---\n*Corpus: Alcance Legal Penal — CPP PBA verificado*`
 }
@@ -223,6 +344,10 @@ async function handleToolCall(params: { name: string; arguments: Record<string, 
             text = await ejecutarAnalizarCaso(args)
         } else if (name === 'buscar_jurisprudencia') {
             text = await ejecutarBuscarJurisprudencia(args)
+        } else if (name === 'guardar_brief_expediente') {
+            text = await ejecutarGuardarBrief(args)
+        } else if (name === 'obtener_brief_expediente') {
+            text = await ejecutarObtenerBrief(args)
         } else {
             return { isError: true, content: [{ type: 'text', text: `Herramienta desconocida: ${name}` }] }
         }
@@ -294,7 +419,7 @@ serve(async (req) => {
 
         case 'tools/list':
             return jsonResponse(id, {
-                tools: [TOOL_ANALIZAR_CASO, TOOL_BUSCAR_JURISPRUDENCIA],
+                tools: [TOOL_ANALIZAR_CASO, TOOL_BUSCAR_JURISPRUDENCIA, TOOL_GUARDAR_BRIEF, TOOL_OBTENER_BRIEF],
             })
 
         case 'tools/call':
