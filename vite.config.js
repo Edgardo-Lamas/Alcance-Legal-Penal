@@ -2,15 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const base = process.env.NODE_ENV === 'production' ? '/Alcance-Legal-Penal/' : '/'
-
-export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/Alcance-Legal-Penal/' : '/',
+export default defineConfig(() => ({
+  base: '/',
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      base: base,
+      base: '/',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'pwa-192.png', 'pwa-512.png'],
       manifest: {
         name: 'Alcance Legal Penal',
@@ -20,8 +18,8 @@ export default defineConfig(({ command }) => ({
         background_color: '#0f172a',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/Alcance-Legal-Penal/',
-        scope: '/Alcance-Legal-Penal/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'pwa-192.png',
@@ -39,7 +37,7 @@ export default defineConfig(({ command }) => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        navigateFallback: '/Alcance-Legal-Penal/',
+        navigateFallback: '/',
         navigateFallbackDenylist: [/^\/api\//],
       }
     })
