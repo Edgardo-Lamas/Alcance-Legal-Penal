@@ -95,45 +95,45 @@ const MOCK_RESPONSES = {
         estado_detalle: 'Requiere revisión de los puntos señalados',
         consistencia: {
             valor: 'PARCIAL',
-            explicacion: 'La estrategia presenta líneas argumentales sólidas pero contiene supuestos implícitos no validados e inconsistencias que podrían afectar su efectividad.',
-            advertencia: 'Se recomienda revisar los puntos señalados antes de avanzar con la ejecución de la estrategia.'
+            explicacion: 'La estrategia defensiva presenta una línea argumental principal sólida (nulidad del procedimiento de detención), pero contiene supuestos implícitos no validados que podrían comprometer su efectividad si la acusación los controvierte. El objetivo de sobreseimiento es alcanzable solo si la nulidad prospera; la estrategia carece de línea subsidiaria para el caso de que el planteo sea rechazado.',
+            advertencia: 'Antes de avanzar con la presentación, refuerce la estrategia con una línea subsidiaria que no dependa exclusivamente del éxito del planteo de nulidad.'
         },
         observaciones: [
             {
                 tipo: 'supuesto_implicito',
                 codigo: 'OBS-001',
-                descripcion: 'Se asume que la contraparte no cuestionará la validez del contrato.',
-                impacto: 'Si la validez del instrumento es cuestionada, la estrategia probatoria actual resultaría insuficiente para sostener la pretensión.',
-                severidad: 'media'
+                descripcion: 'La estrategia asume que el tribunal acogerá el planteo de nulidad sin contemplar el escenario en que lo rechace.',
+                impacto: 'Si la nulidad no prospera, la defensa queda sin argumentos para el fondo del caso. El objetivo de sobreseimiento no podría alcanzarse por la vía subsidiaria.',
+                severidad: 'alta'
             },
             {
-                tipo: 'inconsistencia',
+                tipo: 'riesgo_no_contemplado',
                 codigo: 'OBS-002',
-                descripcion: 'El objetivo de obtener daños punitivos contradice la etapa procesal declarada.',
-                impacto: 'Los daños punitivos requieren fundamentación diferenciada (art. 52 bis LDC) no contemplada en la estrategia propuesta.',
-                severidad: 'alta'
+                descripcion: 'La estrategia no contempla la posibilidad de prueba independiente que no dependa de la detención cuestionada.',
+                impacto: 'Si existe prueba obtenida por vía autónoma (doctrina del árbol envenenado — excepciones art. 211 CPP PBA), la exclusión solicitada podría ser parcial y no eliminar todos los elementos de cargo.',
+                severidad: 'media'
             }
         ],
         recomendaciones: [
             {
                 prioridad: 'alta',
-                accion: 'Incorporar línea argumental subsidiaria para el supuesto de cuestionamiento de validez contractual.'
+                accion: 'Desarrollar una línea argumental subsidiaria sobre insuficiencia probatoria (art. 323 inc. 3 CPP PBA) para el caso en que el planteo de nulidad sea rechazado.'
             },
             {
                 prioridad: 'alta',
-                accion: 'Reformular pretensión de daños punitivos o desarrollar fundamentación normativa específica.'
+                accion: 'Relevar si existe prueba de cargo independiente de la detención cuestionada y anticipar su tratamiento en la estrategia.'
             },
             {
                 prioridad: 'media',
-                accion: 'Considerar prueba pericial contable para acreditar cuantificación del daño con mayor precisión.'
+                accion: 'Incorporar al planteo de nulidad el análisis de la cadena de custodia de los elementos secuestrados, cuya regularidad está vinculada a la validez del procedimiento.'
             }
         ],
         advertencias: {
-            principal: 'La auditoría detecta patrones potencialmente problemáticos. La decisión final sobre la estrategia corresponde al profesional actuante.',
+            principal: 'La auditoría evalúa consistencia lógica y detecta riesgos, no garantiza resultados procesales. La decisión final corresponde al profesional actuante.',
             items: [
-                'Este dictamen evalúa consistencia lógica, no garantiza resultados procesales.',
-                'Supuestos no declarados pueden contener riesgos adicionales no identificados.',
-                'La validación final de la estrategia requiere conocimiento del contexto judicial específico.'
+                'Este dictamen evalúa coherencia interna de la estrategia, no el mérito del caso.',
+                'Supuestos no declarados por el abogado pueden contener riesgos adicionales no identificados.',
+                'La validación final requiere conocimiento completo del expediente.'
             ]
         }
     },
@@ -142,53 +142,65 @@ const MOCK_RESPONSES = {
         numero_informe: `ALC-RED-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 100000)).padStart(6, '0')}`,
         fecha_emision: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
         estado: 'BORRADOR ASISTIDO',
-        estado_detalle: 'Documento de trabajo - NO PRESENTAR sin revisión profesional',
-        tipo_escrito: 'Demanda por Incumplimiento Contractual',
-        contenido: `PROMUEVE DEMANDA POR INCUMPLIMIENTO CONTRACTUAL
+        estado_detalle: 'Documento de trabajo — NO PRESENTAR sin revisión profesional',
+        tipo_escrito: 'Excarcelación / Morigeración de Prisión Preventiva',
+        contenido: `SOLICITA EXCARCELACIÓN — ART. 169 CPP PBA
 
-Sr. Juez:
+Sr./Sra. Juez/a de Garantías:
 
-[Nombre del letrado], abogado, T° [...] F° [...] del C.P.A.C.F., constituyendo domicilio electrónico en [...] y domicilio procesal en [...], en representación de [NOMBRE DEL ACTOR], según poder que se adjunta, a V.S. respetuosamente digo:
+[COMPLETAR: Nombre del letrado], abogado/a, T° [COMPLETAR] F° [COMPLETAR] del Colegio de Abogados del Departamento Judicial [COMPLETAR], constituyendo domicilio electrónico en [COMPLETAR] y domicilio procesal en [COMPLETAR], en representación de [COMPLETAR: nombre del imputado], a V.S. respetuosamente digo:
 
 I. OBJETO
-Que vengo a promover formal demanda por incumplimiento contractual contra [NOMBRE DEL DEMANDADO], con domicilio en [...], por la suma de PESOS [MONTO] ($[...]) o lo que en más o en menos resulte de la prueba a producirse, con más sus intereses y costas.
+Que vengo a solicitar la EXCARCELACIÓN de mi asistido/a bajo caución [real/personal] conforme lo previsto por los arts. 169 y 189 del CPP PBA (Ley 11.922), por las razones de hecho y de derecho que a continuación expongo.
 
-II. HECHOS
-[SECCIÓN PENDIENTE - Requiere desarrollo según cronología del caso]
+II. HECHOS Y ANTECEDENTES
+[COMPLETAR: Narrar los hechos desde la perspectiva de la defensa, incluyendo: fecha de detención, imputación formulada, tiempo de detención transcurrido, situación personal del imputado]
 
 III. DERECHO
-[SECCIÓN PENDIENTE - Ajustar fundamentación a jurisdicción específica]
+El art. 169 del CPP PBA establece que la excarcelación procederá cuando no concurran los peligros procesales previstos en el art. 157.
 
-...`,
+Los peligros procesales del art. 157 CPP PBA (peligro de fuga y peligro de entorpecimiento de la investigación) NO se verifican en autos por las siguientes razones:
+
+Respecto del peligro de fuga: mi asistido/a cuenta con [COMPLETAR: arraigo —domicilio fijo, trabajo, núcleo familiar—], lo que descarta objetivamente la posibilidad de sustracción al proceso (arts. 148 y 157 CPP PBA).
+
+Respecto del peligro de entorpecimiento: [COMPLETAR: razones por las que no existe riesgo de entorpecimiento — etapa procesal, prueba ya colectada, etc.]
+
+IV. PETITORIO
+Por todo lo expuesto, a V.S. solicito:
+1. Se tenga por presentado el presente escrito.
+2. Se OTORGUE la excarcelación de [COMPLETAR: nombre] bajo caución [real/personal] de PESOS [COMPLETAR: monto] (arts. 169 y 189 CPP PBA).
+3. Oportunamente, se haga lugar a lo solicitado con costas.
+
+Proveer de conformidad será justicia.`,
         secciones_pendientes: [
             {
-                seccion: 'II. HECHOS',
-                motivo: 'Requiere desarrollo detallado según cronología específica del caso',
+                seccion: 'Identificación del letrado',
+                motivo: 'Completar T°, F°, Colegio, domicilios electrónico y procesal',
                 criticidad: 'alta'
             },
             {
-                seccion: 'III. DERECHO',
-                motivo: 'Ajustar citas normativas a la jurisdicción y fuero correspondiente',
+                seccion: 'II. HECHOS Y ANTECEDENTES',
+                motivo: 'Narrar los hechos del caso: detención, imputación, tiempo transcurrido',
                 criticidad: 'alta'
             },
             {
-                seccion: 'V. PRUEBA',
-                motivo: 'Completar ofrecimiento según documentación efectivamente disponible',
+                seccion: 'III. DERECHO — Arraigo',
+                motivo: 'Detallar domicilio, ocupación laboral y núcleo familiar del imputado',
+                criticidad: 'alta'
+            },
+            {
+                seccion: 'IV. PETITORIO — Caución',
+                motivo: 'Definir tipo y monto de la caución propuesta',
                 criticidad: 'media'
-            },
-            {
-                seccion: 'PETITORIO',
-                motivo: 'Verificar monto reclamado y accesorios solicitados',
-                criticidad: 'alta'
             }
         ],
         advertencias: {
-            principal: 'ADVERTENCIA CRÍTICA: Este documento es un BORRADOR DE TRABAJO generado por asistencia automatizada. Su presentación judicial sin revisión profesional completa constituye ejercicio inadecuado de la profesión.',
+            principal: 'ADVERTENCIA CRÍTICA: Este documento es un BORRADOR DE TRABAJO generado por asistencia automatizada. Su presentación judicial sin revisión profesional completa del letrado constituye ejercicio inadecuado de la profesión.',
             items: [
                 'El letrado firmante asume responsabilidad exclusiva por el contenido presentado.',
-                'Verificar datos de las partes, montos y fechas antes de cualquier uso.',
-                'Las citas legales deben ser validadas contra normativa vigente.',
-                'El estilo y estructura pueden requerir ajustes según práctica del fuero.'
+                'Verificar datos del imputado, juzgado y número de causa antes de cualquier uso.',
+                'Las citas normativas deben validarse contra el CPP PBA vigente (Ley 11.922).',
+                'El estilo y estructura pueden requerir ajustes según la práctica del juzgado interviniente.'
             ]
         }
     }
@@ -262,48 +274,77 @@ class AlcanceLegalAPI {
     }
 
     /**
-     * Envía consulta de auditoría
-     * @param {Object} data - Datos del formulario de auditoría
-     * @returns {Promise<Object>} - Respuesta de la auditoría
+     * Audita la estrategia defensiva contra la Edge Function auditar-estrategia.
+     * @param {Object} data - { etapa_procesal, situacion_procesal, estrategia_actual, objetivo_defensivo, ... }
+     * @returns {Promise<Object>} - Dictamen de auditoría
      */
     async auditarEstrategia(data) {
-        if (this.config.useMocks) {
-            await simulateLatency()
-            return {
-                success: true,
-                data: {
-                    ...MOCK_RESPONSES.auditar,
-                    _input: {
-                        etapa_procesal: data.etapa_procesal
-                    }
+        if (SUPABASE_CONFIG.functionsUrl && !this.config.useMocks) {
+            try {
+                console.log('[API] Llamando Edge Function auditar-estrategia...')
+                const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/auditar-estrategia`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'apikey': SUPABASE_CONFIG.anonKey
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                if (!response.ok) {
+                    const text = await response.text()
+                    try { return JSON.parse(text) } catch { /* no JSON */ }
+                    return { success: false, fundamento: `Error del servidor (${response.status})` }
                 }
+
+                return await response.json()
+            } catch (error) {
+                console.error('[API] auditar-estrategia error de red:', error.message)
+                return { success: false, fundamento: `Error de red: ${error.message}` }
             }
         }
 
-        return this._post(this.config.endpoints.auditar, data)
+        // Fallback mock
+        await simulateLatency()
+        return { success: true, data: MOCK_RESPONSES.auditar }
     }
 
     /**
-     * Envía consulta de redacción
-     * @param {Object} data - Datos del formulario de redacción
-     * @returns {Promise<Object>} - Respuesta con borrador
+     * Genera borrador de escrito penal contra la Edge Function redactar-escrito.
+     * @param {Object} data - { tipo_escrito, nombre_imputado, hechos_relevantes, pretension_defensiva, ... }
+     * @returns {Promise<Object>} - Borrador del escrito + secciones pendientes
      */
     async redactarEscrito(data) {
-        if (this.config.useMocks) {
-            await simulateLatency()
-            return {
-                success: true,
-                data: {
-                    ...MOCK_RESPONSES.redactar,
-                    tipo_escrito: data.tipo_escrito || 'Demanda',
-                    _input: {
-                        tipo_escrito: data.tipo_escrito
-                    }
+        if (SUPABASE_CONFIG.functionsUrl && !this.config.useMocks) {
+            try {
+                console.log('[API] Llamando Edge Function redactar-escrito...')
+                const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/redactar-escrito`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'apikey': SUPABASE_CONFIG.anonKey
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                if (!response.ok) {
+                    const text = await response.text()
+                    try { return JSON.parse(text) } catch { /* no JSON */ }
+                    return { success: false, fundamento: `Error del servidor (${response.status})` }
                 }
+
+                return await response.json()
+            } catch (error) {
+                console.error('[API] redactar-escrito error de red:', error.message)
+                return { success: false, fundamento: `Error de red: ${error.message}` }
             }
         }
 
-        return this._post(this.config.endpoints.redactar, data)
+        // Fallback mock
+        await simulateLatency()
+        return { success: true, data: MOCK_RESPONSES.redactar }
     }
 
     /**

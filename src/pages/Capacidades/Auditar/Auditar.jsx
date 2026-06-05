@@ -4,19 +4,27 @@ import { api } from '../../../services/api'
 import '../Analizar/Analizar.css'
 
 const etapasProcesales = [
-    { value: 'demanda', label: 'Demanda' },
-    { value: 'contestacion', label: 'Contestación' },
-    { value: 'prueba', label: 'Etapa Probatoria' },
-    { value: 'alegatos', label: 'Alegatos' },
-    { value: 'ejecucion', label: 'Ejecución de Sentencia' },
+    { value: 'ipp', label: 'IPP — Invest. Penal Preparatoria' },
+    { value: 'intermedia', label: 'Etapa Intermedia' },
+    { value: 'juicio_oral', label: 'Juicio Oral' },
+    { value: 'recursos', label: 'Recursos / Casación' },
+    { value: 'ejecucion_pena', label: 'Ejecución de Pena' },
+]
+
+const situacionesProcesales = [
+    { value: 'libre', label: 'En libertad' },
+    { value: 'detenido', label: 'Detenido / PP vigente' },
+    { value: 'domiciliaria', label: 'Detención domiciliaria' },
 ]
 
 function Auditar() {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         etapa_procesal: '',
+        tipo_delito_imputado: '',
+        situacion_procesal: '',
         estrategia_actual: '',
-        objetivo_procesal: '',
+        objetivo_defensivo: '',
         riesgos_identificados: '',
         contexto_adicional: ''
     })
@@ -26,50 +34,39 @@ function Auditar() {
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData(prev => ({ ...prev, [name]: value }))
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: null }))
-        }
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: null }))
     }
 
     const validate = () => {
         const newErrors = {}
-        if (!formData.etapa_procesal) {
+        if (!formData.etapa_procesal)
             newErrors.etapa_procesal = 'Seleccione la etapa procesal'
-        }
-        if (!formData.estrategia_actual || formData.estrategia_actual.length < 150) {
-            newErrors.estrategia_actual = 'Describa la estrategia actual (mínimo 150 caracteres)'
-        }
-        if (!formData.objetivo_procesal) {
-            newErrors.objetivo_procesal = 'Indique el objetivo procesal'
-        }
+        if (!formData.situacion_procesal)
+            newErrors.situacion_procesal = 'Seleccione la situación del imputado'
+        if (!formData.estrategia_actual || formData.estrategia_actual.length < 150)
+            newErrors.estrategia_actual = 'Describa la estrategia defensiva (mínimo 150 caracteres)'
+        if (!formData.objetivo_defensivo)
+            newErrors.objetivo_defensivo = 'Indique el objetivo defensivo concreto'
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (validate()) {
-            setIsLoading(true)
-            setErrors({})
-
-            try {
-                const response = await api.auditarEstrategia(formData)
-
-                if (response.success) {
-                    navigate('/resultado', {
-                        state: {
-                            capacidad: 'auditar',
-                            data: response.data
-                        }
-                    })
-                } else {
-                    setErrors({ api: response.error || 'Error al procesar la consulta' })
-                }
-            } catch (error) {
-                setErrors({ api: 'Error de conexión. Intente nuevamente.' })
-            } finally {
-                setIsLoading(false)
+        if (!validate()) return
+        setIsLoading(true)
+        setErrors({})
+        try {
+            const response = await api.auditarEstrategia(formData)
+            if (response.success) {
+                navigate('/resultado', { state: { capacidad: 'auditar', data: response.data } })
+            } else {
+                setErrors({ api: response.error || response.fundamento || 'Error al procesar la consulta' })
             }
+        } catch {
+            setErrors({ api: 'Error de conexión. Intente nuevamente.' })
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -84,17 +81,18 @@ function Auditar() {
                     </svg>
                     Volver
                 </button>
-                <h1 className="analizar__title">Auditar Estrategia Procesal</h1>
+                <h1 className="analizar__title">Auditar Estrategia Defensiva</h1>
                 <p className="analizar__subtitle">
-                    Evalúe la consistencia de su estrategia, identifique supuestos implícitos y detecte riesgos no considerados.
+                    Detecte supuestos implícitos, inconsistencias y riesgos en su estrategia de defensa penal PBA.
                 </p>
             </header>
 
             <form className="analizar__form" onSubmit={handleSubmit}>
+
                 {/* Etapa Procesal */}
                 <div className="form-group">
                     <label className="form-label">
-                        Etapa Procesal Actual <span className="required">*</span>
+                        Etapa Procesal <span className="required">*</span>
                     </label>
                     <div className="form-options">
                         {etapasProcesales.map(etapa => (
@@ -116,22 +114,66 @@ function Auditar() {
                     {errors.etapa_procesal && <span className="form-error">{errors.etapa_procesal}</span>}
                 </div>
 
-                {/* Estrategia Actual */}
+                {/* Situación del imputado */}
                 <div className="form-group">
-                    <label className="form-label" htmlFor="estrategia_actual">
-                        Estrategia Actual <span className="required">*</span>
+                    <label className="form-label">
+                        Situación del Imputado <span className="required">*</span>
+                    </label>
+                    <div className="form-options">
+                        {situacionesProcesales.map(sit => (
+                            <label
+                                key={sit.value}
+                                className={`form-option ${formData.situacion_procesal === sit.value ? 'form-option--selected' : ''}`}
+                            >
+                                <input
+                                    type="radio"
+                                    name="situacion_procesal"
+                                    value={sit.value}
+                                    checked={formData.situacion_procesal === sit.value}
+                                    onChange={handleChange}
+                                />
+                                <span>{sit.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                    {errors.situacion_procesal && <span className="form-error">{errors.situacion_procesal}</span>}
+                </div>
+
+                {/* Tipo de delito imputado */}
+                <div className="form-group">
+                    <label className="form-label" htmlFor="tipo_delito_imputado">
+                        Delito Imputado
                     </label>
                     <p className="form-hint">
-                        Describa la estrategia procesal que está implementando o planea implementar.
+                        Norma o tipo penal que la acusación aplica (opcional pero recomendado).
+                    </p>
+                    <input
+                        id="tipo_delito_imputado"
+                        name="tipo_delito_imputado"
+                        type="text"
+                        className="form-input"
+                        value={formData.tipo_delito_imputado}
+                        onChange={handleChange}
+                        placeholder="Ej: Art. 119 CP (abuso sexual), art. 164 CP (robo), art. 89 CP (lesiones leves)..."
+                    />
+                </div>
+
+                {/* Estrategia defensiva actual */}
+                <div className="form-group">
+                    <label className="form-label" htmlFor="estrategia_actual">
+                        Estrategia Defensiva Actual <span className="required">*</span>
+                    </label>
+                    <p className="form-hint">
+                        Describa su enfoque estratégico: líneas argumentales, prueba a ofrecer, planteos de nulidad, orden de presentación.
                     </p>
                     <textarea
                         id="estrategia_actual"
                         name="estrategia_actual"
                         className={`form-textarea ${errors.estrategia_actual ? 'form-textarea--error' : ''}`}
-                        rows="6"
+                        rows="7"
                         value={formData.estrategia_actual}
                         onChange={handleChange}
-                        placeholder="Describa su enfoque estratégico, líneas argumentales principales, pruebas a ofrecer, orden de presentación..."
+                        placeholder="Ej: La defensa plantea la nulidad del procedimiento de detención por ausencia de flagrancia real (art. 151 CPP PBA). Como consecuencia, solicita la exclusión de la prueba obtenida (art. 211 CPP PBA). Subsidiariamente, cuestiona la suficiencia probatoria del testimonio único sin corroboración periférica..."
                     />
                     <div className="form-textarea-footer">
                         <span className={`char-count ${charCount < 150 ? 'char-count--warning' : 'char-count--ok'}`}>
@@ -141,33 +183,33 @@ function Auditar() {
                     {errors.estrategia_actual && <span className="form-error">{errors.estrategia_actual}</span>}
                 </div>
 
-                {/* Objetivo Procesal */}
+                {/* Objetivo defensivo */}
                 <div className="form-group">
-                    <label className="form-label" htmlFor="objetivo_procesal">
-                        Objetivo Procesal <span className="required">*</span>
+                    <label className="form-label" htmlFor="objetivo_defensivo">
+                        Objetivo Defensivo Concreto <span className="required">*</span>
                     </label>
                     <p className="form-hint">
-                        ¿Qué resultado concreto busca obtener con esta estrategia?
+                        ¿Qué resultado busca obtener con esta estrategia?
                     </p>
                     <textarea
-                        id="objetivo_procesal"
-                        name="objetivo_procesal"
-                        className={`form-textarea ${errors.objetivo_procesal ? 'form-textarea--error' : ''}`}
+                        id="objetivo_defensivo"
+                        name="objetivo_defensivo"
+                        className={`form-textarea ${errors.objetivo_defensivo ? 'form-textarea--error' : ''}`}
                         rows="3"
-                        value={formData.objetivo_procesal}
+                        value={formData.objetivo_defensivo}
                         onChange={handleChange}
-                        placeholder="Ej: Obtener sentencia favorable que declare la resolución contractual con daños..."
+                        placeholder="Ej: Sobreseimiento definitivo por insuficiencia probatoria (art. 323 inc. 3 CPP PBA) / Nulidad del allanamiento y exclusión de prueba obtenida / Absolución en juicio oral / Morigeración de la prisión preventiva..."
                     />
-                    {errors.objetivo_procesal && <span className="form-error">{errors.objetivo_procesal}</span>}
+                    {errors.objetivo_defensivo && <span className="form-error">{errors.objetivo_defensivo}</span>}
                 </div>
 
-                {/* Riesgos Identificados */}
+                {/* Riesgos ya identificados */}
                 <div className="form-group">
                     <label className="form-label" htmlFor="riesgos_identificados">
                         Riesgos Ya Identificados
                     </label>
                     <p className="form-hint">
-                        ¿Qué riesgos procesales o de fondo ya ha identificado?
+                        ¿Qué debilidades o riesgos ya contempla en su estrategia?
                     </p>
                     <textarea
                         id="riesgos_identificados"
@@ -176,17 +218,17 @@ function Auditar() {
                         rows="3"
                         value={formData.riesgos_identificados}
                         onChange={handleChange}
-                        placeholder="Liste los riesgos que ya contempla en su estrategia..."
+                        placeholder="Ej: El testimonio de la víctima es persistente; hay pericia psicológica oficial favorable a la acusación; el imputado no tiene coartada acreditada..."
                     />
                 </div>
 
-                {/* Contexto Adicional */}
+                {/* Contexto adicional */}
                 <div className="form-group">
                     <label className="form-label" htmlFor="contexto_adicional">
                         Contexto Adicional
                     </label>
                     <p className="form-hint">
-                        Información adicional relevante para la auditoría.
+                        Información relevante que no encaja en los campos anteriores.
                     </p>
                     <textarea
                         id="contexto_adicional"
@@ -195,25 +237,28 @@ function Auditar() {
                         rows="3"
                         value={formData.contexto_adicional}
                         onChange={handleChange}
-                        placeholder="Antecedentes, particularidades del juzgado, comportamiento de la contraparte..."
+                        placeholder="Juzgado interviniente, particularidades del caso, antecedentes del imputado, presión mediática, plazo de PP..."
                     />
                 </div>
 
-                {/* Submit */}
+                {errors.api && (
+                    <div className="form-error form-error--api">{errors.api}</div>
+                )}
+
                 <div className="form-actions">
                     <button type="button" className="btn btn--secondary" onClick={() => navigate('/')}>
                         Cancelar
                     </button>
-                    <button type="submit" className="btn btn--primary">
-                        Solicitar Auditoría
+                    <button type="submit" className="btn btn--primary" disabled={isLoading}>
+                        {isLoading ? 'Auditando estrategia...' : 'Solicitar Auditoría Defensiva'}
                     </button>
                 </div>
             </form>
 
             <footer className="analizar__footer">
                 <p>
-                    <strong>Nota:</strong> La auditoría detectará supuestos implícitos en su estrategia
-                    y evaluará su consistencia con el objetivo procesal declarado.
+                    <strong>Nota:</strong> El sistema detectará supuestos implícitos, inconsistencias lógicas
+                    y riesgos no contemplados, razonando siempre desde la perspectiva defensiva (in dubio pro reo).
                 </p>
             </footer>
         </div>

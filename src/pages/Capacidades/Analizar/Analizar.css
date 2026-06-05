@@ -198,6 +198,22 @@
     border-color: #dc2626;
 }
 
+.form-input--error {
+    border-color: #dc2626;
+}
+
+/* Error de API — bloque inline bajo el formulario */
+.form-error--api {
+    display: block;
+    padding: 0.75rem 1rem;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #fca5a5;
+    margin-bottom: 1rem;
+}
+
 .form-textarea:disabled {
     background: #040a14;
     color: #2d4a68;
