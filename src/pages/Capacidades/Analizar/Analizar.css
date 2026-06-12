@@ -1084,6 +1084,58 @@
 }
 
 /* ============================================
+   MEV TIP CALLOUT
+   ============================================ */
+
+.mev-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    background: rgba(30, 58, 95, 0.4);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-left: 3px solid #3b82f6;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.mev-tip__icon {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    color: #60a5fa;
+}
+
+.mev-tip__icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.mev-tip__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.mev-tip__body strong {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #93c5fd;
+    letter-spacing: 0.01em;
+}
+
+.mev-tip__body span {
+    font-size: 0.78rem;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+.form-label__badge--mev {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: #60a5fa;
+}
+
+/* ============================================
    PRINT
    ============================================ */
 

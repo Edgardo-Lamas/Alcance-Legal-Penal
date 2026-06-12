@@ -504,14 +504,27 @@ function Analizar() {
                 <div className="analizar-layout__izq">
                     <form className="analizar__form" onSubmit={handleSubmit}>
 
+                        {/* MEV Tip */}
+                        <div className="mev-tip">
+                            <div className="mev-tip__icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                                </svg>
+                            </div>
+                            <div className="mev-tip__body">
+                                <strong>¿Tenés el expediente en el MEV?</strong>
+                                <span>Abrí la causa → seleccioná todo el texto (Ctrl+A) → copialo (Ctrl+C) → pegalo en &ldquo;Texto del expediente&rdquo; abajo.</span>
+                            </div>
+                        </div>
+
                         {/* Hechos — campo principal */}
                         <div className="form-group">
                             <label className="form-label" htmlFor="hechos">
-                                Describí los hechos del caso <span className="required">*</span>
+                                Describí brevemente el caso <span className="required">*</span>
                             </label>
                             <p className="form-hint">
-                                Narrá los hechos tal como figuran en la causa: fechas, lugares y circunstancias relevantes.
-                                Incluí qué dijo la acusación y cualquier aspecto que consideres clave para la defensa.
+                                Qué delito se imputa, en qué etapa está, qué querés analizar.
+                                Si pegás el texto del MEV abajo, alcanza con una línea aquí.
                             </p>
                             <textarea
                                 id="hechos"
@@ -529,6 +542,28 @@ function Analizar() {
                                 </span>
                             </div>
                             {errors.hechos && <span className="form-error">{errors.hechos}</span>}
+                        </div>
+
+                        {/* Texto del expediente — MEV paste */}
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="documentacion_caso">
+                                Texto del expediente
+                                <span className="form-label__badge form-label__badge--mev">MEV</span>
+                                <span className="form-label__opt">(opcional)</span>
+                            </label>
+                            <p className="form-hint">
+                                Pegá aquí el texto copiado del MEV, pericias, declaraciones o cualquier documento del expediente.
+                            </p>
+                            <textarea
+                                id="documentacion_caso"
+                                name="documentacion_caso"
+                                className="form-textarea"
+                                rows="6"
+                                value={formData.documentacion_caso}
+                                onChange={handleChange}
+                                placeholder="Pegá aquí el texto completo del expediente copiado del MEV, o el texto de pericias, actas y declaraciones..."
+                                disabled={isLoading}
+                            />
                         </div>
 
                         {/* Tipo Penal */}
@@ -674,27 +709,6 @@ function Analizar() {
                                 </div>
                             )}
                             {errors.pdfs && <span className="form-error">{errors.pdfs}</span>}
-                        </div>
-
-                        {/* Documentación del Expediente — texto */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="documentacion_caso">
-                                Texto del expediente <span className="form-label__opt">(opcional)</span>
-                            </label>
-                            <p className="form-hint">
-                                Pegá aquí el texto de pericias, declaraciones, actas u otros documentos
-                                copiados directamente del MEV u otra fuente.
-                            </p>
-                            <textarea
-                                id="documentacion_caso"
-                                name="documentacion_caso"
-                                className="form-textarea"
-                                rows="5"
-                                value={formData.documentacion_caso}
-                                onChange={handleChange}
-                                placeholder="Ej: Pericia médico-forense: '...el examen físico revela...', Declaración testimonial: '...'"
-                                disabled={isLoading}
-                            />
                         </div>
 
                         {/* Imágenes Adjuntas */}
