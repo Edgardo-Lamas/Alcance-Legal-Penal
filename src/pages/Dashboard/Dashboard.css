@@ -385,3 +385,100 @@
         font-size: 2.25rem;
     }
 }
+
+/* ── Banner MEV Setup ── */
+.mev-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.mev-banner--setup {
+    background: rgba(15, 30, 60, 0.7);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    border-left: 3px solid #3b82f6;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.mev-banner--activo {
+    background: rgba(6, 30, 18, 0.6);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-left: 3px solid #34d399;
+    font-size: 0.82rem;
+    color: #6ee7b7;
+}
+
+.mev-banner__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #34d399;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
+    animation: mev-pulse-dash 2s infinite;
+}
+
+@keyframes mev-pulse-dash {
+    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
+    70%  { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+.mev-banner__texto {
+    color: #6ee7b7;
+    font-size: 0.82rem;
+}
+
+.mev-banner__izq {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #60a5fa;
+    flex: 1;
+    min-width: 0;
+}
+
+.mev-banner__izq svg {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.mev-banner__izq div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.mev-banner__izq strong {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #93c5fd;
+}
+
+.mev-banner__izq span {
+    font-size: 0.76rem;
+    color: #4a6a8a;
+    line-height: 1.4;
+}
+
+.mev-banner__btn {
+    flex-shrink: 0;
+    padding: 0.5rem 1rem;
+    background: #1d4ed8;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.mev-banner__btn:hover {
+    background: #2563eb;
+}

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Alcance Legal Penal — MEV Navigator",
-  "version": "1.0.0",
-  "description": "Copiloto de IA para abogados defensores. Analiza expedientes del MEV (SCBA) con inteligencia jurídica penal — CPP PBA.",
+  "name": "Alcance Legal Penal · Conexión MEV",
+  "version": "1.1.0",
+  "description": "Componente MEV de Alcance Legal Penal. Analiza expedientes del MEV (SCBA) con inteligencia jurídica penal — CPP PBA.",
   "permissions": [
     "sidePanel",
     "storage",
@@ -10,7 +10,9 @@
     "scripting"
   ],
   "host_permissions": [
-    "https://mev.scba.gov.ar/*"
+    "https://mev.scba.gov.ar/*",
+    "https://alcance-legal-penal.vercel.app/*",
+    "http://localhost:5173/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -22,7 +24,7 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_title": "MEV Navigator — Alcance Legal Penal"
+    "default_title": "Alcance Legal Penal · Conexión MEV"
   },
   "side_panel": {
     "default_path": "sidepanel.html"
@@ -38,6 +40,14 @@
       "js": ["content.js"],
       "run_at": "document_idle",
       "world": "ISOLATED"
+    },
+    {
+      "matches": [
+        "https://alcance-legal-penal.vercel.app/*",
+        "http://localhost:5173/*"
+      ],
+      "js": ["detector.js"],
+      "run_at": "document_start"
     }
   ]
 }

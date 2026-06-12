@@ -4,8 +4,11 @@ import exifr from 'exifr'
 import { api } from '../../../services/api'
 import { supabase } from '../../../services/supabase'
 import { useAuth } from '../../../context/AuthContext'
+import { useExtensionDetect } from '../../../hooks/useExtensionDetect'
 import PipelineStatus from '../../../components/PipelineStatus/PipelineStatus'
 import './Analizar.css'
+
+const CHROME_STORE_URL = 'https://chromewebstore.google.com/search/Alcance%20Legal%20Penal%20MEV'
 
 const MAX_IMAGES = 4
 const MAX_SIZE_MB = 4
@@ -140,6 +143,7 @@ function Analizar() {
     )
     const [mevStatus, setMevStatus] = useState('idle') // 'idle' | 'waiting' | 'received'
     const realtimeRef = useRef(null)
+    const mevInstalado = useExtensionDetect()
 
     useEffect(() => {
         return () => {
@@ -539,56 +543,79 @@ function Analizar() {
                     <form className="analizar__form" onSubmit={handleSubmit}>
 
                         {/* MEV Connect Panel */}
-                        <div className="mev-connect">
+                        <div className={`mev-connect ${mevInstalado ? 'mev-connect--activo' : ''}`}>
                             <div className="mev-connect__header">
                                 <svg className="mev-connect__logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
                                 </svg>
                                 <div className="mev-connect__title-block">
-                                    <strong>MEV Navigator</strong>
-                                    <span>Analizá tu expediente sin copiar texto</span>
+                                    <strong>Conexión MEV</strong>
+                                    <span>{mevInstalado ? 'Componente instalado y activo' : 'Analizá tu expediente sin copiar texto'}</span>
                                 </div>
-                                {mevStatus === 'waiting' && (
-                                    <span className="mev-connect__live-badge">EN VIVO</span>
-                                )}
+                                {mevInstalado
+                                    ? <span className="mev-connect__live-badge mev-connect__live-badge--ok">✓ ACTIVO</span>
+                                    : mevStatus === 'waiting' && <span className="mev-connect__live-badge">EN VIVO</span>
+                                }
                             </div>
 
-                            <ol className="mev-connect__pasos">
-                                <li className="mev-connect__paso">
-                                    <span className="mev-connect__paso-num">1</span>
-                                    <div className="mev-connect__paso-body">
-                                        <strong>Instalá MEV Navigator en Chrome</strong>
-                                        <a
-                                            href="https://chromewebstore.google.com/search/MEV%20Navigator%20Alcance%20Legal"
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="mev-connect__link"
-                                        >
-                                            Instalar extensión →
-                                        </a>
-                                    </div>
-                                </li>
-                                <li className="mev-connect__paso">
-                                    <span className="mev-connect__paso-num">2</span>
-                                    <div className="mev-connect__paso-body">
-                                        <strong>Abrí el MEV y navegá a tu causa autorizada</strong>
-                                        <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__link">mev.scba.gov.ar →</a>
-                                    </div>
-                                </li>
-                                <li className="mev-connect__paso">
-                                    <span className="mev-connect__paso-num">3</span>
-                                    <div className="mev-connect__paso-body">
-                                        <strong>Hacé clic en &ldquo;Analizar&rdquo; en el panel lateral</strong>
-                                        <span>El resultado aparece acá automáticamente</span>
-                                    </div>
-                                </li>
-                            </ol>
+                            {mevInstalado ? (
+                                <ol className="mev-connect__pasos">
+                                    <li className="mev-connect__paso mev-connect__paso--done">
+                                        <span className="mev-connect__paso-num mev-connect__paso-num--done">✓</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Componente instalado</strong>
+                                        </div>
+                                    </li>
+                                    <li className="mev-connect__paso">
+                                        <span className="mev-connect__paso-num">2</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Abrí el MEV y navegá a tu causa autorizada</strong>
+                                            <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__link">mev.scba.gov.ar →</a>
+                                        </div>
+                                    </li>
+                                    <li className="mev-connect__paso">
+                                        <span className="mev-connect__paso-num">3</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Hacé clic en &ldquo;Analizar&rdquo; en el panel lateral</strong>
+                                            <span>El resultado aparece acá automáticamente</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            ) : (
+                                <ol className="mev-connect__pasos">
+                                    <li className="mev-connect__paso">
+                                        <span className="mev-connect__paso-num">1</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Activá el componente MEV en Chrome</strong>
+                                            <a href={CHROME_STORE_URL} target="_blank" rel="noreferrer" className="mev-connect__link">
+                                                Instalar en Chrome (30 seg) →
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li className="mev-connect__paso">
+                                        <span className="mev-connect__paso-num">2</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Abrí el MEV y navegá a tu causa autorizada</strong>
+                                            <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__link">mev.scba.gov.ar →</a>
+                                        </div>
+                                    </li>
+                                    <li className="mev-connect__paso">
+                                        <span className="mev-connect__paso-num">3</span>
+                                        <div className="mev-connect__paso-body">
+                                            <strong>Hacé clic en &ldquo;Analizar&rdquo; en el panel lateral</strong>
+                                            <span>El resultado aparece acá automáticamente</span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            )}
 
                             <div className="mev-connect__status">
-                                <span className={`mev-connect__dot ${mevStatus === 'waiting' ? 'mev-connect__dot--live' : 'mev-connect__dot--idle'}`} />
-                                {mevStatus === 'waiting'
+                                <span className={`mev-connect__dot ${mevInstalado || mevStatus === 'waiting' ? 'mev-connect__dot--live' : 'mev-connect__dot--idle'}`} />
+                                {mevInstalado
                                     ? 'Escuchando resultados desde MEV...'
-                                    : 'Esperando que uses la extensión...'
+                                    : mevStatus === 'waiting'
+                                        ? 'Esperando análisis desde el MEV...'
+                                        : 'Instalá el componente para conectar con el MEV'
                                 }
                             </div>
                         </div>
