@@ -138,6 +138,8 @@ function Analizar() {
     const [pipelineFases, setPipelineFases] = useState(
         FASES_PIPELINE_BASE.map(f => ({ ...f, estado: 'pendiente' }))
     )
+    const [mevStatus, setMevStatus] = useState('idle') // 'idle' | 'waiting' | 'received'
+    const realtimeRef = useRef(null)
 
     useEffect(() => {
         return () => {
@@ -145,6 +147,53 @@ function Analizar() {
             timeoutRefs.current.forEach(clearTimeout)
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Supabase Realtime: detecta análisis enviados desde la extensión MEV
+    useEffect(() => {
+        if (!supabase || !user?.id || isLoading) return
+
+        const estadoLabels = {
+            approved: 'INFORME APROBADO',
+            limited:  'INFORME CON LIMITACIONES',
+            rejected: 'NO ENTREGABLE',
+        }
+
+        const channel = supabase
+            .channel(`analisis-mev-${user.id}`)
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'analisis',
+                filter: `user_id=eq.${user.id}`,
+            }, (payload) => {
+                const row = payload.new
+                if (!row?.resultado_json) return
+                navigate('/resultado', {
+                    state: {
+                        capacidad: 'analizar',
+                        _fromHistorial: true,
+                        data: {
+                            ...row.resultado_json,
+                            estado:        estadoLabels[row.status] || 'INFORME',
+                            estado_detalle:'Defensa Penal PBA — In dubio pro reo',
+                            _status:       row.status,
+                            _advertencias: row.resultado_json?._advertencias || [],
+                            _disclaimer:   row.resultado_json?._disclaimer,
+                            _meta:         row.resultado_json?._meta,
+                        }
+                    }
+                })
+            })
+            .subscribe((status) => {
+                if (status === 'SUBSCRIBED') setMevStatus('waiting')
+            })
+
+        realtimeRef.current = channel
+
+        return () => {
+            if (realtimeRef.current) supabase.removeChannel(realtimeRef.current)
+        }
+    }, [user?.id, isLoading]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -489,17 +538,64 @@ function Analizar() {
                 <div className="analizar-layout__izq">
                     <form className="analizar__form" onSubmit={handleSubmit}>
 
-                        {/* MEV Tip */}
-                        <div className="mev-tip">
-                            <div className="mev-tip__icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        {/* MEV Connect Panel */}
+                        <div className="mev-connect">
+                            <div className="mev-connect__header">
+                                <svg className="mev-connect__logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
                                 </svg>
+                                <div className="mev-connect__title-block">
+                                    <strong>MEV Navigator</strong>
+                                    <span>Analizá tu expediente sin copiar texto</span>
+                                </div>
+                                {mevStatus === 'waiting' && (
+                                    <span className="mev-connect__live-badge">EN VIVO</span>
+                                )}
                             </div>
-                            <div className="mev-tip__body">
-                                <strong>¿Tenés el expediente en el MEV?</strong>
-                                <span>Abrí la causa → seleccioná todo el texto (Ctrl+A) → copialo (Ctrl+C) → pegalo en &ldquo;Texto del expediente&rdquo; abajo.</span>
+
+                            <ol className="mev-connect__pasos">
+                                <li className="mev-connect__paso">
+                                    <span className="mev-connect__paso-num">1</span>
+                                    <div className="mev-connect__paso-body">
+                                        <strong>Instalá MEV Navigator en Chrome</strong>
+                                        <a
+                                            href="https://chromewebstore.google.com/search/MEV%20Navigator%20Alcance%20Legal"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="mev-connect__link"
+                                        >
+                                            Instalar extensión →
+                                        </a>
+                                    </div>
+                                </li>
+                                <li className="mev-connect__paso">
+                                    <span className="mev-connect__paso-num">2</span>
+                                    <div className="mev-connect__paso-body">
+                                        <strong>Abrí el MEV y navegá a tu causa autorizada</strong>
+                                        <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__link">mev.scba.gov.ar →</a>
+                                    </div>
+                                </li>
+                                <li className="mev-connect__paso">
+                                    <span className="mev-connect__paso-num">3</span>
+                                    <div className="mev-connect__paso-body">
+                                        <strong>Hacé clic en &ldquo;Analizar&rdquo; en el panel lateral</strong>
+                                        <span>El resultado aparece acá automáticamente</span>
+                                    </div>
+                                </li>
+                            </ol>
+
+                            <div className="mev-connect__status">
+                                <span className={`mev-connect__dot ${mevStatus === 'waiting' ? 'mev-connect__dot--live' : 'mev-connect__dot--idle'}`} />
+                                {mevStatus === 'waiting'
+                                    ? 'Escuchando resultados desde MEV...'
+                                    : 'Esperando que uses la extensión...'
+                                }
                             </div>
+                        </div>
+
+                        {/* Divisor entre MEV y formulario manual */}
+                        <div className="mev-divider">
+                            <span>O ingresalo manualmente</span>
                         </div>
 
                         {/* CAMPO PRINCIPAL — Texto del expediente */}

@@ -409,9 +409,10 @@
       }
 
       setLoadingMsg('Analizando expediente con IA en el backend (hasta 45s)...')
-      const resultText = await callEdgeFunction(apiData)
-      renderAnalisis(resultText)
-      guardarEnHistorial(state.mevData, resultText)
+      const { textResult, rawRes } = await callEdgeFunction(apiData)
+      renderAnalisis(textResult)
+      guardarEnHistorial(state.mevData, textResult)
+      guardarEnSupabase(rawRes, hechos, c)
     } catch (err) {
       showError(`Error en el análisis: ${err.message}`)
     } finally {
@@ -446,9 +447,9 @@
     }
 
     const data = res.data || {}
-    
+
     // Reconstruye el texto plano con marcas **FASE X** para compatibilidad con parseAnalisisFases
-    const textResult = 
+    const textResult =
       `**FASE 1 — Encuadre procesal**\n${data.encuadre_procesal || 'No disponible.'}\n\n` +
       `**FASE 2 — Análisis de prueba de cargo**\n${data.analisis_prueba_cargo || 'No disponible.'}\n\n` +
       `**FASE 3 — Nulidades y vicios procesales**\n${data.nulidades_y_vicios || 'No disponible.'}\n\n` +
@@ -456,7 +457,66 @@
       `**FASE 5 — Recomendación estratégica**\n${data.conclusion_defensiva || 'No disponible.'}\n\n` +
       `**Limitaciones**\n${data.limitaciones || 'No disponible.'}`
 
-    return textResult
+    return { textResult, rawRes: res }
+  }
+
+  async function guardarEnSupabase(rawRes, hechos, caratula) {
+    if (!state.session?.access_token || !state.session?.user_id) return
+    try {
+      const payload = {
+        user_id: state.session.user_id,
+        numero_informe: rawRes.data?.numero_informe,
+        fecha_emision: rawRes.data?.fecha_emision || new Date().toISOString(),
+        status: rawRes.status,
+        tipo_analisis: 'analizar',
+        hechos,
+        tipo_penal: caratula.delito || null,
+        etapa_procesal: caratula.etapaProcesal || 'IPP',
+        resultado_json: rawRes.data,
+        criterios_utilizados: rawRes.meta?.criterios_utilizados ?? null,
+        pipeline_version: rawRes.meta?.pipeline_version ?? null,
+      }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/analisis`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${state.session.access_token}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify(payload),
+      })
+      if (res.ok) mostrarBotonWebApp()
+    } catch (err) {
+      console.error('[MEV] Error guardando en Supabase:', err)
+    }
+  }
+
+  function mostrarBotonWebApp() {
+    let btn = $('btn-ver-web')
+    if (!btn) {
+      btn = document.createElement('a')
+      btn.id = 'btn-ver-web'
+      btn.href = 'https://alcance-legal-penal.vercel.app/historial'
+      btn.target = '_blank'
+      btn.rel = 'noreferrer'
+      btn.style.cssText = [
+        'display:flex;align-items:center;justify-content:center;gap:6px',
+        'margin:12px 0 4px',
+        'padding:10px 16px',
+        'background:#1d4ed8',
+        'color:#fff',
+        'border-radius:6px',
+        'text-decoration:none',
+        'font-size:13px',
+        'font-weight:600',
+        'letter-spacing:0.02em',
+      ].join(';')
+      btn.innerHTML = '📋 Ver análisis en Alcance Legal Penal →'
+      const container = $('analisis-resultado')
+      if (container) container.before(btn)
+    }
+    btn.style.display = 'flex'
   }
 
   function renderAnalisis(text) {
