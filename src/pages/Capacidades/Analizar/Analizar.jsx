@@ -107,13 +107,6 @@ function buildMetadataSummary(exif, filename) {
     }
 }
 
-const etapasProcesales = [
-    { value: 'ipp', label: 'Investigación Penal Preparatoria (IPP)' },
-    { value: 'juicio_oral', label: 'Juicio Oral' },
-    { value: 'recursos', label: 'Recursos / Casación' },
-    { value: 'ejecucion', label: 'Ejecución de Sentencia' },
-]
-
 function Analizar() {
     const navigate = useNavigate()
     const { user } = useAuth()
@@ -126,24 +119,15 @@ function Analizar() {
     const [formData, setFormData] = useState(() => {
         try {
             const saved = sessionStorage.getItem(SESSION_KEY)
-            return saved ? JSON.parse(saved) : {
-                hechos: '',
-                tipo_penal: '',
-                etapa_procesal: '',
-                prueba_acusacion: '',
-                pretension_defensiva: '',
-                documentacion_caso: '',
+            if (saved) {
+                const parsed = JSON.parse(saved)
+                return {
+                    documentacion_caso: parsed.documentacion_caso || '',
+                    pretension_defensiva: parsed.pretension_defensiva || '',
+                }
             }
-        } catch {
-            return {
-                hechos: '',
-                tipo_penal: '',
-                etapa_procesal: '',
-                prueba_acusacion: '',
-                pretension_defensiva: '',
-                documentacion_caso: '',
-            }
-        }
+        } catch { /* ignorar */ }
+        return { documentacion_caso: '', pretension_defensiva: '' }
     })
     const [imagenes, setImagenes] = useState([])
     const [documentosPdf, setDocumentosPdf] = useState([])
@@ -176,8 +160,8 @@ function Analizar() {
 
     const validate = () => {
         const newErrors = {}
-        if (!formData.hechos || formData.hechos.trim().length < 20) {
-            newErrors.hechos = 'Necesito al menos una descripción de los hechos para iniciar el análisis.'
+        if (!formData.documentacion_caso || formData.documentacion_caso.trim().length < 20) {
+            newErrors.documentacion_caso = 'Pegá el texto del expediente para iniciar el análisis (mínimo 20 caracteres).'
         }
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
@@ -337,7 +321,9 @@ function Analizar() {
 
         try {
             const payload = {
-                ...formData,
+                hechos: formData.documentacion_caso.slice(0, 300).trim(),
+                documentacion_caso: formData.documentacion_caso,
+                pretension_defensiva: formData.pretension_defensiva || undefined,
                 imagenes: imagenes.map(({ data, mediaType, nombre, metadatos }) => ({
                     data, mediaType, nombre,
                     metadatos_texto: metadatos?.texto
@@ -475,7 +461,6 @@ function Analizar() {
         }
     }
 
-    const charCount = formData.hechos.length
     const imagenesRestantes = MAX_IMAGES - imagenes.length
 
     return (
@@ -517,127 +502,50 @@ function Analizar() {
                             </div>
                         </div>
 
-                        {/* Hechos — campo principal */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="hechos">
-                                Describí brevemente el caso <span className="required">*</span>
-                            </label>
-                            <p className="form-hint">
-                                Qué delito se imputa, en qué etapa está, qué querés analizar.
-                                Si pegás el texto del MEV abajo, alcanza con una línea aquí.
-                            </p>
-                            <textarea
-                                id="hechos"
-                                name="hechos"
-                                className={`form-textarea ${errors.hechos ? 'form-textarea--error' : ''}`}
-                                rows="7"
-                                value={formData.hechos}
-                                onChange={handleChange}
-                                placeholder="Ej: Se imputa al defendido haber... en fecha aproximada... en perjuicio de... La acusación encuadra la conducta en el art. ... del Código Penal."
-                                disabled={isLoading}
-                            />
-                            <div className="form-textarea-footer">
-                                <span className={`char-count ${charCount < 20 ? 'char-count--warning' : 'char-count--ok'}`}>
-                                    {charCount}/20 mínimo
-                                </span>
-                            </div>
-                            {errors.hechos && <span className="form-error">{errors.hechos}</span>}
-                        </div>
-
-                        {/* Texto del expediente — MEV paste */}
+                        {/* CAMPO PRINCIPAL — Texto del expediente */}
                         <div className="form-group">
                             <label className="form-label" htmlFor="documentacion_caso">
                                 Texto del expediente
                                 <span className="form-label__badge form-label__badge--mev">MEV</span>
-                                <span className="form-label__opt">(opcional)</span>
+                                <span className="required"> *</span>
                             </label>
                             <p className="form-hint">
-                                Pegá aquí el texto copiado del MEV, pericias, declaraciones o cualquier documento del expediente.
+                                Pegá el texto copiado del MEV. El sistema extrae automáticamente los hechos,
+                                la etapa, el delito imputado y la prueba de cargo.
                             </p>
                             <textarea
                                 id="documentacion_caso"
                                 name="documentacion_caso"
-                                className="form-textarea"
-                                rows="6"
+                                className={`form-textarea form-textarea--main ${errors.documentacion_caso ? 'form-textarea--error' : ''}`}
+                                rows="10"
                                 value={formData.documentacion_caso}
                                 onChange={handleChange}
-                                placeholder="Pegá aquí el texto completo del expediente copiado del MEV, o el texto de pericias, actas y declaraciones..."
+                                placeholder="Pegá aquí el texto completo del expediente copiado del MEV, o describí los hechos con el mayor detalle posible..."
                                 disabled={isLoading}
                             />
+                            {errors.documentacion_caso && (
+                                <span className="form-error">{errors.documentacion_caso}</span>
+                            )}
                         </div>
 
-                        {/* Tipo Penal */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="tipo_penal">
-                                Delito imputado <span className="form-label__opt">(opcional)</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="tipo_penal"
-                                name="tipo_penal"
-                                className="form-input"
-                                value={formData.tipo_penal}
-                                onChange={handleChange}
-                                placeholder="Ej: robo calificado art. 166 CP, abuso sexual art. 119 CP..."
-                                disabled={isLoading}
-                            />
-                        </div>
-
-                        {/* Etapa Procesal */}
-                        <div className="form-group">
-                            <label className="form-label">
-                                Etapa del proceso <span className="form-label__opt">(opcional)</span>
-                            </label>
-                            <div className="form-options">
-                                {etapasProcesales.map(etapa => (
-                                    <label
-                                        key={etapa.value}
-                                        className={`form-option ${formData.etapa_procesal === etapa.value ? 'form-option--selected' : ''}`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            name="etapa_procesal"
-                                            value={etapa.value}
-                                            checked={formData.etapa_procesal === etapa.value}
-                                            onChange={handleChange}
-                                            disabled={isLoading}
-                                        />
-                                        <span>{etapa.label}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Prueba de la Acusación */}
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="prueba_acusacion">
-                                Prueba invocada por la acusación <span className="form-label__opt">(opcional)</span>
-                            </label>
-                            <textarea
-                                id="prueba_acusacion"
-                                name="prueba_acusacion"
-                                className="form-textarea"
-                                rows="4"
-                                value={formData.prueba_acusacion}
-                                onChange={handleChange}
-                                placeholder="Ej: Testimonio de la denunciante, pericia médico-forense, capturas de pantalla de mensajes..."
-                                disabled={isLoading}
-                            />
-                        </div>
-
-                        {/* Pretensión Defensiva */}
+                        {/* CAMPO OPCIONAL — Pregunta específica */}
                         <div className="form-group">
                             <label className="form-label" htmlFor="pretension_defensiva">
-                                Pretensión defensiva <span className="form-label__opt">(opcional)</span>
+                                ¿Qué aspectos querés analizar?
+                                <span className="form-label__opt"> (opcional)</span>
                             </label>
+                            <p className="form-hint">
+                                Ej: "¿Puedo pedir la excarcelación?", "¿Hay nulidades en el allanamiento?", "Quiero apelar la prisión preventiva".
+                                Si no especificás, el sistema hace un análisis defensivo integral.
+                            </p>
                             <textarea
                                 id="pretension_defensiva"
                                 name="pretension_defensiva"
                                 className="form-textarea"
-                                rows="3"
+                                rows="2"
                                 value={formData.pretension_defensiva}
                                 onChange={handleChange}
-                                placeholder="Ej: Sobreseimiento por insuficiencia probatoria, o en subsidio nulidad del allanamiento..."
+                                placeholder="Pregunta o aspecto específico a analizar..."
                                 disabled={isLoading}
                             />
                         </div>
