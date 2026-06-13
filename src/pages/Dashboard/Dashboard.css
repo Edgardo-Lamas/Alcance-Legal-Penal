@@ -1,98 +1,308 @@
 /* ============================================
    DASHBOARD — Alcance Legal Penal
-   Tema oscuro profesional · Defensa Penal PBA
+   Bento Grid · Dark Professional · v4
    ============================================ */
 
-.dashboard {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
+/* ── Keyframes ── */
+@keyframes dash-fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Header ── */
-.dashboard__header {
+@keyframes mev-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+    70%  { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+}
+
+/* Icon animations — float (Analizar), pulse (Auditar), drift (Redactar) */
+@keyframes icon-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-5px); }
+}
+@keyframes icon-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50%      { transform: scale(1.15); opacity: 1; }
+}
+@keyframes icon-drift {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33%      { transform: translate(2px, -2px) rotate(1deg); }
+    66%      { transform: translate(-1px, 1px) rotate(-1deg); }
+}
+
+/* ── Base ── */
+.dashboard {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 2rem 5rem;
+    position: relative;
+    /* Dot grid de fondo + glow central */
+    background-image:
+        radial-gradient(circle at center, rgba(201, 162, 39, 0.05) 1px, transparent 1px),
+        radial-gradient(ellipse 65% 45% at 50% 0%, rgba(201, 162, 39, 0.05) 0%, transparent 70%);
+    background-size: 24px 24px, 100% 100%;
+}
+
+/* Animaciones de entrada escalonadas */
+.dashboard > * {
+    animation: dash-fade-up 0.45s ease both;
+}
+.dashboard > *:nth-child(1) { animation-delay: 0.04s; }
+.dashboard > *:nth-child(2) { animation-delay: 0.10s; }
+.dashboard > *:nth-child(3) { animation-delay: 0.16s; }
+.dashboard > *:nth-child(4) { animation-delay: 0.22s; }
+.dashboard > *:nth-child(5) { animation-delay: 0.28s; }
+.dashboard > *:nth-child(6) { animation-delay: 0.34s; }
+
+/* ── Banner MEV ── */
+.mev-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    font-size: 0.82rem;
+}
+
+.mev-banner--setup {
+    background: rgba(15, 28, 55, 0.75);
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    border-left: 2px solid #3b82f6;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    backdrop-filter: blur(6px);
+}
+
+.mev-banner--activo {
+    background: rgba(5, 25, 15, 0.65);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-left: 2px solid #34d399;
+    color: #6ee7b7;
+    backdrop-filter: blur(6px);
+}
+
+.mev-banner__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+    flex-shrink: 0;
+    animation: mev-pulse 2s infinite;
+}
+
+.mev-banner__texto { color: #6ee7b7; }
+
+.mev-banner__izq {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    color: #60a5fa;
+    flex: 1;
+    min-width: 0;
+}
+
+.mev-banner__izq svg { flex-shrink: 0; margin-top: 1px; }
+
+.mev-banner__izq div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.mev-banner__izq strong {
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #93c5fd;
+}
+
+.mev-banner__izq span {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.mev-banner__btn {
+    flex-shrink: 0;
+    padding: 0.45rem 1rem;
+    background: #1d4ed8;
+    color: #fff;
+    border-radius: var(--radius-md);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--transition-fast);
+}
+
+.mev-banner__btn:hover { background: #2563eb; color: #fff; }
+
+/* ── Hero Header ── */
+.dashboard__hero {
     text-align: center;
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid var(--color-border-subtle);
+    padding: 3.5rem 2rem 3rem;
+    margin-bottom: 1.5rem;
     position: relative;
 }
 
-.dashboard__perfil-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-accent);
-    background: var(--color-accent-dim);
-    border: 1px solid rgba(201, 162, 39, 0.3);
-    padding: 0.3rem 0.875rem;
-    border-radius: 100px;
-    margin-bottom: 1.25rem;
-}
-
-.dashboard__title {
-    font-family: var(--font-serif);
-    font-size: 3rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0 0 0.875rem 0;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-}
-
-.dashboard__subtitle {
-    font-family: var(--font-sans);
-    font-size: 0.95rem;
-    color: var(--color-text-muted);
-    margin: 0;
-    letter-spacing: 0.02em;
-}
-
-/* Gold divider line under header */
-.dashboard__header::after {
+/* Glow radial detrás del hero */
+.dashboard__hero::before {
     content: '';
     position: absolute;
-    bottom: -1px;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 55% 65% at 50% 20%, rgba(201, 162, 39, 0.06) 0%, transparent 68%);
+    pointer-events: none;
+}
+
+/* Línea divisoria gold */
+.dashboard__hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 2px;
+    width: 80px;
+    height: 1px;
     background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
 }
 
-/* ── Aviso de Fuero ── */
+.dashboard__hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-accent);
+    background: var(--color-accent-dim);
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    padding: 0.35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard__hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #34d399;
+    margin-left: 0.625rem;
+    vertical-align: middle;
+}
+
+.dashboard__hero-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34d399;
+    animation: mev-pulse 2.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+.dashboard__hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+}
+
+.dashboard__hero-title em {
+    font-style: italic;
+    color: var(--color-accent);
+    /* Sutil text-shadow gold */
+    text-shadow: 0 0 40px rgba(201, 162, 39, 0.25);
+}
+
+.dashboard__hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0 0 2rem 0;
+    letter-spacing: 0.03em;
+}
+
+/* ── Principios como pills ── */
+.dashboard__principios-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.principio-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.875rem;
+    background: rgba(10, 21, 37, 0.8);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 100px;
+    cursor: default;
+    backdrop-filter: blur(4px);
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.principio-pill:hover {
+    border-color: rgba(201, 162, 39, 0.3);
+    background: rgba(201, 162, 39, 0.04);
+}
+
+.principio-pill__num {
+    font-family: var(--font-serif);
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: var(--color-accent-dim);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.principio-pill__nombre {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+}
+
+/* ── Aviso Fuero ── */
 .dashboard__aviso {
     display: flex;
     align-items: flex-start;
-    gap: 0.875rem;
-    padding: 0.875rem 1.25rem;
-    background: rgba(201, 162, 39, 0.05);
-    border: 1px solid rgba(201, 162, 39, 0.2);
-    border-left: 3px solid var(--color-accent);
+    gap: 0.75rem;
+    padding: 0.75rem 1.125rem;
+    background: rgba(201, 162, 39, 0.03);
+    border: 1px solid rgba(201, 162, 39, 0.13);
+    border-left: 2px solid var(--color-accent);
     border-radius: var(--radius-md);
     margin-bottom: 2.5rem;
+    backdrop-filter: blur(4px);
 }
 
 .dashboard__aviso-icon {
     flex-shrink: 0;
-    width: 18px;
-    height: 18px;
     color: var(--color-accent);
     margin-top: 1px;
-}
-
-.dashboard__aviso-icon svg {
-    width: 100%;
-    height: 100%;
+    opacity: 0.8;
 }
 
 .dashboard__aviso p {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 0.82rem;
     color: var(--color-text-muted);
     line-height: 1.5;
     max-width: none;
@@ -103,261 +313,353 @@
     color: var(--color-accent);
 }
 
-/* ── Grid de Capacidades ── */
-.dashboard__grid {
+/* ── Bento Grid ── */
+.dashboard__bento {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
     margin-bottom: 3rem;
 }
 
-/* ── Tarjeta de Capacidad ── */
-.capacidad-card {
-    background: var(--color-bg-surface);
+/* Animación escalonada en las cards */
+.bento-card:nth-child(1) { animation: dash-fade-up 0.55s 0.26s ease both; }
+.bento-card:nth-child(2) { animation: dash-fade-up 0.55s 0.34s ease both; }
+.bento-card:nth-child(3) { animation: dash-fade-up 0.55s 0.42s ease both; }
+
+/* Card primaria ocupa toda la columna izquierda (2 filas) */
+.bento-card--primary {
+    grid-row: 1 / 3;
+}
+
+/* ── Bento Card base ── */
+.bento-card {
+    background: rgba(10, 21, 37, 0.88);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-xl);
     padding: 1.75rem;
     cursor: pointer;
-    transition: border-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    gap: 1.25rem;
+    transition:
+        border-color var(--transition-base),
+        box-shadow var(--transition-base),
+        transform var(--transition-slow);
 }
 
-/* Top accent line — appears on hover */
-.capacidad-card::before {
+/* Dot pattern que aparece en hover — inspirado en bento monochrome */
+.bento-card__dot-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at center, rgba(201, 162, 39, 0.06) 1px, transparent 1px);
+    background-size: 16px 16px;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    transition: opacity 0.35s ease;
+}
+
+/* Línea superior dorada */
+.bento-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
+    top: 0; left: 0; right: 0;
+    height: 1px;
     background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
     opacity: 0;
     transition: opacity var(--transition-base);
+    z-index: 1;
 }
 
-.capacidad-card:hover {
-    border-color: rgba(201, 162, 39, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(201, 162, 39, 0.1);
-    transform: translateY(-2px);
+/* Número de card — watermark esquina inferior derecha */
+.bento-card::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: 1.25rem;
+    right: 1.5rem;
+    font-family: var(--font-serif);
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(201, 162, 39, 0.035);
+    line-height: 1;
+    pointer-events: none;
+    transition: color var(--transition-base);
+    letter-spacing: -0.04em;
+    user-select: none;
 }
 
-.capacidad-card:hover::before {
-    opacity: 1;
+.bento-card:hover {
+    border-color: rgba(201, 162, 39, 0.38);
+    box-shadow:
+        0 0 0 1px rgba(201, 162, 39, 0.07),
+        0 16px 48px rgba(0, 0, 0, 0.55),
+        var(--shadow-gold);
+    transform: translateY(-4px);
 }
 
-.capacidad-card__header {
+.bento-card:hover .bento-card__dot-pattern { opacity: 1; }
+.bento-card:hover::before { opacity: 1; }
+.bento-card:hover::after  { color: rgba(201, 162, 39, 0.08); }
+
+/* ── Card primaria — estado persistente (siempre activa) ── */
+.bento-card--primary {
+    background: linear-gradient(155deg, rgba(14, 26, 48, 0.92) 0%, rgba(10, 21, 37, 0.88) 55%);
+    border-color: rgba(201, 162, 39, 0.2);
+    box-shadow:
+        0 4px 28px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(201, 162, 39, 0.05);
+}
+
+/* La línea superior siempre visible (dim) en la card primaria */
+.bento-card--primary::before { opacity: 0.4; }
+
+/* Dot pattern visible sutilmente en estado idle */
+.bento-card--primary .bento-card__dot-pattern { opacity: 0.5; }
+
+.bento-card--primary:hover {
+    border-color: rgba(201, 162, 39, 0.45);
+    box-shadow:
+        0 0 0 1px rgba(201, 162, 39, 0.1),
+        0 20px 56px rgba(0, 0, 0, 0.6),
+        0 4px 20px rgba(201, 162, 39, 0.22);
+    transform: translateY(-4px);
+}
+
+.bento-card--primary:hover .bento-card__dot-pattern { opacity: 1; }
+.bento-card--primary:hover::before { opacity: 1; }
+
+/* ── Glow decorativo ── */
+.bento-card__glow {
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 162, 39, 0.08) 0%, transparent 65%);
+    pointer-events: none;
+    transition: transform var(--transition-slow), opacity var(--transition-slow);
+}
+
+.bento-card--primary:hover .bento-card__glow {
+    transform: scale(1.25) translate(-10px, 10px);
+}
+
+/* ── Card top row ── */
+.bento-card__top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
 }
 
-.capacidad-card__icon {
-    width: 44px;
-    height: 44px;
-    background: rgba(201, 162, 39, 0.08);
-    border: 1px solid rgba(201, 162, 39, 0.2);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.bento-card__meta { display: flex; align-items: center; gap: 0.5rem; }
+
+.bento-card__tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--color-accent);
-    transition: background var(--transition-base), border-color var(--transition-base);
+    background: var(--color-accent-dim);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 100px;
 }
 
-.capacidad-card:hover .capacidad-card__icon {
-    background: rgba(201, 162, 39, 0.15);
-    border-color: rgba(201, 162, 39, 0.4);
-}
-
-.capacidad-card__icon svg {
-    width: 22px;
-    height: 22px;
-}
-
-.capacidad-card__badge {
-    font-size: 0.62rem;
+.bento-card__badge {
+    font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #a78bfa;
     background: rgba(167, 139, 250, 0.1);
-    border: 1px solid rgba(167, 139, 250, 0.25);
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--radius-sm);
-}
-
-.capacidad-card__titulo {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin: 0 0 0.625rem 0;
-    line-height: 1.3;
-}
-
-.capacidad-card__descripcion {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    margin: 0 0 1.25rem 0;
-    flex: 1;
-}
-
-.capacidad-card__materias {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1.5rem;
-}
-
-.capacidad-card__materia {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--color-text-dim);
-    background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border-subtle);
+    border: 1px solid rgba(167, 139, 250, 0.2);
     padding: 0.2rem 0.6rem;
     border-radius: 100px;
 }
 
-.capacidad-card__action {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--color-accent);
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-border-subtle);
-    margin-top: auto;
-    letter-spacing: 0.02em;
-}
-
-.capacidad-card__action svg {
-    width: 15px;
-    height: 15px;
-    transition: transform var(--transition-fast);
-}
-
-.capacidad-card:hover .capacidad-card__action svg {
-    transform: translateX(4px);
-}
-
-/* ── Principios Rectores ── */
-.dashboard__principios {
-    margin-bottom: 2.5rem;
-    padding: 1.5rem;
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
+/* ── Icon con animación ── */
+.bento-card__icon {
+    width: 46px;
+    height: 46px;
+    background: rgba(201, 162, 39, 0.07);
+    border: 1px solid rgba(201, 162, 39, 0.18);
     border-radius: var(--radius-lg);
-}
-
-.dashboard__principios-label {
-    font-family: var(--font-sans);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-text-dim);
-    margin: 0 0 1.25rem 0;
-}
-
-.dashboard__principios-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.principio-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.875rem;
-}
-
-.principio-item__simbolo {
-    flex-shrink: 0;
-    font-family: var(--font-serif);
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    background: var(--color-accent-dim);
-    border: 1px solid rgba(201, 162, 39, 0.25);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 1px;
+    color: var(--color-accent);
+    transition: background var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
 }
 
-.principio-item__texto {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+.bento-card__icon svg { width: 22px; height: 22px; }
+
+.bento-card__icon--lg {
+    width: 56px;
+    height: 56px;
+}
+.bento-card__icon--lg svg { width: 28px; height: 28px; }
+
+.bento-card:hover .bento-card__icon {
+    background: rgba(201, 162, 39, 0.13);
+    border-color: rgba(201, 162, 39, 0.38);
+    box-shadow: 0 0 16px rgba(201, 162, 39, 0.15);
 }
 
-.principio-item__texto strong {
-    font-family: var(--font-sans);
-    font-size: 0.85rem;
+/* Animación del SVG dentro del icon al hover de la card */
+.bento-card__icon-inner { display: contents; }
+
+.bento-card--primary:hover .bento-card__icon-inner svg {
+    animation: icon-float 3s ease-in-out infinite;
+}
+
+.bento-card--secondary:nth-child(2):hover .bento-card__icon-inner svg {
+    animation: icon-pulse 2.5s ease-in-out infinite;
+}
+
+.bento-card--secondary:nth-child(3):hover .bento-card__icon-inner svg {
+    animation: icon-drift 4s ease-in-out infinite;
+}
+
+/* ── Body ── */
+.bento-card__body {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.bento-card__titulo {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
     font-weight: 600;
-    color: var(--color-text-secondary);
-    line-height: 1.3;
+    color: var(--color-text-primary);
+    margin: 0 0 0.625rem 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
-.principio-item__texto span {
-    font-size: 0.775rem;
+.bento-card--secondary .bento-card__titulo {
+    font-size: 1.2rem;
+}
+
+.bento-card__descripcion {
+    font-size: 0.85rem;
     color: var(--color-text-muted);
-    line-height: 1.4;
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Tags ── */
+.bento-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    position: relative;
+    z-index: 1;
+}
+
+.bento-card__tag-item {
+    font-size: 0.67rem;
+    font-weight: 500;
+    color: var(--color-text-dim);
+    background: rgba(13, 30, 53, 0.7);
+    border: 1px solid var(--color-border-subtle);
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.bento-card:hover .bento-card__tag-item {
+    border-color: rgba(201, 162, 39, 0.18);
+    color: var(--color-text-muted);
+    background: rgba(201, 162, 39, 0.04);
+}
+
+/* ── Action ── */
+.bento-card__action {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(30, 58, 95, 0.6);
+    margin-top: auto;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+    transition: gap var(--transition-fast);
+}
+
+.bento-card__action svg {
+    transition: transform var(--transition-fast);
+}
+
+.bento-card:hover .bento-card__action {
+    gap: 0.65rem;
+}
+
+.bento-card:hover .bento-card__action svg {
+    transform: translateX(5px);
 }
 
 /* ── Footer ── */
 .dashboard__footer {
-    text-align: center;
-    padding: 1.75rem 2rem;
-    background: var(--color-bg-surface);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--color-border-subtle);
-    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
-.dashboard__footer p {
-    margin: 0;
+.dashboard__footer-filosofia {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    background: rgba(10, 21, 37, 0.7);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-subtle);
     font-size: 0.875rem;
     color: var(--color-text-muted);
     line-height: 1.6;
-    max-width: 60ch;
-    margin: 0 auto;
+    margin: 0;
+    max-width: none;
+    backdrop-filter: blur(6px);
 }
 
-.dashboard__footer strong {
+.dashboard__footer-filosofia strong {
     color: var(--color-text-secondary);
 }
 
-/* ── Aviso Legal ── */
 .dashboard__aviso-legal {
     padding: 1.25rem 1.5rem;
-    background: var(--color-bg-surface);
+    background: rgba(10, 21, 37, 0.7);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    backdrop-filter: blur(4px);
 }
 
 .dashboard__aviso-legal-titulo {
     font-family: var(--font-sans);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--color-text-dim);
-    margin: 0 0 0.625rem 0;
 }
 
-.dashboard__aviso-legal p:last-child {
-    font-size: 0.8rem;
+.dashboard__aviso-legal p {
+    font-size: 0.78rem;
     color: var(--color-text-muted);
     line-height: 1.6;
     margin: 0;
@@ -370,115 +672,55 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-    .dashboard__principios-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
 @media (max-width: 768px) {
     .dashboard {
-        padding: 1.5rem 1rem 3rem;
+        padding: 1.25rem 1rem 4rem;
+        background-size: 20px 20px, 100% 100%;
     }
 
-    .dashboard__title {
+    .dashboard__bento {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .bento-card--primary {
+        grid-row: auto;
+    }
+
+    .dashboard__hero {
+        padding: 2.5rem 1rem 2rem;
+    }
+
+    .dashboard__principios-pills {
+        gap: 0.375rem;
+    }
+
+    .principio-pill__nombre {
+        display: none;
+    }
+
+    .principio-pill {
+        padding: 0.35rem 0.625rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard__hero-title {
         font-size: 2.25rem;
     }
+
+    .bento-card {
+        padding: 1.375rem;
+    }
 }
 
-/* ── Banner MEV Setup ── */
-.mev-banner {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.875rem 1.5rem;
-    border-radius: 10px;
-    margin-bottom: 1.5rem;
-}
-
-.mev-banner--setup {
-    background: rgba(15, 30, 60, 0.7);
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    border-left: 3px solid #3b82f6;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
-.mev-banner--activo {
-    background: rgba(6, 30, 18, 0.6);
-    border: 1px solid rgba(52, 211, 153, 0.3);
-    border-left: 3px solid #34d399;
-    font-size: 0.82rem;
-    color: #6ee7b7;
-}
-
-.mev-banner__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #34d399;
-    flex-shrink: 0;
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4);
-    animation: mev-pulse-dash 2s infinite;
-}
-
-@keyframes mev-pulse-dash {
-    0%   { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
-    70%  { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
-}
-
-.mev-banner__texto {
-    color: #6ee7b7;
-    font-size: 0.82rem;
-}
-
-.mev-banner__izq {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    color: #60a5fa;
-    flex: 1;
-    min-width: 0;
-}
-
-.mev-banner__izq svg {
-    flex-shrink: 0;
-    margin-top: 0.1rem;
-}
-
-.mev-banner__izq div {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.mev-banner__izq strong {
-    font-size: 0.84rem;
-    font-weight: 700;
-    color: #93c5fd;
-}
-
-.mev-banner__izq span {
-    font-size: 0.76rem;
-    color: #4a6a8a;
-    line-height: 1.4;
-}
-
-.mev-banner__btn {
-    flex-shrink: 0;
-    padding: 0.5rem 1rem;
-    background: #1d4ed8;
-    color: #fff;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: background 0.15s;
-}
-
-.mev-banner__btn:hover {
-    background: #2563eb;
+/* Reducir animaciones para usuarios que lo prefieren */
+@media (prefers-reduced-motion: reduce) {
+    .dashboard > *,
+    .bento-card,
+    .mev-banner__dot,
+    .dashboard__hero-status-dot {
+        animation: none !important;
+        transition: none !important;
+    }
 }
