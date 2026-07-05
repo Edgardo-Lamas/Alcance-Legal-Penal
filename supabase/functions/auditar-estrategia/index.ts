@@ -246,10 +246,11 @@ serve(async (req: Request) => {
         }), { headers: { ...cors, 'Content-Type': 'application/json' } })
 
     } catch (error) {
+        // Loguear detalle; no devolver el mensaje crudo al cliente.
         console.error('[auditar-estrategia] Error:', error)
         return new Response(JSON.stringify({
             success: false,
-            fundamento: error instanceof Error ? error.message : 'Error interno del servidor'
+            fundamento: 'Ocurrió un error al auditar la estrategia. Intente nuevamente en unos minutos.'
         }), { status: 500, headers: { ...cors, 'Content-Type': 'application/json' } })
     }
 })

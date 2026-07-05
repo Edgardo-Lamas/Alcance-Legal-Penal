@@ -13,6 +13,10 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { PROFILE_PENAL_PBA_CONFIG } from '../_shared/profile-config.ts'
 
+// Tipo del cliente Supabase con schema explícito ('public') para que .rpc()/.from()
+// tipen correctamente (ReturnType<typeof createClient> resuelve el schema a `never`).
+type SupabaseSvc = ReturnType<typeof createClient<any, 'public'>>
+
 // ============================================
 // CONFIGURACIÓN
 // ============================================
@@ -20,12 +24,54 @@ import { PROFILE_PENAL_PBA_CONFIG } from '../_shared/profile-config.ts'
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 
+// Si es 'true', se exige un JWT de usuario válido (login del abogado). Activar en PRODUCCIÓN.
+// Se deja en false por defecto para no romper la beta / los tests con mocks.
+const REQUIRE_AUTH = Deno.env.get('REQUIRE_AUTH') === 'true'
+
 // Umbral mínimo de caracteres para activar extracción con Gemini
 const GEMINI_EXTRACTION_MIN_CHARS = 500
+
+// Límites de tamaño de adjuntos (validados server-side, no solo en el frontend)
+const MAX_IMAGE_BYTES = 6 * 1024 * 1024   // ~6MB por imagen (frontend limita a 4MB)
+const MAX_PDF_BYTES   = 13 * 1024 * 1024  // ~13MB por PDF (frontend limita a 10MB)
+
+// Estima los bytes reales a partir del largo de una cadena base64 (~3/4).
+function base64Bytes(b64: string): number {
+    return Math.floor((b64?.length ?? 0) * 0.75)
+}
+
+// fetch con reintento y backoff para errores transitorios de proveedores (429, 5xx, red).
+async function fetchConReintento(
+    url: string,
+    init: RequestInit,
+    { retries = 2, baseDelayMs = 500 } = {}
+): Promise<Response> {
+    let ultimoError: unknown
+    for (let intento = 0; intento <= retries; intento++) {
+        try {
+            const resp = await fetch(url, init)
+            if (resp.status === 429 || resp.status >= 500) {
+                if (intento < retries) {
+                    await new Promise(r => setTimeout(r, baseDelayMs * Math.pow(2, intento)))
+                    continue
+                }
+            }
+            return resp
+        } catch (err) {
+            ultimoError = err
+            if (intento < retries) {
+                await new Promise(r => setTimeout(r, baseDelayMs * Math.pow(2, intento)))
+                continue
+            }
+        }
+    }
+    throw ultimoError ?? new Error('fetchConReintento agotó los intentos')
+}
 
 // ============================================
 // RATE LIMITING (en memoria por instancia)
@@ -182,7 +228,8 @@ function getCachedEmbedding(key: string): number[] | undefined {
 function setCachedEmbedding(key: string, embedding: number[]): void {
     if (embeddingCache.size >= CACHE_MAX_SIZE) {
         // Elimina el primer elemento (FIFO simple)
-        embeddingCache.delete(embeddingCache.keys().next().value)
+        const primera = embeddingCache.keys().next().value
+        if (primera !== undefined) embeddingCache.delete(primera)
     }
     embeddingCache.set(key, embedding)
 }
@@ -245,7 +292,7 @@ async function generarEmbedding(texto: string): Promise<number[]> {
         return cached
     }
 
-    const response = await fetch('https://api.openai.com/v1/embeddings', {
+    const response = await fetchConReintento('https://api.openai.com/v1/embeddings', {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
@@ -258,7 +305,9 @@ async function generarEmbedding(texto: string): Promise<number[]> {
     })
 
     if (!response.ok) {
-        throw new Error(`OpenAI Embeddings error: ${await response.text()}`)
+        // No exponer el cuerpo del error del proveedor al cliente: loguear detalle, lanzar genérico.
+        console.error(`[OpenAI] Embeddings error ${response.status}: ${await response.text()}`)
+        throw new Error('Fallo al generar el embedding de la consulta.')
     }
 
     const data = await response.json()
@@ -334,7 +383,7 @@ async function invocarRazonamiento(
               ]
             : context
 
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetchConReintento('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
                 'x-api-key': ANTHROPIC_API_KEY,
@@ -347,10 +396,11 @@ async function invocarRazonamiento(
                 system: PROFILE_PENAL_PBA_CONFIG.systemPrompt,
                 messages: [{ role: 'user', content: userContent }]
             }),
-        })
+        }, { retries: 2 })
 
         if (!response.ok) {
-            throw new Error(`Anthropic API error: ${await response.text()}`)
+            console.error(`[Anthropic] razonamiento error ${response.status}: ${await response.text()}`)
+            throw new Error('El servicio de análisis no está disponible en este momento. Intente nuevamente en unos minutos.')
         }
 
         const data = await response.json()
@@ -358,7 +408,7 @@ async function invocarRazonamiento(
     }
 
     // Sin fallback a otros LLMs — el análisis defensivo debe ser siempre por Claude
-    throw new Error('ANTHROPIC_API_KEY no configurada. El análisis de defensa penal requiere Claude.')
+    throw new Error('El servicio de análisis no está configurado correctamente.')
 }
 
 // Helper: limpia markdown fences antes de JSON.parse
@@ -541,85 +591,9 @@ async function validarAnalogiaFactica(
     }
 }
 
-// ============================================
-// DETECCIÓN DE PATRONES PROCESALES (FASE 4 sub-tarea)
-// ============================================
-
-async function detectarPatrones(
-    casoContext: string,
-    borrador: Record<string, string>
-): Promise<PatronDetectado[]> {
-    const borradorTexto = Object.entries(borrador)
-        .map(([k, v]) => `### ${k}\n${v}`)
-        .join('\n\n')
-
-    const prompt =
-        `Tenés el siguiente caso penal y el borrador de informe defensivo.\n\n` +
-        `## CASO\n${casoContext}\n\n` +
-        `## BORRADOR DE INFORME\n${borradorTexto}\n\n` +
-        `## PATRONES PROCESALES PENALES\n${PATRONES_PROCESALES_DESCRIPCION}\n\n` +
-        `Revisá el caso y el borrador. Para cada uno de los 8 patrones (PDN-001 a CGP-008) determiná:\n` +
-        `- presente: true si hay indicios del patrón en el caso o la prueba descripta\n` +
-        `- nivel_alerta: "alto", "medio" o "bajo" según la gravedad\n` +
-        `- nota_resumen: 1-2 frases en lenguaje claro explicando por qué está o no presente\n` +
-        `- secciones_relacionadas: array con las secciones donde debe reflejarse (analisis_prueba_cargo, nulidades_y_vicios, contraargumentacion, encuadre_procesal, conclusion_defensiva)\n\n` +
-        `Devolvé SOLO el JSON array sin texto adicional:\n` +
-        `[{"id":"PDN-001","nombre_corto":"...","nivel_alerta":"alto","presente":true,"nota_resumen":"...","secciones_relacionadas":["..."]}]`
-
-    if (ANTHROPIC_API_KEY) {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-6',
-                max_tokens: 2048,
-                messages: [{ role: 'user', content: prompt }]
-            }),
-        })
-
-        if (!response.ok) {
-            throw new Error(`Anthropic API error (patrones): ${await response.text()}`)
-        }
-
-        const data = await response.json()
-        return parseJsonSafe(data.content[0].text) as PatronDetectado[]
-    }
-
-    // Fallback OpenAI — json_object requiere wrapper de objeto
-    const promptOpenAI = prompt.replace(
-        'Devolvé SOLO el JSON array sin texto adicional:\n[{',
-        'Devolvé un JSON object con la clave "patrones_detectados" conteniendo el array:\n{"patrones_detectados":[{'
-    ).replace(/\]$/, ']}'
-    )
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${OPENAI_API_KEY}`,
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            model: 'gpt-4-turbo-preview',
-            response_format: { type: 'json_object' },
-            messages: [
-                { role: 'system', content: 'Eres un asistente jurídico especializado en defensa penal PBA. Devuelve solo JSON.' },
-                { role: 'user', content: promptOpenAI }
-            ]
-        }),
-    })
-
-    if (!response.ok) {
-        throw new Error(`OpenAI error (patrones): ${await response.text()}`)
-    }
-
-    const data = await response.json()
-    const parsed = parseJsonSafe(data.choices[0].message.content) as Record<string, unknown>
-    return ((parsed.patrones_detectados ?? parsed) as PatronDetectado[])
-}
+// Nota: los patrones procesales se detectan dentro de la misma llamada de razonamiento
+// (ver contextReasoning + FASE 3). La antigua función `detectarPatrones` era código muerto
+// y se eliminó en la preparación a producción (auditoría A-4).
 
 // ============================================
 // FASE 1: ADMISIBILIDAD
@@ -659,7 +633,7 @@ function checkAdmissibility(body: AnalizarCasoRequest): {
 // ============================================
 
 async function retrieveCriteria(
-    supabase: ReturnType<typeof createClient>,
+    supabase: SupabaseSvc,
     embedding: number[]
 ): Promise<{
     baseSuficiente: boolean
@@ -670,7 +644,8 @@ async function retrieveCriteria(
     const { data: criterios, error } = await supabase.rpc('buscar_criterios', {
         query_embedding: embedding,
         match_count: RAG_CONFIG.TOP_K,
-        filter_alcance: 'criterios_generales'
+        filter_alcance: 'criterios_generales',
+        filter_fuero: 'penal'   // evita traer criterios de otros fueros si la DB se vuelve multi-fuero
     })
 
     if (error) {
@@ -714,43 +689,42 @@ function validateOutput(contenido: Record<string, string>): {
     esViolacionScope?: boolean
 } {
     const advertencias: string[] = []
-    let errorCount = 0
     const textoCompleto = Object.values(contenido).join(' ')
 
-    // Detectar certeza excesiva
+    // Certeza excesiva → advertencia (no bloquea).
     for (const pattern of CERTEZA_PATTERNS) {
         if (pattern.test(textoCompleto)) {
             advertencias.push('El análisis expresa niveles de certeza que deben interpretarse con cautela profesional.')
-            errorCount++
             break
         }
     }
 
-    // Detectar bias hacia la acusación (violación de scope crítica)
+    // Posible razonamiento desde la acusación → ADVERTENCIA, no bloqueo.
+    // Los patrones de superficie no distinguen una cita/refutación de la acusación
+    // ("la fiscalía sostiene que el imputado es culpable, pero no lo probó…") de una
+    // violación real de scope. Bloquear con 403 producía falsos rechazos de análisis
+    // defensivos correctos (auditoría C-1). El reemplazo ideal es un juicio LLM
+    // "¿el informe razona DESDE la acusación? sí/no"; hasta entonces, degradamos a aviso.
     for (const pattern of ACUSACION_BIAS_PATTERNS) {
         if (pattern.test(textoCompleto)) {
-            return {
-                status: 'rejected',
-                advertencias: ['Se detectó razonamiento desde la perspectiva de la acusación. El sistema opera exclusivamente desde la defensa.'],
-                esViolacionScope: true
-            }
+            advertencias.push('Revisión manual sugerida: el texto contiene frases que podrían leerse como razonamiento desde la acusación. Verificar que se citan solo para refutarlas.')
+            break
         }
     }
 
-    // Detectar mención a fueros excluidos
+    // Mención a materia de otro fuero → ADVERTENCIA, no bloqueo: suele ser una
+    // referencia legítima (ej. acción civil dentro del proceso penal). Auditoría C-1/C-2.
     for (const keyword of PROFILE_PENAL_PBA_CONFIG.fuerosExcluidosKeywords) {
         if (textoCompleto.toLowerCase().includes(keyword.toLowerCase())) {
-            return {
-                status: 'rejected',
-                advertencias: [`Se detectó mención a materia fuera del scope penal: "${keyword}"`],
-                esViolacionScope: true
-            }
+            advertencias.push(`Revisión manual sugerida: el análisis menciona "${keyword}" (materia potencialmente ajena al fuero penal).`)
+            break
         }
     }
 
-    if (errorCount >= 2) return { status: 'rejected', advertencias }
-    if (errorCount === 1 || advertencias.length > 0) return { status: 'limited', advertencias }
-    return { status: 'approved', advertencias: [] }
+    // Esta capa nunca rechaza por sí sola: solo aprueba o marca como "limited" con avisos.
+    return advertencias.length > 0
+        ? { status: 'limited', advertencias }
+        : { status: 'approved', advertencias: [] }
 }
 
 // ============================================
@@ -758,7 +732,7 @@ function validateOutput(contenido: Record<string, string>): {
 // ============================================
 
 async function generarNumeroInforme(
-    supabase: ReturnType<typeof createClient>
+    supabase: SupabaseSvc
 ): Promise<string> {
     const year = new Date().getFullYear()
 
@@ -772,6 +746,60 @@ async function generarNumeroInforme(
     }
 
     return `ALC-${PROFILE_PENAL_PBA_CONFIG.codigoInforme}-${year}-${String(data).padStart(6, '0')}`
+}
+
+// ============================================
+// AUTENTICACIÓN DE USUARIO (JWT real, no solo decodificado)
+// ============================================
+// Devuelve el user_id sólo si el JWT es un token de USUARIO válido (login del abogado).
+// El anon key también es un JWT válido pero con role='anon' y sin usuario → no cuenta.
+async function verificarUsuario(
+    req: Request
+): Promise<{ userId: string | null; autenticado: boolean }> {
+    const authHeader = req.headers.get('authorization') ?? ''
+    const jwt = authHeader.replace('Bearer ', '').trim()
+    if (!jwt || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        return { userId: null, autenticado: false }
+    }
+    try {
+        const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            global: { headers: { Authorization: `Bearer ${jwt}` } },
+        })
+        const { data, error } = await client.auth.getUser(jwt)
+        if (error || !data?.user) return { userId: null, autenticado: false }
+        return { userId: data.user.id, autenticado: true }
+    } catch {
+        return { userId: null, autenticado: false }
+    }
+}
+
+// ============================================
+// RATE LIMITING PERSISTENTE (tabla Postgres — sobrevive a instancias efímeras)
+// ============================================
+// Requiere la migración 009 (tabla rate_limits + función check_rate_limit).
+// Si la función aún no está aplicada, hace fail-open (no bloquea) y loguea aviso,
+// para que el deploy sea seguro incluso antes de correr la migración.
+async function checkRateLimitPersistente(
+    supabase: SupabaseSvc,
+    key: string,
+    max: number,
+    windowSeconds: number
+): Promise<boolean> {
+    try {
+        const { data, error } = await supabase.rpc('check_rate_limit', {
+            p_key: key,
+            p_max: max,
+            p_window_seconds: windowSeconds,
+        })
+        if (error) {
+            console.warn('[RATE] check_rate_limit no disponible, fail-open:', error.message)
+            return true
+        }
+        return data === true
+    } catch (err) {
+        console.warn('[RATE] Error en rate limit persistente, fail-open:', (err as Error).message)
+        return true
+    }
 }
 
 // ============================================
@@ -809,27 +837,70 @@ serve(async (req: Request) => {
             throw new Error(`Variables de entorno faltantes: ${missingEnvVars.join(', ')}`)
         }
 
-        // Extraer user_id del JWT para trazabilidad multi-tenant
-        let userId = 'anonimo'
-        try {
-            const authHeader = req.headers.get('authorization') ?? ''
-            const jwt = authHeader.replace('Bearer ', '')
-            if (jwt) {
-                const payload = JSON.parse(atob(jwt.split('.')[1]))
-                userId = payload.sub ?? 'anonimo'
-            }
-        } catch { /* JWT inválido o anon */ }
+        // Verificar identidad del usuario (JWT real, no solo decodificado).
+        // En PRODUCCIÓN (REQUIRE_AUTH=true) se rechaza cualquier request sin login válido.
+        const { userId: userIdVerificado, autenticado } = await verificarUsuario(req)
+        if (REQUIRE_AUTH && !autenticado) {
+            return new Response(JSON.stringify({
+                success: false,
+                fase_rechazo: 'sistema',
+                codigo: 'NO_AUTENTICADO',
+                fundamento: 'Se requiere iniciar sesión para usar el análisis.',
+                disclaimer: DISCLAIMER
+            }), { status: 401, headers: { ...cors, 'Content-Type': 'application/json' } })
+        }
+        const userId = userIdVerificado ?? 'anonimo'
+        console.log(`[PIPELINE] user=${userId} ip=${clientIp} auth=${autenticado}`)
 
-        console.log(`[PIPELINE] user=${userId} ip=${clientIp}`)
+        // Cliente Supabase (service role) — usado para RAG, rate limit y numeración.
+        const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!)
+
+        // Rate limiting persistente (autoritativo, sobrevive a instancias efímeras).
+        // Clave: usuario si está logueado, si no la IP.
+        const rateKey = `analizar:${autenticado ? userId : clientIp}`
+        if (!(await checkRateLimitPersistente(supabase, rateKey, RATE_LIMIT_MAX, 60))) {
+            return new Response(JSON.stringify({
+                success: false,
+                fase_rechazo: 'sistema',
+                codigo: 'RATE_LIMIT_EXCEEDED',
+                fundamento: `Límite de solicitudes alcanzado. Máximo ${RATE_LIMIT_MAX} análisis por minuto.`,
+                recomendacion: 'Aguardá un momento antes de realizar otra consulta.',
+                disclaimer: DISCLAIMER
+            }), { status: 429, headers: { ...cors, 'Content-Type': 'application/json' } })
+        }
 
         const body: AnalizarCasoRequest = await req.json()
 
-        // Validar tamaño de campos de texto para evitar token overflow
-        if (body.hechos?.length > 10000) {
-            throw new Error('El campo "hechos" supera el límite de 10.000 caracteres.')
+        // Avisos que se agregan al informe final (ej. hechos extraídos por IA).
+        const advertenciasPipeline: string[] = []
+
+        // Validación de tamaño → respuesta 400 directa (no throw: evita filtrar mensajes por el catch).
+        if ((body.hechos?.length ?? 0) > 10000) {
+            return new Response(JSON.stringify({
+                success: false, fase_rechazo: 'sistema', codigo: 'INPUT_DEMASIADO_GRANDE',
+                fundamento: 'El campo "hechos" supera el límite de 10.000 caracteres.', disclaimer: DISCLAIMER
+            }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
         }
-        if (body.documentacion_caso?.length > 20000) {
-            throw new Error('El campo "documentacion_caso" supera el límite de 20.000 caracteres.')
+        if ((body.documentacion_caso?.length ?? 0) > 20000) {
+            return new Response(JSON.stringify({
+                success: false, fase_rechazo: 'sistema', codigo: 'INPUT_DEMASIADO_GRANDE',
+                fundamento: 'El campo "documentacion_caso" supera el límite de 20.000 caracteres.', disclaimer: DISCLAIMER
+            }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
+        }
+
+        // Validación de tamaño de adjuntos (server-side). El frontend ya limita, pero un
+        // caller directo podría enviar base64 gigante → memoria/costo/timeout.
+        if ((body.imagenes ?? []).some(img => base64Bytes(img.data) > MAX_IMAGE_BYTES)) {
+            return new Response(JSON.stringify({
+                success: false, fase_rechazo: 'sistema', codigo: 'ADJUNTO_DEMASIADO_GRANDE',
+                fundamento: `Una imagen adjunta supera el límite de ${Math.round(MAX_IMAGE_BYTES / 1048576)}MB.`, disclaimer: DISCLAIMER
+            }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
+        }
+        if ((body.documentos_pdf ?? []).some(pdf => base64Bytes(pdf.data) > MAX_PDF_BYTES)) {
+            return new Response(JSON.stringify({
+                success: false, fase_rechazo: 'sistema', codigo: 'ADJUNTO_DEMASIADO_GRANDE',
+                fundamento: `Un PDF adjunto supera el límite de ${Math.round(MAX_PDF_BYTES / 1048576)}MB.`, disclaimer: DISCLAIMER
+            }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
         }
 
         // ==========================================
@@ -864,7 +935,12 @@ serve(async (req: Request) => {
                     const longitudOriginal = body.documentacion_caso.length
                     if (!body.tipo_penal && extraccion.tipo_penal) body.tipo_penal = extraccion.tipo_penal
                     if (!body.etapa_procesal && extraccion.etapa_procesal) body.etapa_procesal = extraccion.etapa_procesal
-                    if (body.hechos.length < 80 && extraccion.hechos_clave) body.hechos = extraccion.hechos_clave
+                    if (body.hechos.length < 80 && extraccion.hechos_clave) {
+                        body.hechos = extraccion.hechos_clave
+                        // Gemini es una capa nueva y sin probar a fondo: dejar traza visible
+                        // al abogado de que los "hechos" fueron extraídos automáticamente.
+                        advertenciasPipeline.push('Los "hechos" analizados fueron extraídos automáticamente por IA a partir del texto del expediente (el campo original era breve). Verificá que reflejen fielmente la causa.')
+                    }
                     body.documentacion_caso =
                         `[RESUMEN AUTOMÁTICO — texto original: ${longitudOriginal} caracteres]\n\n` +
                         `HECHOS CLAVE: ${extraccion.hechos_clave}\n\n` +
@@ -898,7 +974,6 @@ serve(async (req: Request) => {
 
         const embedding = await generarEmbedding(queryRAG)
 
-        const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
         const rag = await retrieveCriteria(supabase, embedding)
 
         if (!rag.baseSuficiente) {
@@ -1027,9 +1102,18 @@ serve(async (req: Request) => {
         // ==========================================
         const numeroInforme = await generarNumeroInforme(supabase)
 
+        // Fusionar avisos: los del pipeline (ej. hechos por IA) + los de la validación.
+        const advertenciasFinal = [
+            ...advertenciasPipeline,
+            ...(validacion.status === 'limited' ? validacion.advertencias : []),
+        ]
+        const statusFinal = advertenciasFinal.length > 0 && validacion.status === 'approved'
+            ? 'limited' as const
+            : validacion.status
+
         const respuesta: AnalizarCasoResponse = {
             success: true,
-            status: validacion.status,
+            status: statusFinal,
             data: {
                 numero_informe: numeroInforme,
                 fecha_emision: new Date().toISOString(),
@@ -1041,7 +1125,7 @@ serve(async (req: Request) => {
                 limitaciones:           razonamiento.limitaciones            || '',
                 patrones_detectados:    patrones
             },
-            advertencias: validacion.status === 'limited' ? validacion.advertencias : undefined,
+            advertencias: advertenciasFinal.length > 0 ? advertenciasFinal : undefined,
             disclaimer: DISCLAIMER,
             meta: {
                 criterios_utilizados: criteriosValidados.length,
@@ -1056,15 +1140,16 @@ serve(async (req: Request) => {
         })
 
     } catch (error) {
+        // Loguear el detalle server-side; NUNCA devolver el mensaje crudo al cliente
+        // (puede contener errores de proveedores / info interna).
         console.error('Error en Edge Function:', error)
-        const mensaje = error instanceof Error ? error.message : 'Error interno del servidor'
 
         return new Response(
             JSON.stringify({
                 success: false,
                 fase_rechazo: 'sistema',
                 codigo: 'ERROR_INTERNO',
-                fundamento: mensaje,
+                fundamento: 'Ocurrió un error al procesar el análisis. Intente nuevamente en unos minutos.',
                 disclaimer: DISCLAIMER
             }),
             {

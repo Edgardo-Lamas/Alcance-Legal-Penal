@@ -74,7 +74,7 @@ test.describe('Autenticación', () => {
     test('acceso a dashboard en modo sin auth (test mode)', async ({ page }) => {
         // En modo test, auth está deshabilitado → dashboard accesible sin login
         await gotoApp(page, '/')
-        await expect(page.getByText(TEXTOS.dashboard.titulo)).toBeVisible()
+        await expect(page.getByRole('heading', { name: TEXTOS.dashboard.titulo })).toBeVisible()
     })
 
     test('rutas protegidas accesibles en modo sin Supabase', async ({ page }) => {

@@ -83,7 +83,7 @@ function run(text, opts = {}) {
 
 // ─── Header del documento ─────────────────────────────────────────────────────
 
-function buildHeader(informe, capacidad) {
+function buildHeader(informe, _capacidad) {
     return new Header({
         children: [
             new Paragraph({

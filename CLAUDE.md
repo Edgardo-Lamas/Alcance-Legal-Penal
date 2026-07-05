@@ -14,6 +14,77 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 
 ---
 
+## ⚠️ ESTADO ACTUAL Y PLAN DE TRABAJO PARA PRODUCCIÓN
+
+> **Leer esto primero al comenzar cualquier sesión.** Estamos preparando el paso a
+> producción. Auditoría completa realizada el **2026-07-05**. Estado: **apto para
+> beta cerrada; NO listo para producción abierta** hasta cerrar los ítems 🔴 y 🟠.
+> A medida que se completa una tarea, marcar `[x]` y anotar el commit.
+
+### Ya verificado (no re-hacer salvo que se pida)
+- ✅ Build de Vite compila (`npm run build`).
+- ✅ Migraciones sanas: el overload duplicado de `buscar_criterios` está corregido en
+  `008` y es el **único** caso del patrón (revisadas las 8).
+- ✅ IDs de modelo Claude válidos y vigentes (`claude-sonnet-4-6`, `claude-haiku-4-5-20251001`).
+- ✅ Extensión Chrome **sin API keys embebidas**: migrada a login Supabase, solo lleva
+  la `anon key` (pública por diseño).
+
+### Plan de trabajo — estado (actualizado 2026-07-05)
+
+**✅ COMPLETADO EN CÓDIGO** (verificado: `deno check` de las 4 funciones OK, `npm run build` OK,
+`npm run lint` exit 0, suite Playwright verde):
+
+- [x] **C-1** · `validateOutput()` ya **no rechaza** por patrones de superficie: degrada a
+  `limited` con advertencia. Deja de descartar análisis correctos que citan a la acusación.
+- [x] **C-2** · `fuerosExcluidosKeywords`: se quitaron `'quiebra'`/`'alimentos'` y se pasó a
+  frases específicas de otro fuero.
+- [x] **A-1 (código)** · Verificación real de JWT (`supabase.auth.getUser`) + flag
+  `REQUIRE_AUTH` + rate-limit persistente vía RPC `check_rate_limit` (migración **009**).
+  ⤷ *Pendiente tuyo:* aplicar migración, setear envs y alertas de gasto (ver abajo).
+- [x] **A-4** · `fetchConReintento` (backoff en 429/5xx) en OpenAI + Anthropic;
+  `detectarPatrones` (código muerto) eliminado.
+- [x] **A-2** · Suite Playwright **verde** (helpers/TEXTOS + flujos de auditar/redactar
+  reescritos; se removieron tests de features eliminadas). Sigue siendo **solo mocks**
+  → *pendiente:* 1 test de integración contra staging real.
+- [x] **M-1** · Validación server-side de tamaño de imágenes (6MB) y PDF (13MB).
+- [x] **M-2** · Gemini ya no pisa `hechos` en silencio: agrega advertencia visible al informe.
+- [x] **M-3** · RAG con `filter_fuero: 'penal'` en `analizar-caso` y `mcp-server`.
+- [x] **M-4** · Las 4 funciones devuelven mensaje genérico; el detalle solo va a `console.error`.
+- [x] **M-5** · `MCP_SECRET` ya no cae al anon key (fail-closed si no está configurado).
+- [x] **M-6** · `eslint.config.js` ignora artefactos + globals node en scripts → `npm run lint`
+  exit 0 (6 warnings informativos).
+- [x] **B-2 (README)** · `chrome-extension/README.md` actualizado al flujo de login Supabase.
+- [x] **B-3** · `src/core/README.md` documenta que es referencia, no producción.
+
+**⏳ PENDIENTE — acciones tuyas (requieren tu entorno / red / dashboards)**
+- [ ] **A-1 (deploy)** · En Supabase: aplicar migración `supabase db push` (o el SQL de
+  `009_create_rate_limits.sql`); setear envs de la Edge Function `analizar-caso`:
+  `SUPABASE_ANON_KEY`, `REQUIRE_AUTH=true` (producción); setear `MCP_SECRET` en `mcp-server`.
+  Configurar alertas de gasto en Anthropic/OpenAI/Gemini.
+- [ ] **A-3** · `npm audit fix` + bump `react-router-dom` (RCE turbo-stream GHSA-49rj-9fvp-4h2h),
+  `ws`, `uuid`. *No se pudo hacer acá: el entorno no tiene red npm.* Correr en tu máquina y
+  re-verificar `npm run build`.
+- [ ] **A-2 (integración)** · Agregar ≥1 test que pegue contra un Supabase de **staging real**
+  (no mock) para el happy-path del pipeline.
+- [ ] **B-2 (zip)** · Borrar/re-generar `alcance-legal-mev-navigator-v1.0.0.zip` de la raíz
+  (artefacto viejo; puede tener el flujo de API key). No lo toqué por no haberlo creado yo.
+- [ ] **B-4** · `match_criterios_juridicos` (migración 006) queda como función huérfana
+  (no la usa el código de producción). Cosmético — borrar si se confirma sin uso.
+- [ ] **Deploy** · Configurar el **Preview env de Vercel** (quedó pendiente por el CLI viejo);
+  documentar rollback de Supabase. `npm i -g vercel@latest` primero.
+
+### Cómo salir a producción (checklist de release)
+1. En tu máquina: `npm audit fix` + bump react-router-dom → `npm run build` OK.
+2. Supabase: `supabase db push` (aplica migración 009) y recargar corpus si hace falta.
+3. Envs de Edge Functions: `SUPABASE_ANON_KEY`, `REQUIRE_AUTH=true`, `MCP_SECRET`,
+   `ALLOWED_ORIGIN` (dominio prod), + las claves de IA ya existentes.
+4. Deploy funciones: `supabase functions deploy analizar-caso auditar-estrategia redactar-escrito mcp-server`.
+5. Vercel: configurar env Production **y Preview**; deploy.
+6. Alertas de gasto en los 3 proveedores de IA.
+7. Verificación end-to-end con un caso real (login del abogado → análisis).
+
+---
+
 ## Stack
 
 - **Frontend**: React 19 + Vite 7 + React Router 7
@@ -60,9 +131,15 @@ src/core/
 
 ```
 supabase/functions/
-├── analizar-caso/index.ts   ← Endpoint principal: POST /analizar-caso
-└── mcp-server/index.ts      ← MCP Server: POST /mcp-server (JSON-RPC 2.0)
+├── analizar-caso/index.ts       ← Endpoint principal: POST /analizar-caso (pipeline 5 fases)
+├── auditar-estrategia/index.ts  ← POST /auditar-estrategia (auditoría de estrategia defensiva)
+├── redactar-escrito/index.ts    ← POST /redactar-escrito (borradores de escritos judiciales)
+├── mcp-server/index.ts          ← MCP Server: POST /mcp-server (JSON-RPC 2.0)
+└── _shared/profile-config.ts    ← System prompt + config del perfil penal (compartido)
 ```
+
+> **Son 4 Edge Functions** (no 2). `analizar-caso` incluye la capa de extracción/validación
+> con Gemini Flash (pre-procesamiento) recién agregada.
 
 **MCP Server URL:** `https://nclpzmyjjmglpjalmrri.supabase.co/functions/v1/mcp-server`
 **Tools expuestas:** `analizar_caso`, `buscar_jurisprudencia`
@@ -89,7 +166,10 @@ chrome-extension/
 ```
 
 **Estado actual:** funcional, pendiente de prueba real en MEV.
-**Próximo paso crítico:** reemplazar API Key de Anthropic por autenticación con Supabase (login del abogado).
+**Autenticación:** ✅ ya migrada — `sidepanel.js` usa **login Supabase (email/password)** y
+el `access_token` del abogado. Solo embebe la `SUPABASE_ANON_KEY` (pública por diseño).
+**NO** hay API keys de Anthropic/OpenAI embebidas. (El `README.md` de la extensión todavía
+describe el flujo viejo de API key — ver ítem B-2 del plan de trabajo.)
 
 ---
 
@@ -169,7 +249,7 @@ Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
 ## Roadmap acordado (próximas tareas)
 
 1. **Prueba real de extensión en MEV** — ajustar `content.js` según DOM real
-2. **Autenticación Supabase en extensión** — reemplazar API Key por login del abogado
+2. ~~**Autenticación Supabase en extensión**~~ — ✅ HECHO (login del abogado en `sidepanel.js`)
 3. **Chrome Web Store (unlisted)** — distribución a abogados beta
 4. **Exportar análisis a Word** — skill `docx`, escritos editables desde el informe
 5. **Corpus juridico RAG** — ampliar `criterios_juridicos` con más jurisprudencia SCBA/CSJN

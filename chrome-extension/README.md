@@ -7,16 +7,18 @@ Extensión de Chrome para navegar, extraer y analizar expedientes judiciales del
 ## Requisitos
 
 - Google Chrome 114 o superior
-- API Key de Anthropic (claude.ai)
+- Cuenta de abogado en Alcance Legal Penal (login con email y contraseña)
+
+> **Nota:** la extensión ya **no** usa una API Key de Anthropic. Se autentica con el
+> **login del abogado** (Supabase). Las claves de IA viven solo en el backend seguro.
 
 ---
 
-## Paso 1 — Obtener la API Key de Anthropic
+## Paso 1 — Tener una cuenta de abogado
 
-1. Ingresá a [console.anthropic.com](https://console.anthropic.com)
-2. Creá una cuenta o iniciá sesión
-3. Ir a **API Keys** → **Create Key**
-4. Copiá la key (empieza con `sk-ant-...`) — guardala en un lugar seguro, se muestra una sola vez
+La extensión usa el mismo login que la app web. Si aún no tenés cuenta, solicitá el
+alta al administrador de Alcance Legal Penal. Vas a iniciar sesión con tu **email y
+contraseña** desde el panel lateral (Paso 4).
 
 ---
 
@@ -45,10 +47,8 @@ Antes de instalar la extensión necesitás generar los archivos de ícono:
 
 1. Hacé clic en el ícono **ALP** en la barra de Chrome
 2. Hacé clic en **"Abrir panel de análisis"**
-3. En el panel lateral, ir a la pestaña **Config**
-4. Pegá tu **API Key de Anthropic** en el campo correspondiente
-5. Seleccioná el modelo (recomendado: `claude-sonnet-4-5`)
-6. Hacé clic en **"Guardar configuración"**
+3. En el panel lateral, iniciá sesión con tu **email y contraseña** de abogado
+4. La sesión queda guardada de forma segura en el navegador (no la contraseña)
 
 ---
 
@@ -85,7 +85,7 @@ Antes de instalar la extensión necesitás generar los archivos de ícono:
 
 ## Notas importantes
 
-- **Privacidad**: la API Key y el historial se guardan únicamente en tu navegador (chrome.storage.local). Nunca se envían a servidores externos de Alcance Legal Penal.
+- **Privacidad**: la sesión (token de login) y el historial se guardan en tu navegador (chrome.storage.local). El análisis se procesa en el backend seguro de Alcance Legal Penal; las claves de los proveedores de IA nunca están en la extensión.
 - **Credenciales MEV**: la extensión NUNCA pide ni almacena tu usuario/contraseña del MEV. El login siempre lo hacés vos.
 - **Expedientes penales**: el MEV requiere autorización previa del juzgado para acceder a causas penales y de familia.
 - **Uso profesional**: los análisis son orientativos y no reemplazan el criterio profesional del abogado defensor.
@@ -97,7 +97,7 @@ Antes de instalar la extensión necesitás generar los archivos de ícono:
 | Problema | Solución |
 |---|---|
 | La extensión no detecta el MEV | Verificá que estás en mev.scba.gov.ar y recargá la pestaña |
-| "API Key inválida" | Verificá que copiaste la key completa (sk-ant-...) |
+| "Credenciales inválidas" | Verificá email y contraseña; si olvidaste la clave, pedí reseteo al administrador |
 | No extrae datos de la causa | El MEV puede tener distintas estructuras según el fuero; usá el botón "Re-extraer" |
 | PDF no descarga | Puede requerir que estés logueado. Hacé clic derecho → "Abrir enlace en nueva pestaña" |
 | El panel no abre | Reiniciá Chrome o recargá la extensión en chrome://extensions |

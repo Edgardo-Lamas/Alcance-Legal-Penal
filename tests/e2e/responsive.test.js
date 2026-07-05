@@ -18,7 +18,7 @@ test.describe('Responsive — Layouts', () => {
             await gotoApp(page, '/')
 
             // El dashboard debe ser visible sin errores de layout
-            await expect(page.getByText('Consola de Criterio Jurídico')).toBeVisible()
+            await expect(page.getByRole('heading', { name: 'Consola de Criterio Jurídico' })).toBeVisible()
 
             // No debe haber overflow horizontal (el body no debe tener scrollX)
             const hasHorizontalOverflow = await page.evaluate(() => {
@@ -31,7 +31,7 @@ test.describe('Responsive — Layouts', () => {
             await page.setViewportSize({ width: vp.width, height: vp.height })
             await gotoApp(page, '/analizar')
 
-            const hechos = page.locator('#hechos')
+            const hechos = page.locator('#documentacion_caso')
             await expect(hechos).toBeVisible()
 
             // El textarea debe tener un ancho razonable (más de 200px)

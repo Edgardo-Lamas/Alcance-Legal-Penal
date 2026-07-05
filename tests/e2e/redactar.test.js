@@ -11,13 +11,22 @@ const HECHOS_VALIDOS =
     'La cadena de custodia del material secuestrado presenta irregularidades graves que comprometen ' +
     'su valor probatorio. No existen testigos del procedimiento ni cámara que lo respalde.'
 
+// Completa el formulario de redacción con datos válidos:
+// tipo de escrito + nombre del imputado + hechos (>200 chars) + pretensión.
+async function completarRedaccionValida(page) {
+    await page.locator('label.form-option', { hasText: 'Planteo de Nulidad Procesal' }).first().click()
+    await page.fill('#nombre_imputado', 'Juan Pérez')
+    await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
+    await page.fill('#pretension_defensiva', 'Se declare la nulidad del procedimiento policial')
+}
+
 test.describe('Redactar Escrito', () => {
 
     test('formulario de redacción carga correctamente', async ({ page }) => {
         await gotoApp(page, '/redactar')
         await expect(page.getByText(TEXTOS.redactar.titulo)).toBeVisible()
         await expect(page.locator('#hechos_relevantes')).toBeVisible()
-        await expect(page.locator('#pretension')).toBeVisible()
+        await expect(page.locator('#pretension_defensiva')).toBeVisible()
     })
 
     test('muestra aviso "BORRADOR ASISTIDO" en el formulario', async ({ page }) => {
@@ -28,8 +37,10 @@ test.describe('Redactar Escrito', () => {
     test('submit sin tipo de escrito muestra error', async ({ page }) => {
         await gotoApp(page, '/redactar')
 
+        // Todo completo menos el tipo → el primer error debe ser el del tipo.
+        await page.fill('#nombre_imputado', 'Juan Pérez')
         await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Nulidad del procedimiento')
+        await page.fill('#pretension_defensiva', 'Nulidad del procedimiento')
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
 
         await expect(page.locator('.form-error')).toBeVisible()
@@ -39,9 +50,10 @@ test.describe('Redactar Escrito', () => {
     test('submit sin hechos (menor a 200 chars) muestra error', async ({ page }) => {
         await gotoApp(page, '/redactar')
 
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#pretension', 'Sobreseimiento')
-        // hechos_relevantes vacío
+        // Tipo + nombre + pretensión OK, hechos vacío → único error: los hechos.
+        await page.locator('label.form-option', { hasText: 'Planteo de Nulidad Procesal' }).first().click()
+        await page.fill('#nombre_imputado', 'Juan Pérez')
+        await page.fill('#pretension_defensiva', 'Sobreseimiento')
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
 
         await expect(page.locator('.form-error')).toBeVisible()
@@ -50,10 +62,7 @@ test.describe('Redactar Escrito', () => {
 
     test('submit válido navega a /resultado con tipo redactar', async ({ page }) => {
         await gotoApp(page, '/redactar')
-
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Se declare la nulidad del procedimiento policial')
+        await completarRedaccionValida(page)
 
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
         await page.waitForURL('**/resultado**', { timeout: 10_000 })
@@ -63,9 +72,7 @@ test.describe('Redactar Escrito', () => {
 
     test('resultado redactar muestra badge BORRADOR ASISTIDO', async ({ page }) => {
         await gotoApp(page, '/redactar')
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Sobreseimiento')
+        await completarRedaccionValida(page)
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
         await page.waitForURL('**/resultado**', { timeout: 10_000 })
         await page.waitForLoadState('networkidle')
@@ -75,9 +82,7 @@ test.describe('Redactar Escrito', () => {
 
     test('resultado redactar muestra sección "Borrador del Escrito"', async ({ page }) => {
         await gotoApp(page, '/redactar')
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Sobreseimiento')
+        await completarRedaccionValida(page)
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
         await page.waitForURL('**/resultado**', { timeout: 10_000 })
         await page.waitForLoadState('networkidle')
@@ -87,9 +92,7 @@ test.describe('Redactar Escrito', () => {
 
     test('resultado redactar muestra botón PDF', async ({ page }) => {
         await gotoApp(page, '/redactar')
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Sobreseimiento')
+        await completarRedaccionValida(page)
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
         await page.waitForURL('**/resultado**', { timeout: 10_000 })
         await page.waitForLoadState('networkidle')
@@ -99,14 +102,12 @@ test.describe('Redactar Escrito', () => {
 
     test('resultado redactar contiene contenido del borrador', async ({ page }) => {
         await gotoApp(page, '/redactar')
-        await page.locator('label.form-option', { hasText: 'Expresión de Agravios' }).first().click()
-        await page.fill('#hechos_relevantes', HECHOS_VALIDOS)
-        await page.fill('#pretension', 'Sobreseimiento')
+        await completarRedaccionValida(page)
         await page.getByRole('button', { name: TEXTOS.redactar.botonSubmit }).click()
         await page.waitForURL('**/resultado**', { timeout: 10_000 })
         await page.waitForLoadState('networkidle')
 
-        // El mock de redactar incluye "Sr. Juez:"
-        await expect(page.getByText('Sr. Juez')).toBeVisible()
+        // El mock de redactar incluye el encabezado "SOLICITA EXCARCELACIÓN".
+        await expect(page.getByText('SOLICITA EXCARCELACIÓN')).toBeVisible()
     })
 })

@@ -125,7 +125,7 @@ async function procesarCriterio(filePath) {
     };
 
     // Insertar en Supabase (upsert para evitar duplicados)
-    const { data, error } = await supabase
+    const { error } = await supabase
         .from('criterios_juridicos')
         .upsert(registro, { onConflict: 'id' })
         .select();

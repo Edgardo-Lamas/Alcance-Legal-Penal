@@ -112,7 +112,7 @@ function validateManifest(manifestPath) {
     return manifest
 }
 
-function validateIcons(iconsDir, manifest) {
+function validateIcons(iconsDir, _manifest) {
     log('\n🎨', 'Verificando íconos...')
     const required = [16, 48, 128]
     let allOk = true

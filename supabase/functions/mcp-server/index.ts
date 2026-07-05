@@ -21,7 +21,12 @@ const SUPABASE_URL              = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const SUPABASE_ANON_KEY         = Deno.env.get('SUPABASE_ANON_KEY')!
 const OPENAI_API_KEY            = Deno.env.get('OPENAI_API_KEY')!
-const MCP_SECRET                = Deno.env.get('MCP_SECRET') ?? SUPABASE_ANON_KEY
+// Secreto propio del MCP. NO cae al anon key (que es público): si no está configurado,
+// se rechazan todas las solicitudes autenticadas (fail-closed).
+const MCP_SECRET                = Deno.env.get('MCP_SECRET')
+if (!MCP_SECRET) {
+    console.error('[MCP][STARTUP] MCP_SECRET no configurado — las solicitudes autenticadas serán rechazadas. Configurar en producción.')
+}
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': 'https://claude.ai',
@@ -50,7 +55,7 @@ function checkMcpRateLimit(key: string): boolean {
 function validateAuth(req: Request): { ok: boolean; clientId: string } {
     const auth = req.headers.get('authorization') ?? ''
     const token = auth.startsWith('Bearer ') ? auth.slice(7) : ''
-    if (!token || token !== MCP_SECRET) {
+    if (!MCP_SECRET || !token || token !== MCP_SECRET) {
         return { ok: false, clientId: 'unknown' }
     }
     // Usa los primeros 8 chars del token como ID de cliente para rate limiting
@@ -316,6 +321,7 @@ async function ejecutarBuscarJurisprudencia(args: Record<string, string>): Promi
         query_embedding: embedding,
         match_count: 5,
         filter_alcance: 'criterios_generales',
+        filter_fuero: 'penal',   // corpus penal únicamente
         ...(args.instituto ? { filter_instituto: args.instituto } : {}),
     })
 
@@ -353,7 +359,8 @@ async function handleToolCall(params: { name: string; arguments: Record<string, 
         }
         return { content: [{ type: 'text', text }] }
     } catch (err) {
-        return { isError: true, content: [{ type: 'text', text: `Error interno: ${err instanceof Error ? err.message : String(err)}` }] }
+        console.error('[MCP] Error en tool call:', err)
+        return { isError: true, content: [{ type: 'text', text: 'Error interno al ejecutar la herramienta. Intente nuevamente.' }] }
     }
 }
 

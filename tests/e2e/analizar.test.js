@@ -26,7 +26,7 @@ test.describe('Analizar Caso', () => {
     test('formulario analizar carga correctamente', async ({ page }) => {
         await gotoApp(page, '/analizar')
         await expect(page.getByText(TEXTOS.analizar.titulo)).toBeVisible()
-        await expect(page.locator('#hechos')).toBeVisible()
+        await expect(page.locator('#documentacion_caso')).toBeVisible()
         await expect(page.locator('.analizar__btn-submit')).toBeVisible()
     })
 
@@ -39,28 +39,14 @@ test.describe('Analizar Caso', () => {
         await expect(page.locator('.form-error')).toContainText(TEXTOS.analizar.errorHechos)
     })
 
-    test('char-count en rojo con texto menor a 20 chars', async ({ page }) => {
-        await gotoApp(page, '/analizar')
-
-        await page.fill('#hechos', 'texto corto')
-
-        const charCount = page.locator('.char-count')
-        await expect(charCount).toHaveClass(/char-count--warning/)
-    })
-
-    test('char-count en verde con texto de 20 o más chars', async ({ page }) => {
-        await gotoApp(page, '/analizar')
-
-        await page.fill('#hechos', 'Este texto tiene veintidós chars')
-
-        const charCount = page.locator('.char-count')
-        await expect(charCount).toHaveClass(/char-count--ok/)
-    })
+    // NOTA: el contador de caracteres visual (.char-count) fue eliminado en el rediseño
+    // del formulario (ahora es un único textarea "documentacion_caso"). Los tests de
+    // char-count se removieron por quedar obsoletos (auditoría A-2).
 
     test('submit válido navega a /resultado con datos', async ({ page }) => {
         await gotoApp(page, '/analizar')
 
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
 
         // Esperar la animación del pipeline y la navegación (máx ~6s)
@@ -70,7 +56,7 @@ test.describe('Analizar Caso', () => {
 
     test('Paso 1 — NO muestra botón PDF (solo Análisis Preliminar)', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -84,7 +70,7 @@ test.describe('Analizar Caso', () => {
 
     test('Paso 2 — muestra botón "Descargar Informe PDF"', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -105,7 +91,7 @@ test.describe('Analizar Caso', () => {
         })
 
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -130,7 +116,7 @@ test.describe('Analizar Caso', () => {
 
     test('resultado muestra encuadre procesal en paso 2', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -145,20 +131,21 @@ test.describe('Analizar Caso', () => {
 
     test('botón Nueva Consulta vuelve al dashboard', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
 
         await page.getByText(TEXTOS.resultado.botonNuevaConsulta).click()
         await page.waitForURL('**/', { timeout: 5_000 })
-        await expect(page.getByText(TEXTOS.dashboard.titulo)).toBeVisible()
+        // El h1 tiene <br/> + <em>, por eso se usa getByRole (accessible name) y no getByText.
+        await expect(page.getByRole('heading', { name: TEXTOS.dashboard.titulo })).toBeVisible()
     })
 
     // ─── Tests del botón Word ──────────────────────────────────────────────────
 
     test('Paso 1 — NO muestra botón Word (solo Análisis Preliminar)', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -169,7 +156,7 @@ test.describe('Analizar Caso', () => {
 
     test('Paso 2 — muestra botón "Descargar en Word"', async ({ page }) => {
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')
@@ -188,7 +175,7 @@ test.describe('Analizar Caso', () => {
         })
 
         await gotoApp(page, '/analizar')
-        await page.fill('#hechos', HECHOS_VALIDOS)
+        await page.fill('#documentacion_caso', HECHOS_VALIDOS)
         await page.locator('.analizar__btn-submit').click()
         await page.waitForURL('**/resultado**', { timeout: 15_000 })
         await page.waitForLoadState('networkidle')

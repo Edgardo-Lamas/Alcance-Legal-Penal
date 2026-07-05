@@ -46,15 +46,17 @@ export const TEXTOS = {
         titulo: 'Consola de Criterio Jurídico',
         cardAnalizar: 'Analizar Causa Penal',
         cardAuditar: 'Auditar Estrategia',
-        cardRedactar: 'Redactar Escrito de Defensa',
+        cardRedactar: 'Redactar Escrito',
     },
     analizar: {
         titulo: 'Nueva Consulta Penal',
         botonSubmit: 'Iniciar análisis penal',
-        errorHechos: 'Necesito al menos una descripción',
+        // El form migró a un único textarea "documentacion_caso" (pegar texto del MEV).
+        campoPrincipal: '#documentacion_caso',
+        errorHechos: 'Pegá el texto del expediente',
     },
     auditar: {
-        titulo: 'Auditar Estrategia Procesal',
+        titulo: 'Auditar Estrategia Defensiva',
         botonSubmit: 'Solicitar Auditoría',
     },
     redactar: {

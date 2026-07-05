@@ -51,7 +51,7 @@ const TITULOS = {
 // ─── Estado del módulo (se reinicia en cada llamada) ─────────────────────────
 let _doc, _y
 
-const getY  = ()    => _y
+const _getY = ()    => _y
 const setY  = (v)   => { _y = v }
 const addY  = (v)   => { _y += v }
 
@@ -101,7 +101,7 @@ function textBlock(str, x, maxW, lineH = 5.5) {
 }
 
 /** Escribe una línea simple (sin wrap). Si no cabe, salta de página. */
-function textLine(str, x, options = {}) {
+function _textLine(str, x, options = {}) {
     maybeBreak(7)
     _doc.text(String(str), x, _y, options)
 }
@@ -313,7 +313,7 @@ function renderAuditar(informe) {
     // Observaciones
     if (informe.observaciones?.length > 0) {
         sectionTitle('Observaciones Críticas', 'II.')
-        informe.observaciones.forEach((o, i) => {
+        informe.observaciones.forEach((o) => {
             maybeBreak(30)
             const sevColor = o.severidad === 'alta' ? C.red : o.severidad === 'media' ? C.amber : C.muted
             const sevBg    = o.severidad === 'alta' ? C.redBg : o.severidad === 'media' ? C.amberBg : C.sectBg
@@ -341,7 +341,7 @@ function renderAuditar(informe) {
     // Recomendaciones
     if (informe.recomendaciones?.length > 0) {
         sectionTitle('Recomendaciones de Acción', 'III.')
-        informe.recomendaciones.forEach((r, i) => {
+        informe.recomendaciones.forEach((r) => {
             maybeBreak(18)
             const priColor = r.prioridad === 'alta' ? C.red : r.prioridad === 'media' ? C.amber : C.muted
             font('bold', 8, priColor)

@@ -183,8 +183,13 @@ export const PROFILE_PENAL_PBA_CONFIG: ProfileConfig = {
   nombre: 'Alcance Legal Penal — PBA',
   codigoInforme: 'PENAL-PBA',
   jurisdiccion: 'Provincia de Buenos Aires (CPP Ley 11.922)',
+  // Keywords de fueros excluidos — usadas SOLO como señal de admisibilidad (input).
+  // Evitar palabras que también aparecen en causas penales:
+  //   - 'quiebra'   → insolvencia fraudulenta es delito penal (arts. 176-180 CP)
+  //   - 'alimentos' → incumplimiento de deberes de asistencia familiar (Ley 13.944)
+  // Se usan frases específicas de otros fueros para minimizar falsos positivos.
   fuerosExcluidosKeywords: [
-    'divorcio', 'alimentos', 'sociedad anónima', 'quiebra',
+    'juicio de divorcio', 'sociedad anónima', 'concurso preventivo',
     'contrato de locación', 'sucesión hereditaria', 'despido laboral'
   ],
   systemPrompt: SYSTEM_PROMPT_PENAL_PBA,
