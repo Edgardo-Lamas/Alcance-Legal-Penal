@@ -21,7 +21,11 @@ const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
+const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
+
+// Umbral mínimo de caracteres para activar extracción con Gemini
+const GEMINI_EXTRACTION_MIN_CHARS = 500
 
 // ============================================
 // RATE LIMITING (en memoria por instancia)
@@ -382,6 +386,66 @@ interface CriterioConAnalogia {
     razon_analogia: string
 }
 
+// ============================================
+// EXTRACCIÓN DE DATOS CON GEMINI FLASH
+// Convierte texto crudo del MEV en JSON estructurado.
+// Reduce hasta 15.000 chars de texto a ~2.000 chars antes de Claude Sonnet.
+// ============================================
+
+interface ExtraccionGemini {
+    hechos_clave: string
+    tipo_penal: string | null
+    etapa_procesal: string | null
+    imputado: string | null
+    actuaciones_resumen: string
+    alertas_preliminares: string
+}
+
+async function extraerDatosConGemini(documentacion_caso: string): Promise<ExtraccionGemini | null> {
+    if (!GEMINI_API_KEY) return null
+
+    const prompt =
+        `Sos un asistente jurídico especializado en derecho penal de la Provincia de Buenos Aires.\n\n` +
+        `Analizá el siguiente texto del expediente y extraé los datos estructurados clave.\n\n` +
+        `TEXTO DEL EXPEDIENTE:\n${documentacion_caso.slice(0, 15000)}\n\n` +
+        `Respondé ÚNICAMENTE con un JSON válido con esta estructura:\n` +
+        `{\n` +
+        `  "hechos_clave": "Descripción concisa de los hechos imputados (máx. 500 chars)",\n` +
+        `  "tipo_penal": "Delito o calificación legal imputada, o null",\n` +
+        `  "etapa_procesal": "IPP | juicio_oral | intermedia | recursos | ejecucion, o null",\n` +
+        `  "imputado": "Nombre del imputado o null",\n` +
+        `  "actuaciones_resumen": "Lista cronológica de actuaciones clave (máx. 800 chars)",\n` +
+        `  "alertas_preliminares": "Posibles nulidades o irregularidades visibles (máx. 400 chars)"\n` +
+        `}`
+
+    const resp = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: 'application/json',
+                    maxOutputTokens: 1024,
+                    temperature: 0.1
+                }
+            })
+        }
+    )
+
+    if (!resp.ok) {
+        console.warn(`[GEMINI] API error ${resp.status}`)
+        return null
+    }
+
+    const data = await resp.json()
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+    if (!text) return null
+
+    return parseJsonSafe(text) as ExtraccionGemini | null
+}
+
 async function validarAnalogiaFactica(
     criterios: Array<{ id: string; criterio: string; regla_general: string; articulos_cpp: string[]; similarity: number }>,
     body: AnalizarCasoRequest
@@ -389,7 +453,8 @@ async function validarAnalogiaFactica(
     const fallback = (): CriterioConAnalogia[] =>
         criterios.map(c => ({ ...c, analogia: 'directa' as const, razon_analogia: '' }))
 
-    if (!ANTHROPIC_API_KEY || criterios.length === 0) return fallback()
+    if (criterios.length === 0) return fallback()
+    if (!GEMINI_API_KEY && !ANTHROPIC_API_KEY) return fallback()
 
     const criteriosList = criterios.map((c, i) =>
         `${i + 1}. ID: ${c.id}\n   Criterio: ${c.criterio}\n   Regla: ${c.regla_general}`
@@ -410,27 +475,55 @@ async function validarAnalogiaFactica(
         `- inaplicable: los hechos son distintos, no hay analogía real`
 
     try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: {
-                'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'claude-haiku-4-5-20251001',
-                max_tokens: 1024,
-                messages: [{ role: 'user', content: prompt }]
-            }),
-        })
+        let responseText: string
 
-        if (!resp.ok) {
-            console.warn('[CAPA2] Haiku no disponible, usando criterios sin filtrar')
-            return fallback()
+        if (GEMINI_API_KEY) {
+            // Gemini Flash — path primario (más económico que Haiku)
+            const resp = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: {
+                            responseMimeType: 'application/json',
+                            maxOutputTokens: 1024,
+                            temperature: 0.1
+                        }
+                    })
+                }
+            )
+            if (!resp.ok) {
+                console.warn('[CAPA2] Gemini no disponible, usando criterios sin filtrar')
+                return fallback()
+            }
+            const data = await resp.json()
+            responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '[]'
+        } else {
+            // Claude Haiku — fallback cuando no hay Gemini configurado
+            const resp = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'x-api-key': ANTHROPIC_API_KEY!,
+                    'anthropic-version': '2023-06-01',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'claude-haiku-4-5-20251001',
+                    max_tokens: 1024,
+                    messages: [{ role: 'user', content: prompt }]
+                }),
+            })
+            if (!resp.ok) {
+                console.warn('[CAPA2] Haiku no disponible, usando criterios sin filtrar')
+                return fallback()
+            }
+            const data = await resp.json()
+            responseText = data.content[0].text
         }
 
-        const data = await resp.json()
-        const validaciones = parseJsonSafe(data.content[0].text) as Array<{
+        const validaciones = parseJsonSafe(responseText) as Array<{
             id: string; analogia: 'directa' | 'parcial' | 'doble_filo' | 'inaplicable'; razon: string
         }>
 
@@ -757,6 +850,33 @@ serve(async (req: Request) => {
                 status: 400,
                 headers: { ...cors, 'Content-Type': 'application/json' }
             })
+        }
+
+        // ==========================================
+        // FASE 1.5: EXTRACCIÓN CON GEMINI (pre-procesamiento MEV)
+        // Reduce texto crudo del MEV a resumen estructurado antes de Claude.
+        // Si Gemini no está disponible, el pipeline sigue sin cambios.
+        // ==========================================
+        if (GEMINI_API_KEY && body.documentacion_caso && body.documentacion_caso.length >= GEMINI_EXTRACTION_MIN_CHARS) {
+            try {
+                const extraccion = await extraerDatosConGemini(body.documentacion_caso)
+                if (extraccion) {
+                    const longitudOriginal = body.documentacion_caso.length
+                    if (!body.tipo_penal && extraccion.tipo_penal) body.tipo_penal = extraccion.tipo_penal
+                    if (!body.etapa_procesal && extraccion.etapa_procesal) body.etapa_procesal = extraccion.etapa_procesal
+                    if (body.hechos.length < 80 && extraccion.hechos_clave) body.hechos = extraccion.hechos_clave
+                    body.documentacion_caso =
+                        `[RESUMEN AUTOMÁTICO — texto original: ${longitudOriginal} caracteres]\n\n` +
+                        `HECHOS CLAVE: ${extraccion.hechos_clave}\n\n` +
+                        `ACTUACIONES RELEVANTES:\n${extraccion.actuaciones_resumen}` +
+                        (extraccion.alertas_preliminares
+                            ? `\n\nALERTAS PRELIMINARES:\n${extraccion.alertas_preliminares}`
+                            : '')
+                    console.log(`[GEMINI] Extracción OK. ${longitudOriginal} → ${body.documentacion_caso.length} chars`)
+                }
+            } catch (err) {
+                console.warn('[GEMINI] Extracción fallida, continuando con datos originales:', (err as Error).message)
+            }
         }
 
         // ==========================================
