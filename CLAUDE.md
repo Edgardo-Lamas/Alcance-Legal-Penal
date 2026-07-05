@@ -64,7 +64,7 @@ supabase/functions/
 └── mcp-server/index.ts      ← MCP Server: POST /mcp-server (JSON-RPC 2.0)
 ```
 
-**MCP Server URL:** `https://bwwlgfgjxslbavhfuhia.supabase.co/functions/v1/mcp-server`
+**MCP Server URL:** `https://nclpzmyjjmglpjalmrri.supabase.co/functions/v1/mcp-server`
 **Tools expuestas:** `analizar_caso`, `buscar_jurisprudencia`
 **Config local:** `~/.claude.json` → `mcpServers.alcance-legal-penal`
 

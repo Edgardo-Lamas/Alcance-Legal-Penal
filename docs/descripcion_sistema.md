@@ -353,7 +353,7 @@ Un abogado que use Claude Desktop puede registrar Alcance Legal Penal como herra
 ### Configuración
 
 ```
-URL: https://bwwlgfgjxslbavhfuhia.supabase.co/functions/v1/mcp-server
+URL: https://nclpzmyjjmglpjalmrri.supabase.co/functions/v1/mcp-server
 Protocolo: JSON-RPC 2.0
 Auth: Bearer <SUPABASE_ANON_KEY>
 Rate limit: 30 llamadas/minuto por cliente

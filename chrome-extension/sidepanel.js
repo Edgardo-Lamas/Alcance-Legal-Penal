@@ -7,11 +7,11 @@
   'use strict'
 
   // ── Constantes Supabase ───────────────────────────────────
-  const SUPABASE_URL = 'https://bwwlgfgjxslbavhfuhia.supabase.co'
+  const SUPABASE_URL = 'https://nclpzmyjjmglpjalmrri.supabase.co'
   const SUPABASE_ANON_KEY = [
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-    'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3d2xnZmdqeHNsYmF2aGZ1aGlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyMTcyOTMsImV4cCI6MjA4OTc5MzI5M30',
-    'kGWlM2Ekk5PJFQYz7sxsxN_TJpaUAlaKvYCa4VqEizw'
+    'eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jbHB6bXlqam1nbHBqYWxtcnJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMyMzI1MzQsImV4cCI6MjA5ODgwODUzNH0',
+    'HwbC0QzX2I6zusmB7OOG6ayKKv7JTy2nGsk0GnhSaxk'
   ].join('.')
 
   // ── Estado ───────────────────────────────────────────────
