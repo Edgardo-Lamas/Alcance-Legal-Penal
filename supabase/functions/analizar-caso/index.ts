@@ -761,6 +761,11 @@ async function verificarUsuario(
     if (!jwt || !SUPABASE_URL || !SUPABASE_ANON_KEY) {
         return { userId: null, autenticado: false }
     }
+    // Caller interno (mcp-server → analizar-caso): el service role key nunca sale
+    // del backend, por lo que autentica como servicio sin pasar por auth.getUser().
+    if (SUPABASE_SERVICE_ROLE_KEY && jwt === SUPABASE_SERVICE_ROLE_KEY) {
+        return { userId: 'mcp-server', autenticado: true }
+    }
     try {
         const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             global: { headers: { Authorization: `Bearer ${jwt}` } },

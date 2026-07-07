@@ -56,22 +56,29 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 - [x] **B-2 (README)** · `chrome-extension/README.md` actualizado al flujo de login Supabase.
 - [x] **B-3** · `src/core/README.md` documenta que es referencia, no producción.
 
+**✅ COMPLETADO EN INFRA (2026-07-07, verificado en vivo):**
+- [x] **A-1 (deploy)** · Migración 009 aplicada (`supabase db push`); `REQUIRE_AUTH=true` y
+  `MCP_SECRET` seteados en el proyecto nuevo. Verificado: anon key → 401 `NO_AUTENTICADO`;
+  MCP → informe `ALC-PENAL-PBA-2026-000002` OK. **Nota:** `verificarUsuario()` en
+  `analizar-caso` ahora acepta el service role key como caller interno del mcp-server
+  (sin eso, REQUIRE_AUTH rompía la tool `analizar_caso`).
+- [x] **A-3** · `npm audit fix` + reinstalación limpia → **0 vulnerabilidades**.
+  `react-router-dom` 7.18.1 (RCE parcheado). Build OK, lint exit 0, 56 tests Playwright verdes.
+- [x] **B-2 (zip)** · `alcance-legal-mev-navigator-v1.0.0.zip` eliminado (no estaba en git).
+- [x] **Deploy Preview** · Envs `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` agregadas al
+  entorno Preview de Vercel; deploy de Preview verificado **Ready**. CLI actualizado a 54.21.1.
+- [x] **MCP server** · Redesplegado con `--no-verify-jwt` (el gateway bloqueaba el token propio).
+  ⚠️ Siempre deployar con: `supabase functions deploy mcp-server --no-verify-jwt`
+
 **⏳ PENDIENTE — acciones tuyas (requieren tu entorno / red / dashboards)**
-- [ ] **A-1 (deploy)** · En Supabase: aplicar migración `supabase db push` (o el SQL de
-  `009_create_rate_limits.sql`); setear envs de la Edge Function `analizar-caso`:
-  `SUPABASE_ANON_KEY`, `REQUIRE_AUTH=true` (producción); setear `MCP_SECRET` en `mcp-server`.
-  Configurar alertas de gasto en Anthropic/OpenAI/Gemini.
-- [ ] **A-3** · `npm audit fix` + bump `react-router-dom` (RCE turbo-stream GHSA-49rj-9fvp-4h2h),
-  `ws`, `uuid`. *No se pudo hacer acá: el entorno no tiene red npm.* Correr en tu máquina y
-  re-verificar `npm run build`.
+- [ ] **Alertas de gasto** en dashboards de Anthropic/OpenAI/Gemini (manual, solo vos).
 - [ ] **A-2 (integración)** · Agregar ≥1 test que pegue contra un Supabase de **staging real**
   (no mock) para el happy-path del pipeline.
-- [ ] **B-2 (zip)** · Borrar/re-generar `alcance-legal-mev-navigator-v1.0.0.zip` de la raíz
-  (artefacto viejo; puede tener el flujo de API key). No lo toqué por no haberlo creado yo.
 - [ ] **B-4** · `match_criterios_juridicos` (migración 006) queda como función huérfana
   (no la usa el código de producción). Cosmético — borrar si se confirma sin uso.
-- [ ] **Deploy** · Configurar el **Preview env de Vercel** (quedó pendiente por el CLI viejo);
-  documentar rollback de Supabase. `npm i -g vercel@latest` primero.
+- [ ] **Seguridad** · Rotar `MCP_SECRET` por uno aleatorio (`openssl rand -hex 32`) antes de
+  abrir la beta; actualizarlo en Supabase + Claude.ai + `~/.claude.json`.
+- [ ] **Verificación E2E humana** · Login real de abogado → análisis completo en producción.
 
 ### Cómo salir a producción (checklist de release)
 1. En tu máquina: `npm audit fix` + bump react-router-dom → `npm run build` OK.
@@ -218,8 +225,8 @@ El perfil `PROFILE_PENAL_PBA` controla:
 
 ## Mock vs producción
 
-`src/services/api.js` usa mocks cuando `VITE_USE_MOCKS !== 'false'`.
-Para activar Supabase real: `VITE_USE_MOCKS=false` + corpus cargado (`node scripts/load-criterios.js`).
+`src/services/api.js` usa mocks **solo si** `VITE_USE_MOCKS === 'true'` (explícito).
+En producción (env sin setear) usa Supabase real. Corpus: `node scripts/load-criterios.js`.
 
 ---
 
