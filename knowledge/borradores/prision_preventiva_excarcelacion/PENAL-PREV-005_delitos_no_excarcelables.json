@@ -1,0 +1,40 @@
+{
+    "id": "PENAL-PREV-005",
+    "instituto": "excarcelacion",
+    "subtipo": "delitos_no_excarcelables",
+    "criterio": "Prohibiciones automáticas de excarcelación por categoría de delito — inconstitucionalidad",
+    "regla_general": "Las cláusulas legales que excluyen la excarcelación en abstracto para categorías de delitos son inconstitucionales cuando impiden al juez evaluar el riesgo procesal del caso concreto: consagran una presunción iuris et de iure de fuga, quiebran la igualdad ante la ley y convierten la preventiva en pena anticipada. El juez conserva siempre el deber de examinar la situación individual del imputado, cualquiera sea el delito atribuido.",
+    "articulos_cpp": [
+        "CN, arts. 16, 18 y 75 inc. 22",
+        "CADH, arts. 7 y 24",
+        "CPP PBA (Ley 11.922), régimen de los arts. 169 a 171"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN arts. 16 y 18; CPP PBA régimen excarcelatorio (texto según Ley 13.449)",
+        "jurisprudencia_referente": "CSJN, 'Nápoli, Erika' (Fallos 321:3630, 1998) — inconstitucionalidad de la exclusión de excarcelación por categoría delictiva; Corte IDH, 'Suárez Rosero' (1997) — prohibición de exclusiones automáticas de la libertad procesal",
+        "doctrina": "Comentarios a la reforma de la Ley 13.449 — el riesgo procesal como única causal legítima de denegatoria"
+    },
+    "aplicacion_practica": "Si la denegatoria se funda —expresa o implícitamente— en que 'el delito no lo permite', plantear la inconstitucionalidad de la aplicación automática con cita de 'Nápoli' y exigir el análisis individual de riesgo. En PBA, recordar que tras la Ley 13.449 la denegatoria solo puede sostenerse en peligro de fuga o entorpecimiento verificados en el caso.",
+    "condiciones_aplicacion": [
+        "Denegatoria basada en la categoría del delito y no en el riesgo del caso",
+        "Imputaciones por delitos con escalas altas donde el reflejo denegatorio automático es habitual"
+    ],
+    "riesgos_procesales": [
+        "Omitir el planteo constitucional en la primera denegatoria, debilitando su tratamiento ulterior",
+        "Confundir la pauta legítima de la escala penal (un indicio más) con la exclusión automática (vedada)"
+    ],
+    "tags": [
+        "excarcelacion",
+        "inexcarcelable",
+        "napoli",
+        "igualdad",
+        "inconstitucionalidad",
+        "ley_13449"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

@@ -1,0 +1,40 @@
+{
+    "id": "PENAL-PREV-011",
+    "instituto": "prision_preventiva",
+    "subtipo": "plazo_razonable_revision",
+    "criterio": "Duración de la preventiva — plazo razonable, revisión periódica y cese",
+    "regla_general": "La prisión preventiva está sometida a un doble límite temporal: el plazo razonable convencional (art. 7.5 CADH), de evaluación concreta según complejidad del caso, actividad procesal del interesado y conducta de las autoridades; y los topes del régimen interno. El transcurso del tiempo opera como factor autónomo de revisión: los fundamentos que justificaron la medida deben reexaminarse periódicamente y pierden fuerza con la prolongación del encierro, imponiendo el cese o la atenuación aunque subsistan formalmente los presupuestos iniciales.",
+    "articulos_cpp": [
+        "CADH, art. 7.5",
+        "PIDCP, art. 9.3",
+        "CPP PBA (Ley 11.922), arts. 141 y 163",
+        "Ley 24.390 (pauta interpretativa)"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CADH art. 7.5; CPP PBA — régimen de duración del proceso y atenuación de la coerción; Ley 24.390 como referencia del estándar nacional",
+        "jurisprudencia_referente": "Corte IDH, 'Bayarri vs. Argentina' (2008) — la preventiva prolongada deviene pena anticipada; CIDH, Informe 35/07; complementa PENAL-NUL-004 (exceso de plazo) y PENAL-GAR-007 (plazo razonable general)",
+        "doctrina": "Pastor, 'El plazo razonable en el proceso del Estado de derecho'"
+    },
+    "aplicacion_practica": "Llevar el cómputo exacto del encierro cautelar y calendarizar pedidos de reexamen periódico (cada 60-90 días), demostrando en cada uno qué cambió: prueba ya producida, avance de etapa, deterioro de la actualidad del riesgo. Denunciar la inactividad estatal como factor que la doctrina 'Bayarri' pone a cargo del Estado, nunca del imputado.",
+    "condiciones_aplicacion": [
+        "Preventivas que superan los 6 meses sin avance procesal significativo",
+        "Causas con instrucción paralizada o demoras no imputables a la defensa"
+    ],
+    "riesgos_procesales": [
+        "Dejar de instar el reexamen, convalidando la prolongación por inercia",
+        "Actividad procesal defensiva dilatoria que la acusación computará contra el plazo razonable"
+    ],
+    "tags": [
+        "plazo_razonable",
+        "revision_periodica",
+        "cese",
+        "bayarri",
+        "duracion_preventiva"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

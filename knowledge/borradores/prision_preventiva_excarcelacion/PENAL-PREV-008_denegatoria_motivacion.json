@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-008",
+    "instituto": "excarcelacion",
+    "subtipo": "denegatoria_motivacion",
+    "criterio": "Denegatoria de libertad — deber de motivación reforzada y proscripción de fórmulas dogmáticas",
+    "regla_general": "La resolución que deniega la excarcelación o mantiene la preventiva exige motivación reforzada: identificación de los indicios concretos de riesgo, su respaldo en constancias de la causa, y la explicación de por qué las medidas menos gravosas resultan insuficientes. Las fórmulas rituales ('atento a la pena en expectativa', 'las características del hecho', 'no se advierten motivos para apartarse') constituyen fundamentación aparente y determinan la arbitrariedad de la resolución.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 106 (motivación de resoluciones) y 171",
+        "CN, art. 18",
+        "CADH, art. 8.1"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA arts. 106 y 171 — deber de motivación; doctrina de la arbitrariedad de sentencias (CSJN)",
+        "jurisprudencia_referente": "CSJN — doctrina de la fundamentación aparente; Corte IDH, 'Chaparro Álvarez vs. Ecuador' (2007) — deber de motivar la prisión cautelar; SCBA — control casatorio de la motivación cautelar",
+        "doctrina": "Sagüés — recurso extraordinario y arbitrariedad"
+    },
+    "aplicacion_practica": "Deconstruir el auto denegatorio párrafo por párrafo, clasificando cada fundamento como (a) indicio concreto con respaldo, o (b) fórmula dogmática. El escrito recursivo que exhibe esa disección demuestra visualmente la fundamentación aparente. Reservar desde la primera instancia la cuestión federal por arbitrariedad y violación del art. 7 CADH.",
+    "condiciones_aplicacion": [
+        "Denegatorias con fundamentos estereotipados o remisiones genéricas",
+        "Resoluciones que omiten el análisis de medidas alternativas"
+    ],
+    "riesgos_procesales": [
+        "Atacar la valoración sin señalar el defecto estructural de motivación, terreno donde el tribunal revisor tiene menos margen",
+        "No introducir oportunamente la reserva federal"
+    ],
+    "tags": [
+        "denegatoria",
+        "motivacion_reforzada",
+        "fundamentacion_aparente",
+        "arbitrariedad",
+        "reserva_federal"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

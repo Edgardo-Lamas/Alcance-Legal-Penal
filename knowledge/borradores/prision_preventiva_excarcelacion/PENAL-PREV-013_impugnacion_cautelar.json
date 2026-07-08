@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-013",
+    "instituto": "recursos",
+    "subtipo": "impugnacion_cautelar",
+    "criterio": "Impugnación de la prisión preventiva — vía recursiva y alcance amplio de la revisión",
+    "regla_general": "El auto que dicta o mantiene la prisión preventiva y la denegatoria de excarcelación son apelables, y la revisión debe ser amplia: hechos, derecho y valoración del riesgo, no un mero control formal. La garantía del recurso (art. 8.2.h CADH) alcanza a las decisiones cautelares que afectan la libertad. La interposición debe ser inmediata: la demora consolida la medida y debilita el ulterior agravio por prolongación indebida.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 164 y 439 y ss.",
+        "CADH, arts. 7.6 y 8.2.h",
+        "CN, art. 18"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA arts. 164 (recurribilidad de la preventiva) y 439 y ss. (apelación); CADH art. 7.6 (control judicial de la privación de libertad)",
+        "jurisprudencia_referente": "Corte IDH, 'Chaparro Álvarez' (2007) — derecho al control judicial efectivo de la detención; CSJN — revisión amplia de decisiones sobre libertad; complementa PENAL-GAR-012 (recurso amplio)",
+        "doctrina": "Referencia cruzada del proyecto: impugnar preventiva del art. 157 por vía del art. 439 (CLAUDE.md — referencias críticas CPP PBA)"
+    },
+    "aplicacion_practica": "Estructurar la apelación en tres agravios independientes: (1) mérito sustantivo mal derivado de la prueba; (2) riesgo procesal sin indicios concretos (o con fórmulas dogmáticas — ver PENAL-PREV-008); (3) omisión del examen de alternativas. Pedir audiencia oral si el régimen departamental lo admite: la inmediación favorece a la defensa en materia cautelar. Mantener actualizado el legajo de arraigo para la instancia revisora.",
+    "condiciones_aplicacion": [
+        "Auto de preventiva o denegatoria de excarcelación notificados",
+        "Plazo de apelación vigente"
+    ],
+    "riesgos_procesales": [
+        "Apelación genérica que reedita el pedido original sin estructura de agravios",
+        "Perder el plazo o la audiencia por deficiencias de notificación no controladas"
+    ],
+    "tags": [
+        "apelacion",
+        "art_439",
+        "revision_amplia",
+        "agravios",
+        "control_judicial"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

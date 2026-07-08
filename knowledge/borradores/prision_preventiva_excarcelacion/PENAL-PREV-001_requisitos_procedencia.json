@@ -1,0 +1,42 @@
+{
+    "id": "PENAL-PREV-001",
+    "instituto": "prision_preventiva",
+    "subtipo": "requisitos_procedencia",
+    "criterio": "Prisión preventiva — requisitos de procedencia y deber de motivación autónoma",
+    "regla_general": "La prisión preventiva solo procede cuando concurren simultáneamente: (a) elementos de convicción suficientes sobre la existencia del hecho y la participación del imputado (mérito sustantivo); (b) peligro procesal concreto de fuga o de entorpecimiento probatorio; y (c) que ninguna medida menos gravosa resulte suficiente para neutralizar ese peligro. Cada requisito exige motivación autónoma y actual: la ausencia o el tratamiento aparente de cualquiera de ellos vicia la resolución. La preventiva es siempre excepcional, cautelar y de interpretación restrictiva; nunca un anticipo de pena.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 144, 146, 148 y 157",
+        "CN, art. 18",
+        "CADH, arts. 7.3 y 8.2",
+        "PIDCP, art. 9.3"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA arts. 144 (alcance de la coerción), 146 (condiciones de las medidas de coerción), 148 (peligro de fuga y entorpecimiento) y 157 (procedencia de la prisión preventiva)",
+        "jurisprudencia_referente": "Corte IDH, 'Suárez Rosero vs. Ecuador' (1997) y 'Tibi vs. Ecuador' (2004) — excepcionalidad y fines exclusivamente procesales; CIDH, Informe 35/07 'Peirano Basso'; CSJN, 'Loyo Fraire' (2014) — necesidad de riesgo procesal concreto; SCBA, doctrina general sobre coerción personal",
+        "doctrina": "Maier, 'DPP', T. I — coerción procesal; Binder, 'Introducción al DPP' — límites del encarcelamiento preventivo"
+    },
+    "aplicacion_practica": "Al contestar un pedido fiscal o impugnar un auto de preventiva, auditar los tres requisitos por separado: (1) ¿el mérito sustantivo se apoya en prueba identificada o en remisiones genéricas al expediente?; (2) ¿el peligro procesal se acredita con indicios concretos del caso o se infiere solo de la escala penal?; (3) ¿el auto explica por qué una caución, la morigeración o el arresto domiciliario serían insuficientes? La omisión de este último análisis es el defecto más frecuente y habilita la impugnación.",
+    "condiciones_aplicacion": [
+        "Auto de prisión preventiva dictado o pedido fiscal en trámite",
+        "Cualquier etapa de la IPP o juicio con imputado detenido cautelarmente"
+    ],
+    "riesgos_procesales": [
+        "Impugnar solo el mérito sustantivo cuando el flanco débil suele ser la motivación del peligro procesal",
+        "No ofrecer un paquete cautelar alternativo concreto (caución, presentaciones periódicas, domiciliario) que le permita al juez sustituir la preventiva",
+        "Consentir prórrogas sin exigir la reevaluación de los presupuestos originales"
+    ],
+    "tags": [
+        "prision_preventiva",
+        "requisitos",
+        "motivacion",
+        "peligro_procesal",
+        "excepcionalidad",
+        "medidas_alternativas"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

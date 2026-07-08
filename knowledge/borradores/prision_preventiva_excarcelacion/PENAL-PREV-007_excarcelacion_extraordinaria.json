@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-007",
+    "instituto": "excarcelacion",
+    "subtipo": "excarcelacion_extraordinaria",
+    "criterio": "Excarcelación extraordinaria — libertad fuera de los supuestos ordinarios",
+    "regla_general": "Aun cuando el caso no encuadre en los supuestos ordinarios, el imputado puede ser excarcelado en forma extraordinaria cuando, por las características del hecho y las condiciones personales comprobadas, la objetiva valoración indique que no procurará eludir la acción de la justicia ni entorpecer la investigación. El instituto confirma que ninguna situación queda excluida a priori del examen de libertad: la ausencia demostrada de riesgo procesal prevalece sobre el encuadre formal.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), art. 170",
+        "CADH, art. 7.3",
+        "CN, art. 18"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA art. 170 — excarcelación extraordinaria",
+        "jurisprudencia_referente": "SCBA — admisión del examen extraordinario ante ausencia objetiva de riesgo; doctrina de 'Nápoli' (CSJN) como refuerzo del examen individual",
+        "doctrina": "Comentarios al art. 170 CPP PBA"
+    },
+    "aplicacion_practica": "Reservar el planteo para casos con perfil de riesgo genuinamente bajo y documentado: arraigo sólido, ausencia de antecedentes de rebeldía, comportamiento procesal impecable, eventual colaboración con la investigación. La solidez documental es decisiva: la vía extraordinaria exige convencer, no solo invocar. Útil también como planteo subsidiario dentro del pedido ordinario.",
+    "condiciones_aplicacion": [
+        "Casos excluidos de los supuestos ordinarios del art. 169",
+        "Perfil de riesgo bajo respaldado con prueba documental"
+    ],
+    "riesgos_procesales": [
+        "Banalizar la vía usándola en casos con indicios reales de riesgo, restando credibilidad a la defensa",
+        "Presentarla sin el respaldo documental que su carácter excepcional exige"
+    ],
+    "tags": [
+        "excarcelacion_extraordinaria",
+        "art_170",
+        "riesgo_procesal",
+        "arraigo",
+        "planteo_subsidiario"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

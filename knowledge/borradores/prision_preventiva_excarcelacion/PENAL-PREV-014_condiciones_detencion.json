@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-014",
+    "instituto": "prision_preventiva",
+    "subtipo": "condiciones_detencion",
+    "criterio": "Agravamiento ilegítimo de las condiciones de detención — hábeas corpus correctivo",
+    "regla_general": "El encierro cautelar solo priva de la libertad ambulatoria: toda restricción adicional ilegítima (hacinamiento, falta de atención médica, alojamiento en comisarías por tiempo prolongado, incomunicación de hecho, distancia que impide el contacto familiar y con la defensa) configura agravamiento de las condiciones de detención, corregible por vía de hábeas corpus. La sobrepoblación carcelaria bonaerense cuenta con estándar específico fijado por la CSJN en 'Verbitsky'.",
+    "articulos_cpp": [
+        "CN, arts. 18 y 43",
+        "Ley 23.098, art. 3 inc. 2 (hábeas corpus correctivo)",
+        "CADH, art. 5.2"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CN art. 18 ('cárceles sanas y limpias'); Ley 23.098 — hábeas corpus correctivo; referencia crítica del proyecto: hábeas corpus SIEMPRE por Ley 23.098 y art. 18/43 CN, nunca por art. 405 CPP PBA",
+        "jurisprudencia_referente": "CSJN, 'Verbitsky' (Fallos 328:1146, 2005) — hábeas corpus colectivo por condiciones de detención en PBA; Corte IDH, 'Instituto de Reeducación del Menor vs. Paraguay' (2004)",
+        "doctrina": "Estándares de Naciones Unidas (Reglas Mandela) como parámetro interpretativo"
+    },
+    "aplicacion_practica": "Documentar el agravamiento con precisión (fechas, lugar, constancias médicas, fotografías si es posible, testimonios de familiares) antes de interponer el hábeas. El correctivo no discute la legalidad del encierro sino sus condiciones: mantener ambas vías separadas. El agravamiento acreditado refuerza además los pedidos de morigeración (PENAL-GAR-011) como argumento humanitario complementario.",
+    "condiciones_aplicacion": [
+        "Detenidos cautelares en comisarías o unidades con hacinamiento",
+        "Falta de atención médica o tratamiento de salud interrumpido por la detención"
+    ],
+    "riesgos_procesales": [
+        "Confundir el objeto del correctivo con el cuestionamiento de la preventiva misma, debilitando ambos planteos",
+        "Fundar el hábeas en el art. 405 CPP PBA (error de encuadre señalado en la metodología del sistema)"
+    ],
+    "tags": [
+        "habeas_corpus",
+        "correctivo",
+        "verbitsky",
+        "condiciones_detencion",
+        "ley_23098"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

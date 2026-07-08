@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-012",
+    "instituto": "excarcelacion",
+    "subtipo": "cauciones",
+    "criterio": "Cauciones — elección de la menos gravosa y proscripción de la caución de cumplimiento imposible",
+    "regla_general": "La caución asegura la comparecencia y debe fijarse en la modalidad menos gravosa que resulte suficiente: juratoria como regla, personal o real solo ante riesgo que lo justifique. Su monto y modalidad deben adecuarse a la capacidad económica real del imputado: la caución real fijada en suma imposible de integrar funciona como denegatoria encubierta de la libertad y vulnera la igualdad ante la ley y el art. 7 CADH.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), régimen de cauciones de los arts. 177 y ss.",
+        "CN, art. 16",
+        "CADH, art. 7"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA — régimen de cauciones (modalidades, graduación y sustitución)",
+        "jurisprudencia_referente": "Doctrina judicial uniforme sobre caución desproporcionada como denegatoria encubierta; estándares CIDH sobre libertad bajo caución accesible",
+        "doctrina": "Solimine — cauciones en el proceso penal"
+    },
+    "aplicacion_practica": "Acreditar la capacidad económica real (recibos, informes socioambientales, AUH u otros beneficios) al pedir la libertad, y solicitar expresamente la modalidad juratoria o el monto compatible. Si se fija caución inalcanzable, plantear la sustitución y, subsidiariamente, apelar denunciando la denegatoria encubierta. Verificar la devolución de la caución real al cesar la medida.",
+    "condiciones_aplicacion": [
+        "Excarcelación concedida bajo caución personal o real",
+        "Asistidos sin capacidad patrimonial para integrar montos elevados"
+    ],
+    "riesgos_procesales": [
+        "Aceptar montos inalcanzables por apuro, dejando al asistido detenido con libertad formalmente concedida",
+        "No documentar la situación patrimonial, facilitando montos arbitrarios"
+    ],
+    "tags": [
+        "caucion",
+        "caucion_juratoria",
+        "caucion_real",
+        "denegatoria_encubierta",
+        "capacidad_economica"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

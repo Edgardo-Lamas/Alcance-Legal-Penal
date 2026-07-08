@@ -1,0 +1,38 @@
+{
+    "id": "PENAL-PREV-003",
+    "instituto": "prision_preventiva",
+    "subtipo": "entorpecimiento_probatorio",
+    "criterio": "Peligro de entorpecimiento — exigencia de indicios concretos y actuales",
+    "regla_general": "El entorpecimiento probatorio como fundamento de la preventiva exige indicios graves, concretos y actuales de que el imputado, en libertad, destruirá o alterará prueba, o influirá sobre testigos o peritos. No basta la posibilidad abstracta ni la mera condición de conocido de los testigos. El riesgo se debilita progresivamente a medida que la prueba se produce y asegura: completada la recolección (pericias realizadas, testimonios recibidos), el fundamento pierde actualidad y la medida debe cesar o sustituirse.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), art. 148",
+        "CADH, art. 7.3"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA art. 148 — pautas de entorpecimiento (destrucción de prueba, influencia sobre testigos)",
+        "jurisprudencia_referente": "Corte IDH, 'Barreto Leiva vs. Venezuela' (2009) — el peligro debe verificarse en el caso y no presumirse; CIDH, Informe 35/07 — actualidad del riesgo",
+        "doctrina": "Solimine, 'Tratado sobre las causales de excarcelación'"
+    },
+    "aplicacion_practica": "Mapear el estado de la prueba: listar qué medidas ya se produjeron y cuáles restan. Si los testimonios centrales ya se recibieron y las pericias están agregadas, argumentar la pérdida de actualidad del riesgo y pedir el cese o la morigeración. Frente a autos que invocan influencia sobre testigos, exigir la identificación del acto concreto de perturbación que se teme y su base indiciaria.",
+    "condiciones_aplicacion": [
+        "Preventiva fundada en riesgo de entorpecimiento",
+        "Avance significativo de la producción probatoria desde el dictado de la medida"
+    ],
+    "riesgos_procesales": [
+        "Solicitar el cese sin acompañar el detalle del estado probatorio que demuestra la pérdida de actualidad",
+        "Subestimar denuncias de contactos del imputado con testigos, que reactivan el fundamento"
+    ],
+    "tags": [
+        "entorpecimiento",
+        "prueba",
+        "actualidad_del_riesgo",
+        "testigos",
+        "cese_de_preventiva"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

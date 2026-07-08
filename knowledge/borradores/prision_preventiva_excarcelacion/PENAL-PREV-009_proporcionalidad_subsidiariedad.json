@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-009",
+    "instituto": "prision_preventiva",
+    "subtipo": "proporcionalidad_subsidiariedad",
+    "criterio": "Proporcionalidad y subsidiariedad — deber de considerar de oficio medidas alternativas",
+    "regla_general": "La prisión preventiva es la última ratio del sistema cautelar: solo procede cuando ninguna medida menos lesiva (caución, obligación de comparecencia, prohibición de salida, vigilancia electrónica, arresto domiciliario) alcanza para neutralizar el riesgo verificado. El órgano jurisdiccional debe examinar las alternativas de oficio, aun sin pedido de parte, y su omisión vicia la medida. La coerción debe además guardar proporción con la pena esperable y cesar cuando la supere o desnaturalice.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 144, 146, 159 y 163",
+        "CADH, art. 7.3",
+        "PIDCP, art. 9.3"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA arts. 144 y 146 (necesidad y proporcionalidad de la coerción), 159 (alternativas) y 163 (atenuación de la coerción)",
+        "jurisprudencia_referente": "Corte IDH, 'Norín Catrimán' (2014) — obligación de considerar medidas menos lesivas; CIDH, Informe 35/07; reglas de Tokio (ONU) como estándar interpretativo",
+        "doctrina": "Complementa el criterio PENAL-GAR-011 (morigeración y arresto domiciliario)"
+    },
+    "aplicacion_practica": "Ofrecer siempre un menú cautelar escalonado y concreto: caución real o personal cuantificada, presentaciones periódicas con frecuencia propuesta, dispositivo de geolocalización si está disponible en el departamento judicial, domiciliario con sus condiciones. Obligar al juez a pronunciarse sobre cada alternativa: cada rechazo sin fundamento específico engrosa el recurso.",
+    "condiciones_aplicacion": [
+        "Pedido de preventiva en trámite o medida ya dictada",
+        "Disponibilidad de condiciones materiales para alguna alternativa (domicilio estable, garante, empleo)"
+    ],
+    "riesgos_procesales": [
+        "Ofrecer alternativas genéricas sin condiciones verificables",
+        "No documentar la disponibilidad real del dispositivo o domicilio ofrecido"
+    ],
+    "tags": [
+        "proporcionalidad",
+        "subsidiariedad",
+        "medidas_alternativas",
+        "ultima_ratio",
+        "art_163"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

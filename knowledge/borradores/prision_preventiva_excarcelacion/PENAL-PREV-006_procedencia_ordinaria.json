@@ -1,0 +1,40 @@
+{
+    "id": "PENAL-PREV-006",
+    "instituto": "excarcelacion",
+    "subtipo": "procedencia_ordinaria",
+    "criterio": "Excarcelación ordinaria — procedencia y estándar de interpretación restrictiva de la denegatoria",
+    "regla_general": "La excarcelación es la vía natural de recuperación de la libertad durante el proceso y procede en los supuestos del art. 169 CPP PBA. Tras la reforma de la Ley 13.449, su denegatoria solo se sostiene en la existencia de peligro concreto de fuga o entorpecimiento; toda otra consideración es ajena al instituto. Las normas que restringen la libertad se interpretan restrictivamente, y la duda sobre la concurrencia del riesgo procesal se resuelve a favor de la libertad del imputado.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), arts. 169, 170 y 171 (texto según Ley 13.449)",
+        "CPP PBA, art. 3 (interpretación restrictiva de las normas que coartan la libertad)",
+        "CADH, art. 7.5"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA arts. 169 (supuestos de procedencia), 170 (excarcelación extraordinaria) y 171 (denegatoria — solo por peligro de fuga o entorpecimiento); art. 3 (regla de interpretación)",
+        "jurisprudencia_referente": "SCBA, doctrina posterior a la Ley 13.449 — el riesgo procesal como único fundamento denegatorio; CIDH, Informe 35/07 'Peirano Basso'",
+        "doctrina": "Solimine — causales de excarcelación; comentarios al régimen bonaerense reformado"
+    },
+    "aplicacion_practica": "Encuadrar el pedido en el inciso específico del art. 169 aplicable y anticiparse a la denegatoria: acompañar en el mismo escrito el paquete de arraigo y el ofrecimiento de caución. Ante silencio o demora del órgano, recordar que la libertad procesal no admite dilaciones y agotar la vía recursiva de inmediato.",
+    "condiciones_aplicacion": [
+        "Imputado detenido o con preventiva dictada que encuadra en supuestos del art. 169",
+        "Cualquier etapa del proceso"
+    ],
+    "riesgos_procesales": [
+        "Pedidos genéricos sin encuadre en un inciso concreto del art. 169",
+        "No ofrecer caución ni domicilio verificable, facilitando la denegatoria",
+        "Dejar vencer los plazos de apelación de la denegatoria"
+    ],
+    "tags": [
+        "excarcelacion",
+        "art_169",
+        "ley_13449",
+        "interpretacion_restrictiva",
+        "libertad_procesal"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

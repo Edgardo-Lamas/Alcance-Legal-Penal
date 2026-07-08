@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-010",
+    "instituto": "prision_preventiva",
+    "subtipo": "arraigo",
+    "criterio": "Arraigo — evaluación integral y carga probatoria de la acusación",
+    "regla_general": "El arraigo se evalúa integralmente: domicilio estable y verificable, núcleo familiar conviviente, actividad laboral o educativa, vínculos comunitarios comprobables. La precariedad habitacional o laboral no equivale a falta de arraigo ni habilita presumir la fuga: valorar la pobreza como indicador de riesgo introduce una discriminación por condición social vedada constitucional y convencionalmente. La carga de acreditar la ausencia de arraigo relevante pesa sobre la acusación.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), art. 148",
+        "CN, art. 16",
+        "CADH, arts. 7.3 y 24"
+    ],
+    "nivel_autoridad": "orientativo",
+    "fuente": {
+        "norma": "CPP PBA art. 148 — el arraigo como pauta central del juicio de peligro de fuga",
+        "jurisprudencia_referente": "Corte IDH, 'López Álvarez vs. Honduras' (2006) — proscripción de criterios discriminatorios en la coerción; CIDH, Informe sobre el uso de la prisión preventiva en las Américas (2013)",
+        "doctrina": "Estándares interamericanos sobre preventiva y condición social"
+    },
+    "aplicacion_practica": "Armar un legajo de arraigo documentado en las primeras 48 horas: certificado o constatación de domicilio, certificados de trabajo aun informales (declaraciones de empleadores o clientes), constancias escolares de hijos, informes socioambientales. Si el auto infiere riesgo de la precariedad económica, denunciar el sesgo discriminatorio con cita de los estándares CIDH.",
+    "condiciones_aplicacion": [
+        "Discusión sobre peligro de fuga en cualquier incidencia cautelar",
+        "Asistidos en situación de vulnerabilidad socioeconómica"
+    ],
+    "riesgos_procesales": [
+        "Presentar el arraigo tarde, cuando la preventiva ya se consolidó",
+        "Afirmaciones de arraigo desmentibles por la constatación fiscal, que destruyen la credibilidad de la defensa"
+    ],
+    "tags": [
+        "arraigo",
+        "vulnerabilidad",
+        "discriminacion",
+        "carga_probatoria",
+        "legajo_de_arraigo"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

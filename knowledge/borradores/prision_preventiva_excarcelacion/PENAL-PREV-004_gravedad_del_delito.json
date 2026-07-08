@@ -1,0 +1,39 @@
+{
+    "id": "PENAL-PREV-004",
+    "instituto": "prision_preventiva",
+    "subtipo": "gravedad_del_delito",
+    "criterio": "Gravedad del delito y alarma social — insuficiencia como fundamento cautelar",
+    "regla_general": "La gravedad del hecho imputado, la repercusión pública o la 'alarma social' no son fines cautelares legítimos: responden a lógica punitiva y no procesal. Una prisión preventiva sustentada exclusiva o principalmente en ellos encubre una pena anticipada e infringe la presunción de inocencia. Estos factores solo pueden ponderarse en cuanto se traduzcan en un riesgo procesal verificable, nunca como fundamento autónomo.",
+    "articulos_cpp": [
+        "CN, art. 18",
+        "CADH, arts. 7.3, 7.5 y 8.2",
+        "CPP PBA (Ley 11.922), arts. 144 y 148"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "Bloque de constitucionalidad (CN art. 75 inc. 22) — presunción de inocencia y excepcionalidad del encierro cautelar",
+        "jurisprudencia_referente": "Corte IDH, 'López Álvarez vs. Honduras' (2006) — la peligrosidad o la repercusión social del hecho no justifican la preventiva; CFCP, plenario 'Díaz Bessone' (Ac. 1/08); CSJN, 'Loyo Fraire' (2014)",
+        "doctrina": "Bovino — fines procesales exclusivos del encarcelamiento preventivo"
+    },
+    "aplicacion_practica": "Detectar en el auto las expresiones que delatan fundamento punitivo ('la gravedad del hecho impone', 'el impacto en la comunidad', 'la naturaleza del delito'). Aislarlas y demostrar que, removidas, el auto queda sin motivación procesal residual. Este vicio habilita tanto la apelación como el planteo de arbitrariedad.",
+    "condiciones_aplicacion": [
+        "Autos que invocan gravedad, alarma social o repercusión mediática",
+        "Causas con cobertura de prensa donde el riesgo de contaminación punitiva es mayor"
+    ],
+    "riesgos_procesales": [
+        "Reducir el planteo a lo dogmático sin ofrecer simultáneamente el esquema cautelar alternativo",
+        "No preservar la cuestión federal (presunción de inocencia) para instancias superiores"
+    ],
+    "tags": [
+        "alarma_social",
+        "gravedad_del_delito",
+        "pena_anticipada",
+        "presuncion_inocencia",
+        "arbitrariedad"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}

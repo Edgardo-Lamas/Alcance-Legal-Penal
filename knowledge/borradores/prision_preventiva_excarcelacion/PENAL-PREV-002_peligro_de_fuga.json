@@ -1,0 +1,40 @@
+{
+    "id": "PENAL-PREV-002",
+    "instituto": "prision_preventiva",
+    "subtipo": "peligro_de_fuga",
+    "criterio": "Peligro de fuga — pautas objetivas de valoración y prohibición de presunciones automáticas",
+    "regla_general": "El peligro de fuga debe acreditarse mediante circunstancias objetivas y verificadas del caso concreto: arraigo (domicilio, familia, trabajo), comportamiento procesal anterior, posibilidades reales de abandonar el país u ocultarse. La gravedad de la pena en expectativa es solo una pauta más, que no puede operar como presunción automática ni invertir la carga de la prueba. Corresponde a la acusación demostrar el riesgo; el imputado no debe probar que no va a fugarse.",
+    "articulos_cpp": [
+        "CPP PBA (Ley 11.922), art. 148",
+        "CADH, art. 7.3",
+        "PIDCP, art. 9.3"
+    ],
+    "nivel_autoridad": "vinculante",
+    "fuente": {
+        "norma": "CPP PBA art. 148 — pautas para valorar el peligro de fuga y de entorpecimiento",
+        "jurisprudencia_referente": "Corte IDH, 'Norín Catrimán y otros vs. Chile' (2014) — el riesgo debe fundarse en circunstancias objetivas del caso; CSJN, 'Loyo Fraire' (Fallos 337:245, 2014); CFCP, plenario 'Díaz Bessone' (Ac. 1/08) — la severidad de la pena no basta por sí sola",
+        "doctrina": "Bovino, 'El encarcelamiento preventivo en los tratados de derechos humanos'"
+    },
+    "aplicacion_practica": "Construir el legajo de arraigo desde la primera intervención: certificado de domicilio, constancias laborales, grupo familiar conviviente, historial de comparecencia en procesos anteriores. Confrontar cada afirmación fiscal de riesgo con su respaldo probatorio puntual: si el auto solo invoca 'la gravedad del delito' o 'la pena en expectativa', señalar que replica una presunción vedada por los estándares interamericanos.",
+    "condiciones_aplicacion": [
+        "Pedido o auto de preventiva fundado total o principalmente en la escala penal",
+        "Imputado con arraigo acreditable"
+    ],
+    "riesgos_procesales": [
+        "Presentar arraigo genérico sin documentación respaldatoria",
+        "No rebatir individualmente cada indicio de riesgo invocado por la fiscalía",
+        "Ignorar antecedentes de rebeldía o incomparecencia del propio asistido que la contraparte explotará"
+    ],
+    "tags": [
+        "peligro_de_fuga",
+        "arraigo",
+        "pena_en_expectativa",
+        "presunciones",
+        "carga_probatoria"
+    ],
+    "fuero": "penal_pba",
+    "jurisdiccion": "argentina_pba",
+    "alcance": "criterios_generales",
+    "version": "1.0-borrador",
+    "fecha_actualizacion": "2026-07-07"
+}
