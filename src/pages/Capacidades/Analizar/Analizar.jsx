@@ -8,7 +8,7 @@ import { useExtensionDetect } from '../../../hooks/useExtensionDetect'
 import PipelineStatus from '../../../components/PipelineStatus/PipelineStatus'
 import './Analizar.css'
 
-const CHROME_STORE_URL = 'https://chromewebstore.google.com/search/Alcance%20Legal%20Penal%20MEV'
+const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/alcance-legal-penal-%C2%B7-con/gojomcbmgkmmnknihfldaccogebhppfd'
 
 const MAX_IMAGES = 4
 const MAX_SIZE_MB = 4
@@ -144,6 +144,10 @@ function Analizar() {
     const [mevStatus, setMevStatus] = useState('idle') // 'idle' | 'waiting' | 'received'
     const realtimeRef = useRef(null)
     const mevInstalado = useExtensionDetect()
+    // Con la extensión instalada el camino MEV es el principal: el formulario
+    // manual queda colapsado como respaldo hasta que el abogado lo pida.
+    const [mostrarManual, setMostrarManual] = useState(false)
+    const manualVisible = !mevInstalado || mostrarManual
 
     useEffect(() => {
         return () => {
@@ -570,7 +574,7 @@ function Analizar() {
                                         <span className="mev-connect__paso-num">2</span>
                                         <div className="mev-connect__paso-body">
                                             <strong>Abrí el MEV y navegá a tu causa autorizada</strong>
-                                            <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__link">mev.scba.gov.ar →</a>
+                                            <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-connect__btn">Abrir mi MEV →</a>
                                         </div>
                                     </li>
                                     <li className="mev-connect__paso">
@@ -620,10 +624,22 @@ function Analizar() {
                             </div>
                         </div>
 
-                        {/* Divisor entre MEV y formulario manual */}
-                        <div className="mev-divider">
-                            <span>O ingresalo manualmente</span>
-                        </div>
+                        {/* Divisor entre MEV y formulario manual — colapsado si hay conexión MEV */}
+                        {manualVisible ? (
+                            <div className="mev-divider">
+                                <span>O ingresalo manualmente</span>
+                            </div>
+                        ) : (
+                            <button
+                                type="button"
+                                className="mev-manual-toggle"
+                                onClick={() => setMostrarManual(true)}
+                            >
+                                ¿El expediente no está en el MEV? <span>Cargalo manualmente →</span>
+                            </button>
+                        )}
+
+                        {manualVisible && (<>
 
                         {/* CAMPO PRINCIPAL — Texto del expediente */}
                         <div className="form-group">
@@ -865,6 +881,7 @@ function Analizar() {
                                 o si la base jurídica disponible es insuficiente.
                             </p>
                         </div>
+                        </>)}
                     </form>
                 </div>
 

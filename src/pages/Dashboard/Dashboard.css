@@ -92,7 +92,7 @@
     animation: mev-pulse 2s infinite;
 }
 
-.mev-banner__texto { color: #6ee7b7; }
+.mev-banner__texto { color: #6ee7b7; flex: 1; min-width: 0; }
 
 .mev-banner__izq {
     display: flex;

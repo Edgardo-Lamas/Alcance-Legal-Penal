@@ -1323,3 +1323,47 @@
     color: #34d399 !important;
     font-size: 0.7rem !important;
 }
+
+/* ── Botón primario del panel MEV (extensión instalada) ─────────────────── */
+.mev-connect__btn {
+    display: inline-block;
+    margin-top: 0.4rem;
+    padding: 0.55rem 1.4rem;
+    background: var(--color-accent);
+    color: #0a1525;
+    border-radius: var(--radius-md);
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background var(--transition-fast);
+}
+
+.mev-connect__btn:hover {
+    background: var(--color-accent-light);
+    color: #0a1525;
+}
+
+/* ── Toggle del formulario manual (colapsado cuando hay conexión MEV) ───── */
+.mev-manual-toggle {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 0.85rem 1rem;
+    background: transparent;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: 0.82rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.mev-manual-toggle span {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.mev-manual-toggle:hover {
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+}

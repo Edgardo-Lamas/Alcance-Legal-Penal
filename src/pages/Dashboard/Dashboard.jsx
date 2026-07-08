@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useExtensionDetect } from '../../hooks/useExtensionDetect'
 import './Dashboard.css'
 
-const CHROME_STORE_URL = 'https://chromewebstore.google.com/search/Alcance%20Legal%20Penal%20MEV'
+const CHROME_STORE_URL = 'https://chromewebstore.google.com/detail/alcance-legal-penal-%C2%B7-con/gojomcbmgkmmnknihfldaccogebhppfd'
 
 const principios = [
     { simbolo: 'I',   nombre: 'In dubio pro reo',        descripcion: 'La duda razonable beneficia siempre al imputado' },
@@ -67,6 +67,9 @@ function Dashboard() {
                     <span className="mev-banner__texto">
                         Conexión MEV activa — el sistema detecta expedientes automáticamente
                     </span>
+                    <a href="https://mev.scba.gov.ar" target="_blank" rel="noreferrer" className="mev-banner__btn">
+                        Abrir mi MEV →
+                    </a>
                 </div>
             ) : (
                 <div className="mev-banner mev-banner--setup">
