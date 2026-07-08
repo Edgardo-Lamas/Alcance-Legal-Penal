@@ -570,7 +570,7 @@
 .bento-card__tag-item {
     font-size: 0.67rem;
     font-weight: 500;
-    color: var(--color-text-dim);
+    color: var(--color-text-secondary);
     background: rgba(13, 30, 53, 0.7);
     border: 1px solid var(--color-border-subtle);
     padding: 0.2rem 0.55rem;
@@ -696,7 +696,8 @@
     }
 
     .principio-pill__nombre {
-        display: none;
+        font-size: 0.65rem;
+        white-space: normal;
     }
 
     .principio-pill {
@@ -722,5 +723,22 @@
     .dashboard__hero-status-dot {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+
+/* ── MEV banner: apilar en mobile (texto arriba, botón abajo) ── */
+@media (max-width: 640px) {
+    .mev-banner--setup {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .mev-banner--setup .mev-banner__btn {
+        text-align: center;
+    }
+
+    .mev-banner--activo {
+        flex-wrap: wrap;
     }
 }

@@ -14,6 +14,16 @@
     /* No puede ocultarse */
     display: block !important;
     visibility: visible !important;
+    /* El sidebar es fijo: el banner arranca a su derecha en desktop */
+    margin-left: var(--nav-width);
+}
+
+@media (max-width: 1024px) {
+    .disclaimer-banner {
+        margin-left: 0;
+        /* espacio para el botón hamburguesa fijo */
+        padding-left: 3.75rem;
+    }
 }
 
 .banner-text {
@@ -25,7 +35,7 @@
 /* Responsive */
 @media (max-width: 640px) {
     .disclaimer-banner {
-        padding: 0.5rem 0.75rem;
+        padding: 0.5rem 0.75rem 0.5rem 3.5rem;
     }
 
     .banner-text {

@@ -1314,3 +1314,17 @@
         display: none;
     }
 }
+
+
+/* ── Stepper: evitar corte de labels en mobile ── */
+@media (max-width: 480px) {
+    .resultado__pasos {
+        padding: 0 1rem;
+        gap: 0.5rem;
+    }
+
+    .resultado__paso-label {
+        font-size: 0.72rem;
+        white-space: normal;
+    }
+}
