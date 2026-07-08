@@ -157,7 +157,7 @@
     flex-direction: column;
     gap: 0.2rem;
     padding-left: 1rem;
-    border-left: 2px solid rgba(201, 162, 39, 0.3);
+    border-left: 1px solid rgba(201, 162, 39, 0.35);
 }
 
 .manual__lista-item strong {

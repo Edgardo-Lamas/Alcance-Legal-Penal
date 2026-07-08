@@ -172,9 +172,9 @@
 
 .da-contenido__intro {
     background: rgba(201, 162, 39, 0.06);
-    border-left: 3px solid #c9a227;
+    border: 1px solid rgba(201, 162, 39, 0.4);
     padding: 1rem 1.25rem;
-    border-radius: 0 6px 6px 0;
+    border-radius: 6px;
     margin: 0 0 1.75rem;
     color: #cbd5e1;
 }
