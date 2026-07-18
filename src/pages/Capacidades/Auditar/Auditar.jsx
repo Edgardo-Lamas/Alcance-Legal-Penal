@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { api } from '../../../services/api'
+import { mapearEtapa, parseCaratula } from '../../../utils/precargaAnalisis'
 import '../Analizar/Analizar.css'
 
 const etapasProcesales = [
@@ -19,14 +20,22 @@ const situacionesProcesales = [
 
 function Auditar() {
     const navigate = useNavigate()
+    const location = useLocation()
+    // Datos del análisis previo (botón "Auditar Estrategia" del informe). La
+    // estrategia y el objetivo son siempre del abogado — solo se precarga lo
+    // que ya extrajo el sistema del expediente.
+    const desdeAnalisis = location.state?.desdeAnalisis
+    // Si el análisis no trae etapa/delito estructurados, se extraen del texto de hechos
+    const caratula = parseCaratula(desdeAnalisis?.hechos)
+    const sinDato = (v) => !v || /^no especificad/i.test(v.trim()) ? '' : v
     const [formData, setFormData] = useState({
-        etapa_procesal: '',
-        tipo_delito_imputado: '',
+        etapa_procesal: mapearEtapa(sinDato(desdeAnalisis?.etapa_procesal) || caratula.etapa),
+        tipo_delito_imputado: sinDato(desdeAnalisis?.tipo_penal) || caratula.delito,
         situacion_procesal: '',
         estrategia_actual: '',
         objetivo_defensivo: '',
         riesgos_identificados: '',
-        contexto_adicional: ''
+        contexto_adicional: desdeAnalisis?.hechos || ''
     })
     const [errors, setErrors] = useState({})
     const [isLoading, setIsLoading] = useState(false)
@@ -86,6 +95,19 @@ function Auditar() {
                     Detecte supuestos implícitos, inconsistencias y riesgos en su estrategia de defensa penal PBA.
                 </p>
             </header>
+
+            {desdeAnalisis && (
+                <div className="precarga-banner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <p>
+                        Datos del expediente precargados desde el análisis <strong>{desdeAnalisis.numero_informe}</strong>.
+                        La estrategia y el objetivo defensivo los completa usted — el sistema no los deduce.
+                    </p>
+                </div>
+            )}
 
             <form className="analizar__form" onSubmit={handleSubmit}>
 

@@ -58,6 +58,9 @@ function Historial() {
                     _advertencias: item.resultado_json?._advertencias || [],
                     _disclaimer:   item.resultado_json?._disclaimer,
                     _meta:         item.resultado_json?._meta,
+                    _hechos:         item.hechos || '',
+                    _tipo_penal:     item.tipo_penal || '',
+                    _etapa_procesal: item.etapa_procesal || '',
                 }
             }
         })

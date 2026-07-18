@@ -188,6 +188,9 @@ function Analizar() {
                             _advertencias: row.resultado_json?._advertencias || [],
                             _disclaimer:   row.resultado_json?._disclaimer,
                             _meta:         row.resultado_json?._meta,
+                            _hechos:         row.hechos || '',
+                            _tipo_penal:     row.tipo_penal || '',
+                            _etapa_procesal: row.etapa_procesal || '',
                         }
                     }
                 })
@@ -462,6 +465,7 @@ function Analizar() {
                         _advertencias: response.advertencias || [],
                         _disclaimer: response.disclaimer,
                         _meta: response.meta,
+                        _hechos: formData.documentacion_caso || '',
                     }
                 }
 

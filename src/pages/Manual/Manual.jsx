@@ -104,6 +104,11 @@ const secciones = [
                 texto: 'Revisa la coherencia interna de una estrategia defensiva ya elaborada. Detecta supuestos implícitos, inconsistencias argumentales y puntos débiles que la acusación podría aprovechar. Es el "segundo par de ojos" antes de una audiencia o escrito crucial.'
             },
             {
+                subtitulo: 'Dos formas de cargar los datos',
+                tipo: 'texto',
+                texto: 'Desde un informe de análisis (botón "Auditar Estrategia" al pie), la etapa, el delito y el contexto del expediente vienen precargados. También puede completar el formulario desde cero. En ambos casos, la estrategia y el objetivo defensivo los escribe usted: son su criterio profesional, el sistema no los deduce.'
+            },
+            {
                 subtitulo: 'Cuándo usarlo',
                 tipo: 'lista',
                 items: [
@@ -131,9 +136,14 @@ const secciones = [
                 texto: 'Genera un borrador estructurado de un escrito defensivo (excepción, recurso, alegato, etc.) con secciones profesionales, citas normativas y argumento defensivo. Las partes que requieren datos específicos del expediente se marcan explícitamente para completar.'
             },
             {
+                subtitulo: 'Dos formas de cargar los datos',
+                tipo: 'texto',
+                texto: 'Desde un informe de análisis (botón "Redactar Escrito" al pie), el borrador arranca con el imputado, la causa, los hechos y la pretensión sugerida ya precargados desde el expediente analizado. También puede cargar todo manualmente desde cero.'
+            },
+            {
                 subtitulo: 'Importante',
                 tipo: 'advertencia',
-                texto: 'Todo borrador generado es un punto de partida. Requiere obligatoriamente su revisión y adecuación profesional antes de presentarlo. El sistema no tiene acceso al expediente completo ni a los datos precisos del caso.',
+                texto: 'Todo borrador generado es un punto de partida. Requiere obligatoriamente su revisión y adecuación profesional antes de presentarlo. Verifique especialmente los datos precargados y complete los que el sistema marque como faltantes.',
             },
         ]
     },

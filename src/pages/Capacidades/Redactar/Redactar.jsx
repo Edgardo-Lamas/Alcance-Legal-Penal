@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { api } from '../../../services/api'
+import { parseCaratula } from '../../../utils/precargaAnalisis'
 import '../Analizar/Analizar.css'
 
 const tiposEscrito = [
@@ -14,12 +15,17 @@ const tiposEscrito = [
 
 function Redactar() {
     const navigate = useNavigate()
+    const location = useLocation()
+    // Datos del análisis previo (botón "Redactar Escrito" del informe) — si no
+    // hay, el formulario arranca vacío para carga manual.
+    const desdeAnalisis = location.state?.desdeAnalisis
+    const caratula = parseCaratula(desdeAnalisis?.hechos)
     const [formData, setFormData] = useState({
         tipo_escrito: '',
-        nombre_imputado: '',
-        causa_numero: '',
-        hechos_relevantes: '',
-        pretension_defensiva: '',
+        nombre_imputado: caratula.imputado,
+        causa_numero: caratula.expediente,
+        hechos_relevantes: desdeAnalisis?.hechos || '',
+        pretension_defensiva: desdeAnalisis?.conclusion_defensiva || '',
         fundamentos_extra: '',
         incluir_citas_scba: true
     })
@@ -93,6 +99,19 @@ function Redactar() {
                     revisión y firma del letrado responsable antes de su presentación judicial.
                 </p>
             </div>
+
+            {desdeAnalisis && (
+                <div className="precarga-banner">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <p>
+                        Datos precargados desde el análisis <strong>{desdeAnalisis.numero_informe}</strong> —
+                        revise cada campo, edite lo que haga falta y complete los que quedaron vacíos.
+                    </p>
+                </div>
+            )}
 
             <form className="analizar__form" onSubmit={handleSubmit}>
 

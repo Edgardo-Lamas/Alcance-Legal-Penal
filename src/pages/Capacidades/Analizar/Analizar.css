@@ -137,6 +137,35 @@
     font-style: italic;
 }
 
+/* Banner de datos precargados desde un análisis previo */
+.precarga-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    background: rgba(201, 162, 39, 0.08);
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1.5rem;
+    color: #e2c76b;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.precarga-banner svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #c9a227;
+}
+
+.precarga-banner p {
+    margin: 0;
+}
+
+.precarga-banner strong {
+    color: #c9a227;
+}
+
 /* Inputs de texto */
 .form-input {
     width: 100%;
