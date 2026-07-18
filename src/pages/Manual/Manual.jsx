@@ -11,15 +11,6 @@ const secciones = [
         titulo: 'Primeros Pasos',
         bloques: [
             {
-                subtitulo: 'Cómo acceder al sistema',
-                tipo: 'pasos',
-                items: [
-                    { num: '1', label: 'Crear cuenta', detalle: 'Ingrese a la pantalla de inicio → pestaña "Crear cuenta" → complete nombre, correo y contraseña. Recibirá un correo de confirmación.' },
-                    { num: '2', label: 'Confirmar correo', detalle: 'Haga clic en el enlace del correo de Supabase. Sin esta confirmación no podrá ingresar.' },
-                    { num: '3', label: 'Ingresar', detalle: 'Vuelva al inicio de sesión, ingrese su correo y contraseña. Quedará dentro del sistema.' },
-                ]
-            },
-            {
                 subtitulo: 'Flujo de trabajo recomendado',
                 tipo: 'flujo',
                 items: [
@@ -262,7 +253,7 @@ const secciones = [
                     },
                     {
                         pregunta: '¿Puedo usar los informes en el expediente?',
-                        respuesta: 'Los informes son herramientas de trabajo interno, no documentos de presentación judicial. Son insumo para su propio análisis y redacción. No están firmados por letrado ni reemplazanvun dictamen profesional.'
+                        respuesta: 'Los informes son herramientas de trabajo interno, no documentos de presentación judicial. Son insumo para su propio análisis y redacción. No están firmados por letrado ni reemplazan un dictamen profesional.'
                     },
                     {
                         pregunta: '¿Con qué frecuencia se actualiza el corpus?',
