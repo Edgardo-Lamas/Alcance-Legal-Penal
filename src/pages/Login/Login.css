@@ -104,6 +104,48 @@
     box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.08);
 }
 
+/* Password con botón mostrar/ocultar */
+.login-input-wrap {
+    position: relative;
+}
+
+.login-input--password {
+    padding-right: 2.75rem;
+}
+
+.login-eye {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    padding: 7px;
+    background: none;
+    border: none;
+    border-radius: 6px;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.login-eye:hover {
+    color: #e2e8f0;
+}
+
+.login-eye:focus-visible {
+    outline: 2px solid #c9a227;
+    outline-offset: 1px;
+}
+
+.login-eye svg {
+    width: 100%;
+    height: 100%;
+}
+
 .login-error {
     background: rgba(220, 38, 38, 0.1);
     border: 1px solid rgba(220, 38, 38, 0.3);
