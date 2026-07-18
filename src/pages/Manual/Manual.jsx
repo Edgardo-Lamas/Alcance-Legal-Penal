@@ -37,17 +37,22 @@ const secciones = [
                 texto: 'Recibe los hechos imputados y produce un análisis defensivo estructurado: encuadre procesal, evaluación de la prueba de cargo, nulidades potenciales, contraargumentación y conclusión defensiva. Opera exclusivamente desde la perspectiva del imputado — in dubio pro reo.'
             },
             {
-                subtitulo: 'Qué información ingresar',
+                subtitulo: 'Flujo principal — análisis directo desde el MEV',
+                tipo: 'pasos',
+                items: [
+                    { num: '1', label: 'Activar el componente MEV', detalle: 'Instale la extensión de Chrome (una sola vez). En la pantalla Analizar, el panel "Conexión MEV" tiene el enlace de instalación.' },
+                    { num: '2', label: 'Abrir su causa en el MEV', detalle: 'Ingrese a mev.scba.gov.ar con sus credenciales y navegue hasta la causa autorizada.' },
+                    { num: '3', label: 'Hacer clic en "Analizar" en el panel lateral', detalle: 'La extensión extrae la carátula y las actuaciones del expediente — sin copiar ni tipear nada. El resultado aparece automáticamente en esta web.' },
+                ]
+            },
+            {
+                subtitulo: 'Carga manual (si el expediente no está en el MEV)',
                 tipo: 'lista',
                 items: [
-                    { label: 'Hechos imputados (obligatorio)', detalle: 'Describa la conducta atribuida tal como la plantea la acusación. Sea preciso: quién, qué, cuándo, dónde. Mínimo 20 caracteres.' },
-                    { label: 'Tipo penal / Calificación', detalle: 'Artículo del CP invocado. Ej: "Art. 166 inc. 1 CP — Robo con fuerza". Si no lo sabe, déjelo en blanco.' },
-                    { label: 'Etapa procesal', detalle: 'IPP, Juicio Oral, Recursos o Ejecución. Afecta el foco del análisis.' },
-                    { label: 'Prueba de la acusación', detalle: 'Enumere lo que tiene la fiscalía: testimonios, pericias, videos, etc. Cuanto más detalle, mejor el análisis.' },
-                    { label: 'Pretensión defensiva', detalle: 'Qué busca: sobreseimiento, nulidad, absolución, reducción del tipo. Opcional pero mejora el resultado.' },
-                    { label: 'Documentación del expediente (texto)', detalle: 'Pegue texto de actas, pericias, declaraciones. No necesita el documento completo — las partes relevantes son suficientes.' },
-                    { label: 'PDFs del expediente', detalle: 'Adjunte hasta 2 archivos PDF (máx. 10 MB c/u): pericias completas, actas, declaraciones escaneadas. El sistema los lee íntegramente.' },
-                    { label: 'Imágenes del expediente', detalle: 'Adjunte hasta 4 imágenes JPG/PNG/WebP (máx. 4 MB c/u): capturas de pantalla, fotos de evidencia, escritos manuscritos. El sistema las analiza visualmente.' },
+                    { label: 'Texto del expediente (obligatorio)', detalle: 'Pegue el texto del expediente o describa los hechos (mínimo 20 caracteres). El sistema extrae automáticamente los hechos, la etapa procesal, el delito imputado y la prueba de cargo — no necesita separarlos usted.' },
+                    { label: '¿Qué aspectos quiere analizar? (opcional)', detalle: 'Ej: "¿Puedo pedir la excarcelación?", "¿Hay nulidades en el allanamiento?". Si no especifica, el análisis defensivo es integral.' },
+                    { label: 'PDFs del expediente (opcional)', detalle: 'Adjunte hasta 2 archivos PDF (máx. 10 MB c/u): pericias completas, actas, declaraciones escaneadas. El sistema los lee íntegramente. Adjuntar documentos solo es posible por esta vía.' },
+                    { label: 'Imágenes del expediente (opcional)', detalle: 'Adjunte hasta 4 imágenes JPG/PNG/WebP (máx. 4 MB c/u): capturas de pantalla, fotos de evidencia, escritos manuscritos. El sistema las analiza visualmente.' },
                 ]
             },
             {
