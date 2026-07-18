@@ -197,7 +197,7 @@ const secciones = [
                 items: [
                     { label: 'Acceder al historial', detalle: 'Menú lateral → "Historial". Se listan los análisis ordenados por fecha, con el número de informe, estado (Aprobado / Limitado / Rechazado) y extracto de los hechos.' },
                     { label: 'Reabrir un análisis', detalle: 'Haga clic en cualquier entrada del historial para ver el informe completo. El sistema abre directamente en la Estrategia Defensiva (Paso 2), ya que el encuadre fue validado en su momento.' },
-                    { label: 'Exportar desde el historial', detalle: 'Una vez abierto el análisis, puede exportarlo a PDF desde el botón "Exportar PDF" en la parte inferior.' },
+                    { label: 'Exportar desde el historial', detalle: 'Una vez abierto el análisis, puede descargarlo en PDF o Word desde los botones en la parte inferior.' },
                 ]
             },
         ]
@@ -212,20 +212,19 @@ const secciones = [
                 <line x1="9" y1="15" x2="15" y2="15"/>
             </svg>
         ),
-        titulo: 'Exportar PDF',
+        titulo: 'Exportar PDF y Word',
         bloques: [
             {
                 subtitulo: '¿Cómo funciona?',
                 tipo: 'texto',
-                texto: 'El botón "Exportar PDF" abre el diálogo de impresión del navegador. Desde ahí puede guardar el informe como PDF o imprimirlo directamente. El diseño de impresión está optimizado: oculta la navegación y los controles de la app, dejando solo el contenido del informe.'
+                texto: 'Al pie de cada informe hay dos botones de descarga directa: "Descargar Informe PDF" genera un PDF profesional del informe, y "Descargar en Word" genera un archivo .docx editable. No se usa el diálogo de impresión — el archivo se descarga a su dispositivo.'
             },
             {
                 subtitulo: 'Recomendaciones',
                 tipo: 'tips',
                 items: [
-                    'En el diálogo de impresión, seleccione "Guardar como PDF" como destino para obtener un archivo digital.',
-                    'El botón "Exportar PDF" solo está disponible en el Paso 2 (Estrategia Defensiva) — no en el Paso 1 de verificación.',
-                    'En Safari (iOS/Mac), el diálogo puede abrirse como "Compartir" en lugar de "Imprimir".',
+                    'Para borradores de escritos judiciales use la descarga en Word: el .docx queda editable para completar los datos del expediente, adecuar y firmar antes de presentar.',
+                    'En los análisis de caso, los botones de descarga solo están disponibles en el Paso 2 (Estrategia Defensiva) — no en el Paso 1 de verificación.',
                 ]
             },
         ]
