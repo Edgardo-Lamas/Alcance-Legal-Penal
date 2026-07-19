@@ -6,12 +6,29 @@
  * Perspectiva: SIEMPRE desde la defensa. In dubio pro reo.
  */
 
+import { supabase } from './supabase'
+
 // Configuración de Supabase Edge Functions
 const SUPABASE_CONFIG = {
     url: import.meta.env.VITE_SUPABASE_URL,
     anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
     functionsUrl: import.meta.env.VITE_SUPABASE_URL ?
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1` : null
+}
+
+/**
+ * Token para las Edge Functions: el access_token del abogado logueado.
+ * Con REQUIRE_AUTH=true en producción, el anon key devuelve 401 — el fallback
+ * solo aplica sin sesión (dev / mocks).
+ */
+async function getAuthToken() {
+    if (supabase) {
+        try {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session?.access_token) return session.access_token
+        } catch { /* sin sesión activa */ }
+    }
+    return SUPABASE_CONFIG.anonKey
 }
 
 // Configuración de endpoints n8n (legacy/fallback)
@@ -203,6 +220,22 @@ Proveer de conformidad será justicia.`,
                 'El estilo y estructura pueden requerir ajustes según la práctica del juzgado interviniente.'
             ]
         }
+    },
+
+    consultor: {
+        success: true,
+        respuesta:
+            'Sobre la base del informe de esta causa, podría plantearse la nulidad del procedimiento ' +
+            'antes que la excarcelación: si prospera (arts. 201-207 CPP PBA), la exclusión de la prueba ' +
+            'obtenida debilita la base de la prisión preventiva y la excarcelación (arts. 169 y 189 CPP PBA) ' +
+            'gana viabilidad como planteo subsidiario. El riesgo de invertir el orden es consolidar la ' +
+            'valoración de una prueba cuya legalidad aún no fue cuestionada. Esto requiere verificar en el ' +
+            'expediente el acta del procedimiento y su cadena de custodia.',
+        criterios_utilizados: 2,
+        disclaimer: {
+            version: '1.0-consultor',
+            texto: 'Respuesta orientativa del consultor sobre una causa ya analizada. No constituye consejo legal definitivo.'
+        }
     }
 }
 
@@ -236,7 +269,7 @@ class AlcanceLegalAPI {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'Authorization': `Bearer ${await getAuthToken()}`,
                         'apikey': SUPABASE_CONFIG.anonKey
                     },
                     body: JSON.stringify(data)
@@ -286,7 +319,7 @@ class AlcanceLegalAPI {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'Authorization': `Bearer ${await getAuthToken()}`,
                         'apikey': SUPABASE_CONFIG.anonKey
                     },
                     body: JSON.stringify(data)
@@ -323,7 +356,7 @@ class AlcanceLegalAPI {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'Authorization': `Bearer ${await getAuthToken()}`,
                         'apikey': SUPABASE_CONFIG.anonKey
                     },
                     body: JSON.stringify(data)
@@ -345,6 +378,44 @@ class AlcanceLegalAPI {
         // Fallback mock
         await simulateLatency()
         return { success: true, data: MOCK_RESPONSES.redactar }
+    }
+
+    /**
+     * Consultor anclado al análisis: pregunta de seguimiento sobre una causa
+     * ya analizada, contra la Edge Function consultor-caso.
+     * @param {Object} data - { pregunta, contexto: {numero_informe, hechos, ...}, historial: [{role, content}] }
+     * @returns {Promise<Object>} - { success, respuesta, criterios_utilizados, disclaimer }
+     */
+    async consultorCaso(data) {
+        if (SUPABASE_CONFIG.functionsUrl && !this.config.useMocks) {
+            try {
+                console.log('[API] Llamando Edge Function consultor-caso...')
+                const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/consultor-caso`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${await getAuthToken()}`,
+                        'apikey': SUPABASE_CONFIG.anonKey
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                if (!response.ok) {
+                    const text = await response.text()
+                    try { return JSON.parse(text) } catch { /* no JSON */ }
+                    return { success: false, fundamento: `Error del servidor (${response.status})` }
+                }
+
+                return await response.json()
+            } catch (error) {
+                console.error('[API] consultor-caso error de red:', error.message)
+                return { success: false, fundamento: `Error de red: ${error.message}` }
+            }
+        }
+
+        // Fallback mock
+        await simulateLatency()
+        return MOCK_RESPONSES.consultor
     }
 
     /**

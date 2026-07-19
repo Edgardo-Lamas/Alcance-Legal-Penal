@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from '../../services/supabase'
 import { useAuth } from '../../context/AuthContext'
 import PipelineStatus from '../../components/PipelineStatus/PipelineStatus'
+import ConsultorChat from '../../components/ConsultorChat/ConsultorChat'
 import { generarReportePDF } from '../../utils/generarReportePDF'
 import { generarReporteWord } from '../../utils/generarReporteWord'
 import './Resultado.css'
@@ -697,6 +698,23 @@ function Resultado() {
                 {capacidad === 'analizar' && pasoActual === 2 && renderAnalisis()}
                 {capacidad === 'auditar' && renderAuditoria()}
                 {capacidad === 'redactar' && renderRedaccion()}
+
+                {capacidad === 'analizar' && pasoActual === 2 && !!data && (
+                    <ConsultorChat
+                        contexto={{
+                            numero_informe:        informe.numero_informe || '',
+                            hechos:                informe._hechos || '',
+                            tipo_penal:            informe._tipo_penal || '',
+                            etapa_procesal:        informe._etapa_procesal || '',
+                            encuadre_procesal:     informe.encuadre_procesal || '',
+                            analisis_prueba_cargo: informe.analisis_prueba_cargo || '',
+                            nulidades_y_vicios:    informe.nulidades_y_vicios || '',
+                            contraargumentacion:   informe.contraargumentacion || '',
+                            conclusion_defensiva:  informe.conclusion_defensiva || '',
+                            limitaciones:          informe.limitaciones || '',
+                        }}
+                    />
+                )}
             </main>
 
             {(capacidad !== 'analizar' || pasoActual === 2) && (

@@ -85,7 +85,7 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 2. Supabase: `supabase db push` (aplica migración 009) y recargar corpus si hace falta.
 3. Envs de Edge Functions: `SUPABASE_ANON_KEY`, `REQUIRE_AUTH=true`, `MCP_SECRET`,
    `ALLOWED_ORIGIN` (dominio prod), + las claves de IA ya existentes.
-4. Deploy funciones: `supabase functions deploy analizar-caso auditar-estrategia redactar-escrito mcp-server`.
+4. Deploy funciones: `supabase functions deploy analizar-caso auditar-estrategia redactar-escrito consultor-caso mcp-server`.
 5. Vercel: configurar env Production **y Preview**; deploy.
 6. Alertas de gasto en los 3 proveedores de IA.
 7. Verificación end-to-end con un caso real (login del abogado → análisis).
@@ -141,12 +141,29 @@ supabase/functions/
 ├── analizar-caso/index.ts       ← Endpoint principal: POST /analizar-caso (pipeline 5 fases)
 ├── auditar-estrategia/index.ts  ← POST /auditar-estrategia (auditoría de estrategia defensiva)
 ├── redactar-escrito/index.ts    ← POST /redactar-escrito (borradores de escritos judiciales)
+├── consultor-caso/index.ts      ← POST /consultor-caso (chat anclado a un análisis previo)
 ├── mcp-server/index.ts          ← MCP Server: POST /mcp-server (JSON-RPC 2.0)
 └── _shared/profile-config.ts    ← System prompt + config del perfil penal (compartido)
 ```
 
-> **Son 4 Edge Functions** (no 2). `analizar-caso` incluye la capa de extracción/validación
-> con Gemini Flash (pre-procesamiento) recién agregada.
+> **Son 5 Edge Functions**. `analizar-caso` incluye la capa de extracción/validación
+> con Gemini Flash (pre-procesamiento).
+
+### Consultor del caso (`consultor-caso`, agregado 2026-07-18)
+- Chat de seguimiento sobre una causa YA analizada — el widget `ConsultorChat` en
+  Resultado (paso 2) manda `{ pregunta, contexto, historial }`.
+- Secuencia propia (SIN Gemini — el expediente ya llega estructurado):
+  gate de pertinencia (Haiku, fail-open) → RAG `buscar_criterios` (opcional) →
+  Claude con **prompt caching** (system + contexto del caso = prefijo cacheado).
+- Modelo por env `CONSULTOR_MODEL` (default `claude-sonnet-4-6`). Para pasar a Opus:
+  `supabase secrets set CONSULTOR_MODEL=claude-opus-4-6` (sin redeploy).
+- Rate limit persistente: 10/min + techo diario 40 por usuario (`consultor:min:` / `consultor:dia:`).
+- System prompt propio (el del perfil exige JSON — acá es conversacional, texto plano, ≤300 palabras).
+
+### Autenticación del frontend (fix 2026-07-18)
+`src/services/api.js` ahora manda el **access_token de la sesión** del abogado
+(`getAuthToken()`), con fallback al anon key solo sin sesión. Antes mandaba siempre
+el anon key → con `REQUIRE_AUTH=true` los 3 endpoints daban 401 desde la web.
 
 **MCP Server URL:** `https://nclpzmyjjmglpjalmrri.supabase.co/functions/v1/mcp-server`
 **Tools expuestas:** `analizar_caso`, `buscar_jurisprudencia`

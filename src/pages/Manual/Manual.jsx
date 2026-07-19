@@ -89,6 +89,38 @@ const secciones = [
         ]
     },
     {
+        id: 'consultor',
+        icono: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        ),
+        titulo: 'Consultor del Caso',
+        badge: 'Nuevo',
+        bloques: [
+            {
+                subtitulo: '¿Qué es?',
+                tipo: 'texto',
+                texto: 'Un chat de seguimiento que aparece al pie de cada informe de análisis (Paso 2 — Estrategia Defensiva). Responde preguntas sobre ESA causa: alternativas estratégicas, alcance de las nulidades detectadas, orden de los planteos, riesgos de cada camino. Usa como base el informe de la causa y el corpus de criterios jurisprudenciales — no es un chat de derecho penal general, y las consultas ajenas a la causa son rechazadas.'
+            },
+            {
+                subtitulo: 'Cómo usarlo',
+                tipo: 'lista',
+                items: [
+                    { label: 'Pregunte en concreto', detalle: 'Ej: "¿Qué planteo conviene presentar primero?", "¿Qué riesgo corro si rechazan la nulidad?". Cuanto más puntual la pregunta, más útil la respuesta.' },
+                    { label: 'Criterios citados', detalle: 'Debajo de cada respuesta se indica cuántos criterios del corpus se consultaron para fundarla.' },
+                    { label: 'Hechos nuevos', detalle: 'Si su pregunta trae hechos que el análisis no contempló, el consultor responde como hipótesis y le recomienda generar un nuevo análisis.' },
+                    { label: 'Límite de uso', detalle: 'Hasta 40 consultas por día por usuario. El cupo se renueva cada 24 horas.' },
+                ]
+            },
+            {
+                subtitulo: 'Importante',
+                tipo: 'advertencia',
+                texto: 'Las respuestas del consultor son hipótesis defensivas orientativas sobre la causa analizada — nunca certezas ni garantías de resultado. La estrategia y la decisión final corresponden exclusivamente al abogado defensor actuante.',
+            },
+        ]
+    },
+    {
         id: 'auditar',
         icono: (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
