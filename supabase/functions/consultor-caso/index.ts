@@ -16,12 +16,17 @@
  *   3. Respuesta de Claude con el contexto del caso cacheado (prompt caching:
  *      el prefijo fijo se relee con 90% de descuento en cada turno)
  *
- * Modelo configurable por env CONSULTOR_MODEL (default claude-sonnet-4-6;
- * para pasar a Opus: supabase secrets set CONSULTOR_MODEL=claude-opus-4-6).
+ * Modelo configurable por env CONSULTOR_MODEL (default claude-opus-5).
+ * Para volver a Sonnet sin redeploy: supabase secrets set CONSULTOR_MODEL=claude-sonnet-4-6
+ *
+ * ⚠️ Opus 5 razona antes de responder y ese razonamiento consume del mismo
+ * max_tokens que la respuesta. Por eso MAX_TOKENS_RESPUESTA es holgado (4000)
+ * aunque el prompt pida ≤300 palabras: si se ajusta, la respuesta se corta.
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { consumirCuota, esCuentaDeAbogado, mensajeCuotaAgotada } from '../_shared/cuotas.ts'
 
 type SupabaseSvc = ReturnType<typeof createClient<any, 'public'>>
 
@@ -36,13 +41,14 @@ const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY')
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 const REQUIRE_AUTH = Deno.env.get('REQUIRE_AUTH') === 'true'
-const CONSULTOR_MODEL = Deno.env.get('CONSULTOR_MODEL') ?? 'claude-sonnet-4-6'
+const CONSULTOR_MODEL = Deno.env.get('CONSULTOR_MODEL') ?? 'claude-opus-5'
+const CONSULTOR_EFFORT = Deno.env.get('CONSULTOR_EFFORT') ?? 'medium'
 
 const MAX_PREGUNTA_CHARS = 1500
 const MAX_HISTORIAL_TURNOS = 12
 const MAX_HISTORIAL_CHARS = 4000
 const MAX_CONTEXTO_CHARS = 8000        // tope por campo del contexto (control de tokens)
-const MAX_TOKENS_RESPUESTA = 1500
+const MAX_TOKENS_RESPUESTA = 4000     // cubre razonamiento + respuesta (ver nota del encabezado)
 
 const RAG_TOP_K = 4
 const RAG_SIMILARITY_THRESHOLD = 0.70  // algo más permisivo que el análisis: acá el informe es el ancla
@@ -456,6 +462,21 @@ serve(async (req: Request) => {
                 'La consulta excede el alcance del consultor: responde únicamente sobre la defensa penal de la causa analizada (CPP PBA / CP). Reformule la pregunta en relación con esta causa.')
         }
 
+        // 1.5. Cuota mensual del plan (migración 010).
+        // Después del gate: una pregunta que el sistema se niega a responder no
+        // se le cobra al abogado (el gate cuesta centésimas de centavo).
+        // El techo diario de arriba queda como freno anti-abuso; esto es el plan.
+        if (esCuentaDeAbogado(userIdVerificado, autenticado)) {
+            const cuota = await consumirCuota(supabase, userIdVerificado!, 'consultas')
+            if (!cuota.permitido) {
+                return respuestaError(cors,
+                    cuota.error ? 503 : 402,
+                    cuota.error ? 'CUOTA_NO_VERIFICABLE' : 'CUOTA_AGOTADA',
+                    mensajeCuotaAgotada(cuota, 'consultas'))
+            }
+            console.log(`[CUOTA] consultas user=${userIdVerificado} plan=${cuota.plan} ${cuota.usado}/${cuota.limite} credito=${cuota.uso_credito}`)
+        }
+
         // 2. RAG sobre el corpus (si falla o no hay relevantes, el informe es el ancla)
         const criterios = await buscarCriteriosParaPregunta(supabase, pregunta, contexto.tipo_penal ?? '')
         const bloqueCriterios = criterios.length > 0
@@ -477,6 +498,8 @@ serve(async (req: Request) => {
             body: JSON.stringify({
                 model: CONSULTOR_MODEL,
                 max_tokens: MAX_TOKENS_RESPUESTA,
+                thinking: { type: 'adaptive' },
+                output_config: { effort: CONSULTOR_EFFORT },
                 system: [
                     { type: 'text', text: SYSTEM_PROMPT_CONSULTOR },
                     { type: 'text', text: armarContextoCaso(contexto), cache_control: { type: 'ephemeral' } },

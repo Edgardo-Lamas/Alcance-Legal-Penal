@@ -11,6 +11,7 @@ const planes = [
         destacado: false,
         features: [
             '20 análisis de casos por mes',
+            '100 consultas al Consultor por mes',
             'Análisis de texto completo',
             'Informe PDF descargable',
             'Corpus CPP PBA actualizado',
@@ -31,7 +32,8 @@ const planes = [
         destacado: true,
         badge: 'Más elegido',
         features: [
-            '100 análisis de casos por mes',
+            '60 análisis de casos por mes',
+            '250 consultas al Consultor por mes',
             'Análisis de texto completo',
             'Adjuntar imágenes (pericias, capturas)',
             'Informe PDF descargable',
@@ -52,7 +54,8 @@ const planes = [
         descripcion: 'Para estudios jurídicos con múltiples defensores activos.',
         destacado: false,
         features: [
-            'Análisis ilimitados',
+            '150 análisis de casos por mes',
+            '500 consultas al Consultor por mes',
             'Análisis de texto completo',
             'Adjuntar imágenes (pericias, capturas)',
             'Informe PDF descargable',
@@ -107,8 +110,13 @@ function Precios() {
                         Alcance Legal Penal · Inteligencia Jurídica para Defensa PBA
                     </p>
                     <p className="precios-note">
-                        Todos los planes incluyen acceso completo al corpus CPP PBA (Ley 11.922) y Código Penal.
+                        Todos los planes incluyen acceso completo al corpus CPP PBA (Ley 11.922) y Código Penal,
+                        y la <strong>misma calidad de análisis</strong>: lo que varía es el volumen de uso, no la profundidad del trabajo.
                         El acceso es activado manualmente — recibirá sus credenciales por correo.
+                    </p>
+                    <p className="precios-note">
+                        Los cupos son <strong>por cuenta</strong> y se renuevan el día 1 de cada mes.
+                        Si una causa puntual exige más volumen, puede adquirir un paquete adicional sin cambiar de plan.
                     </p>
                 </div>
 

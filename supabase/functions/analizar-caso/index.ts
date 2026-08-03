@@ -12,6 +12,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { PROFILE_PENAL_PBA_CONFIG } from '../_shared/profile-config.ts'
+import { consumirCuota, esCuentaDeAbogado, mensajeCuotaAgotada } from '../_shared/cuotas.ts'
 
 // Tipo del cliente Supabase con schema explícito ('public') para que .rpc()/.from()
 // tipen correctamente (ReturnType<typeof createClient> resuelve el schema a `never`).
@@ -926,6 +927,30 @@ serve(async (req: Request) => {
                 status: 400,
                 headers: { ...cors, 'Content-Type': 'application/json' }
             })
+        }
+
+        // ==========================================
+        // CUOTA DEL PLAN (migración 010)
+        // Va acá a propósito: después de admisibilidad —un rechazo por
+        // inadmisible no le descuenta análisis al abogado— y antes de Gemini,
+        // que es la primera llamada que cuesta plata.
+        // ==========================================
+        if (esCuentaDeAbogado(userIdVerificado, autenticado)) {
+            const cuota = await consumirCuota(supabase, userIdVerificado!, 'analisis')
+            if (!cuota.permitido) {
+                return new Response(JSON.stringify({
+                    success: false,
+                    fase_rechazo: 'sistema',
+                    codigo: cuota.error ? 'CUOTA_NO_VERIFICABLE' : 'CUOTA_AGOTADA',
+                    fundamento: mensajeCuotaAgotada(cuota, 'analisis'),
+                    recomendacion: cuota.error
+                        ? 'Si el problema persiste, escribinos.'
+                        : 'Podés esperar a la renovación del cupo o adquirir un paquete adicional.',
+                    cuota: { plan: cuota.plan, usado: cuota.usado, limite: cuota.limite, creditos: cuota.creditos },
+                    disclaimer: DISCLAIMER
+                }), { status: cuota.error ? 503 : 402, headers: { ...cors, 'Content-Type': 'application/json' } })
+            }
+            console.log(`[CUOTA] analisis user=${userIdVerificado} plan=${cuota.plan} ${cuota.usado}/${cuota.limite} credito=${cuota.uso_credito}`)
         }
 
         // ==========================================

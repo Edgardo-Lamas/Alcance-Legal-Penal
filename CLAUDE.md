@@ -155,10 +155,49 @@ supabase/functions/
 - Secuencia propia (SIN Gemini — el expediente ya llega estructurado):
   gate de pertinencia (Haiku, fail-open) → RAG `buscar_criterios` (opcional) →
   Claude con **prompt caching** (system + contexto del caso = prefijo cacheado).
-- Modelo por env `CONSULTOR_MODEL` (default `claude-sonnet-4-6`). Para pasar a Opus:
-  `supabase secrets set CONSULTOR_MODEL=claude-opus-4-6` (sin redeploy).
-- Rate limit persistente: 10/min + techo diario 40 por usuario (`consultor:min:` / `consultor:dia:`).
+- Modelo por env `CONSULTOR_MODEL` (default **`claude-opus-5`** desde 2026-08-03) y esfuerzo
+  por `CONSULTOR_EFFORT` (default `medium`). Para volver a Sonnet sin redeploy:
+  `supabase secrets set CONSULTOR_MODEL=claude-sonnet-4-6`.
+  ⚠️ Opus 5 razona antes de responder y ese razonamiento sale del mismo `max_tokens` que
+  la respuesta: por eso `MAX_TOKENS_RESPUESTA` es 4000 aunque el prompt pida ≤300 palabras.
+  Medido: el pensamiento se lleva ~65% de los tokens de salida. Latencia ~18s por pregunta.
+- Rate limit persistente: 10/min + techo diario 40 (freno anti-abuso). El límite del
+  **plan** es mensual y vive aparte — ver "Cuotas por plan".
 - System prompt propio (el del perfil exige JSON — acá es conversacional, texto plano, ≤300 palabras).
+
+### Cuotas por plan (migración 010, 2026-08-03)
+
+Antes de esto, los límites publicados en `/precios` no los aplicaba **ninguna línea de código**:
+un abogado del plan Básico podía correr 500 análisis. Ahora se aplican de verdad.
+
+| Tabla | Rol |
+|---|---|
+| `planes` | Catálogo de topes. **Editable por SQL — cambiar un límite NO exige redeploy.** |
+| `suscripciones` | Plan de cada cuenta + `creditos_analisis` / `creditos_consultas` comprados aparte |
+| `consumo_mensual` | Consumo del período corriente (`YYYY-MM` en UTC) |
+
+Límites vigentes: Básico 20 análisis + 100 consultas · Profesional 60 + 250 · Estudio 150 + 500.
+Dimensionados con la regla **"lo incluido cuesta ≈25% del precio"** → margen ~75% parejo y
+ganancia en dólares que crece con el plan. **Los topes son por CUENTA, no por usuario.**
+
+Funciones: `consumir_cuota(uuid, 'analisis'|'consultas')` (atómica, `FOR UPDATE` por cuenta)
+y `otorgar_creditos(uuid, analisis, consultas)` (venta manual de paquetes; cuando exista
+pasarela de pago la llama el webhook). Cliente compartido en `_shared/cuotas.ts`.
+
+**Cuatro reglas de diseño que no hay que romper:**
+1. **Fail-closed.** Si `consumir_cuota` no responde, se rechaza. Es lo contrario del rate
+   limit por minuto (que falla abierto): un error de base no puede habilitar uso ilimitado.
+   ⚠️ Consecuencia operativa: **nunca deployar estas funciones sin la migración aplicada.**
+2. Se cobra **después** de admisibilidad (`analizar-caso`) y **después** del gate de
+   pertinencia (`consultor-caso`): un rechazo del sistema no le descuenta cupo al abogado.
+3. Primero se gasta la cuota del abono; recién cuando se agota, el crédito comprado.
+4. ⚠️ **El camino MCP (service role) NO consume cuota** — `esCuentaDeAbogado()` solo cobra a
+   UUIDs reales. Está bien para uso propio; si se le da el MCP a un abogado, queda sin tope.
+
+⛔ **Decisión comercial de Edgardo: la calidad del análisis es IGUAL en los tres planes.**
+Nunca diferenciar planes por modelo (Sonnet abajo / Opus arriba). Lo que varía es el volumen
+de uso y algunas funciones. Es una herramienta de defensa penal: el que paga las consecuencias
+de un análisis más flojo no es el abogado, es su cliente detenido.
 
 ### Autenticación del frontend (fix 2026-07-18)
 `src/services/api.js` ahora manda el **access_token de la sesión** del abogado
