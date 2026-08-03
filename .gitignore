@@ -36,3 +36,6 @@ test-results/
 *.sln
 *.sw?
 .vercel
+
+# PDFs generados (se regeneran con los scripts de docs/)
+docs/*.pdf

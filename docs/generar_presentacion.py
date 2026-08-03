@@ -125,7 +125,17 @@ def on_first_page(canvas_obj, doc):
     # Footer text
     canvas_obj.setFillColor(MUTED)
     canvas_obj.setFont('Helvetica', 8)
-    canvas_obj.drawCentredString(A4[0]/2, 20*mm, '© 2026 Edgardo Lamas — Studio Lamas · Todos los derechos reservados')
+    canvas_obj.drawCentredString(A4[0]/2, 28*mm, '© 2026 Edgardo Lamas — Studio Lamas · Todos los derechos reservados')
+    
+    canvas_obj.setFillColor(GOLD_LIGHT)
+    url_text = 'https://studio-lamas.vercel.app'
+    canvas_obj.drawCentredString(A4[0] / 2, 21*mm, url_text)
+    url_width = canvas_obj.stringWidth(url_text, 'Helvetica', 8)
+    url_x1 = A4[0] / 2 - url_width / 2
+    canvas_obj.linkURL('https://studio-lamas.vercel.app',
+                       (url_x1, 20*mm, url_x1 + url_width, 21*mm + 8), relative=0)
+                       
+    canvas_obj.setFillColor(MUTED)
     canvas_obj.drawCentredString(A4[0]/2, 14*mm, 'Documento confidencial — Uso exclusivo para evaluación de inversión')
     canvas_obj.restoreState()
 
@@ -343,8 +353,13 @@ def build():
     story.append(Spacer(1, 15*mm))
     story.append(Paragraph('Edgardo Lamas — Studio Lamas', ParagraphStyle('contact',
         fontSize=16, textColor=DARK, fontName='Helvetica-Bold', alignment=TA_CENTER)))
+    story.append(Spacer(1, 4*mm))
+    story.append(Paragraph(
+        '<a href="https://studio-lamas.vercel.app" color="#C9A227"'
+        '>https://studio-lamas.vercel.app</a>',
+        ParagraphStyle('url', fontSize=12, textColor=GOLD, fontName='Helvetica', alignment=TA_CENTER)))
     story.append(Spacer(1, 6*mm))
-    story.append(Paragraph('v2.0-lis-penal_pba · Mayo 2026', ParagraphStyle('ver',
+    story.append(Paragraph('v2.0-lis-penal_pba · Julio 2026', ParagraphStyle('ver',
         fontSize=11, textColor=MUTED, fontName='Helvetica', alignment=TA_CENTER)))
     story.append(Spacer(1, 4*mm))
     story.append(Paragraph('Motor de análisis: Claude Sonnet 4.6 (Anthropic)', ParagraphStyle('mot',
