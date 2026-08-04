@@ -9,6 +9,19 @@ chrome.sidePanel
   .catch(console.error)
 
 // Escucha mensajes del content script y del side panel
+// URLs reales del MEV, mapeadas contra el sitio el 2026-08-04:
+//   loguin.asp → login          POSLoguin.asp → elección de organismo
+//   busqueda.asp → búsqueda     resultados.asp → listado de causas
+//   procesales.asp → EXPEDIENTE con sus actuaciones
+//   proveido.asp → texto de una actuación
+// Los patrones viejos ('causas', 'expediente', 'actuaciones', 'principal') no
+// coincidían con NINGUNA de estas páginas, así que isCausa daba false siempre.
+const RE_MEV = /mev\.scba\.gov\.ar/i
+const RE_CAUSA = /\/(procesales|proveido)\.asp/i
+
+const esMev = (url) => RE_MEV.test(url || '')
+const esCausa = (url) => esMev(url) && RE_CAUSA.test(url || '')
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'MEV_DATA_EXTRACTED') {
     // Guarda los datos extraídos y notifica al side panel
@@ -49,15 +62,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   if (message.type === 'GET_TAB_STATUS') {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0]
-      const isMev = tab?.url?.includes('mev.scba.gov.ar') ?? false
-      const isCausa = isMev && (
-        tab.url.includes('causas') ||
-        tab.url.includes('expediente') ||
-        tab.url.includes('actuaciones') ||
-        tab.url.includes('principal')
-      )
-      sendResponse({ isMev, isCausa, url: tab?.url })
+      // El panel puede estar enfocado y dejar tabs[0] indefinido: se busca
+      // entonces cualquier pestaña del MEV en la ventana antes de rendirse.
+      const activa = tabs[0]
+      if (esMev(activa?.url)) {
+        return sendResponse({ isMev: true, isCausa: esCausa(activa.url), url: activa.url })
+      }
+      chrome.tabs.query({ currentWindow: true }, (todas) => {
+        const enMev = todas.find((t) => esMev(t.url))
+        sendResponse({
+          isMev: !!enMev,
+          isCausa: esCausa(enMev?.url),
+          url: enMev?.url ?? activa?.url,
+        })
+      })
     })
     return true
   }
@@ -74,10 +92,10 @@ function triggerExtraction() {
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   chrome.tabs.get(tabId, (tab) => {
     if (chrome.runtime.lastError) return
-    const isMev = tab.url?.includes('mev.scba.gov.ar') ?? false
     chrome.runtime.sendMessage({
       type: 'TAB_CHANGED',
-      isMev,
+      isMev: esMev(tab.url),
+      isCausa: esCausa(tab.url),
       url: tab.url,
     }).catch(() => {})
   })
@@ -85,10 +103,10 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status !== 'complete') return
-  const isMev = tab.url?.includes('mev.scba.gov.ar') ?? false
   chrome.runtime.sendMessage({
     type: 'TAB_CHANGED',
-    isMev,
+    isMev: esMev(tab.url),
+    isCausa: esCausa(tab.url),
     url: tab.url,
   }).catch(() => {})
 })

@@ -26,6 +26,7 @@
     session: null, // access_token, email, user_id
     historial: [],
     analysisInProgress: false,
+    textosProveidos: [], // cuerpo de las actuaciones traídas del MEV
   }
 
   // ── DOM refs ──────────────────────────────────────────────
@@ -395,17 +396,38 @@
       // Hechos para admisibilidad (mínimo 20 caracteres)
       const hechos = `Causa penal: "${c.caratula || 'Sin carátula'}" (Expediente Nro: ${c.numeroExpediente || 'No especificado'}). Imputado/a: ${c.imputado || 'No especificado'}. Delito investigado: ${c.delito || 'No especificado'}. Etapa: ${c.etapaProcesal || 'IPP'}. Cautelar: ${c.cautelar || 'No especificada'}.`
 
-      // Actuaciones estructuradas en texto plano
-      const documentacion_caso = acts.slice(0, 35).map((a, i) =>
+      // Índice de actuaciones (lo que se ve en el listado del MEV)
+      const indice = acts.slice(0, 35).map((a, i) =>
         `Actuación ${i + 1}: [${a.fecha || 'Sin fecha'}] - Tipo: ${a.tipo || 'N/A'} - Autor: ${a.autor || 'N/A'}${a.descripcion ? ` - Detalle: ${a.descripcion}` : ''}`
       ).join('\n')
+
+      // Texto real de las actuaciones que el abogado haya traído. El índice solo
+      // dice QUÉ hay; el cuerpo dice qué DICE, que es lo que sostiene una nulidad.
+      // Tope alineado con MAX_DOCUMENTACION_CHARS de analizar-caso (120.000), con
+      // aire para el índice y para la lectura previa que Gemini antepone.
+      // ⚠️ Si cambia el límite del backend, este número tiene que cambiar con él.
+      const PRESUPUESTO = 110000
+      const piezas = state.textosProveidos || []
+      let usado = indice.length
+      const incluidas = []
+      for (const p of piezas) {
+        const bloque = `\n\n--- ${p.tipo} (${p.fecha}) ---\n${p.texto}`
+        if (usado + bloque.length > PRESUPUESTO) break
+        incluidas.push(bloque)
+        usado += bloque.length
+      }
+
+      const documentacion_caso = indice + incluidas.join('')
+      if (piezas.length > incluidas.length) {
+        console.warn(`[MEV] ${piezas.length - incluidas.length} actuación(es) no entraron en el límite de ${PRESUPUESTO} caracteres.`)
+      }
 
       const apiData = {
         hechos,
         documentacion_caso,
         tipo_penal: c.delito || 'No especificado',
         etapa_procesal: c.etapaProcesal || 'IPP',
-        prueba_acusacion: acts.filter(a => a.tienePdf).map(a => a.tipo).slice(0, 5).join(', ') || 'Actuaciones del expediente'
+        prueba_acusacion: acts.filter(a => a.tieneDocumento).map(a => a.tipo).slice(0, 5).join(', ') || 'Actuaciones del expediente'
       }
 
       setLoadingMsg('Analizando expediente con IA en el backend (hasta 45s)...')
@@ -608,7 +630,45 @@
 
   function setupDocumentosListeners() {
     $('btn-select-priority').addEventListener('click', selectPriorityDocs)
-    $('btn-descargar-sel').addEventListener('click', downloadSelected)
+    $('btn-descargar-sel').addEventListener('click', async () => {
+      const btn = $('btn-descargar-sel')
+      const original = btn.textContent
+      btn.disabled = true
+      btn.textContent = 'Leyendo del MEV...'
+      try {
+        state.textosProveidos = await traerTextoSeleccionado()
+        const chars = state.textosProveidos.reduce((n, p) => n + p.texto.length, 0)
+        btn.textContent = `${state.textosProveidos.length} actuaciones listas (${chars.toLocaleString()} caracteres)`
+      } catch (err) {
+        showError(`No se pudo leer del MEV: ${err.message}`)
+        btn.textContent = original
+      } finally {
+        btn.disabled = false
+      }
+    })
+  }
+
+  // Una sola fuente de verdad (antes estaba duplicada en renderDocumentos y
+  // selectPriorityDocs, y se podían desincronizar).
+  // El bloque de instrucción cubre IPP/juicio; el de ejecución se agregó tras ver
+  // un expediente real de Juzgado de Ejecución, donde el filtro viejo acertaba
+  // 1 de 42 tipos. ⚠️ Lista a validar por el abogado: la prioridad es criterio
+  // jurídico, no técnico.
+  const PRIORITY_TYPES = [
+    // Instrucción / juicio
+    'detención', 'detencion', 'aprehensión', 'aprehension', 'indagatoria',
+    'procesamiento', 'sentencia', 'pericia', 'allanamiento', 'secuestro',
+    'nulidad', 'excarcelación', 'excarcelacion', 'prisión preventiva', 'prision preventiva',
+    // Ejecución de pena
+    'libertad condicional', 'salidas transitorias', 'salida transitoria',
+    'informe tecnico criminologico', 'informe técnico criminológico',
+    'informe medico', 'informe médico', 'resolución', 'resolucion',
+    'legajo de apelación', 'legajo de apelacion',
+  ]
+
+  function esPrioritaria(tipo) {
+    const t = (tipo || '').toLowerCase()
+    return PRIORITY_TYPES.some((p) => t.includes(p))
   }
 
   function renderDocumentos(actuaciones) {
@@ -618,27 +678,25 @@
       return
     }
 
-    const conPdf = actuaciones.filter((a) => a.tienePdf)
-    if (conPdf.length === 0) {
+    const consultables = actuaciones.filter((a) => a.tieneDocumento)
+    if (consultables.length === 0) {
       $('docs-empty').classList.remove('hidden')
-      $('docs-empty').querySelector('p').textContent = `${actuaciones.length} actuaciones encontradas, pero ninguna tiene PDF disponible.`
+      $('docs-empty').querySelector('p').textContent = `${actuaciones.length} actuaciones encontradas, pero ninguna tiene documento consultable.`
       $('docs-lista').classList.add('hidden')
       return
     }
 
     $('docs-empty').classList.add('hidden')
     $('docs-lista').classList.remove('hidden')
-    $('docs-count').textContent = `${conPdf.length} documentos con PDF disponible`
+    $('docs-count').textContent = `${consultables.length} actuaciones consultables`
 
-    const PRIORITY_TYPES = ['detención', 'aprehensión', 'indagatoria', 'procesamiento', 'sentencia', 'pericia', 'allanamiento', 'secuestro']
-
-    $('docs-items').innerHTML = conPdf.map((doc, i) => {
-      const isPriority = PRIORITY_TYPES.some((p) => (doc.tipo || '').toLowerCase().includes(p))
+    $('docs-items').innerHTML = consultables.map((doc, i) => {
+      const isPriority = esPrioritaria(doc.tipo)
       return `
         <label class="alp-doc-item ${isPriority ? 'alp-doc-item--priority' : ''}">
-          <input type="checkbox" class="alp-doc-check" data-index="${i}" data-url="${doc.urlPdf || ''}" ${isPriority ? 'checked' : ''} />
+          <input type="checkbox" class="alp-doc-check" data-index="${i}" data-url="${doc.urlProveido || ''}" ${isPriority ? 'checked' : ''} />
           <div class="alp-doc-info">
-            <span class="alp-doc-tipo">${doc.tipo || 'Documento'}</span>
+            <span class="alp-doc-tipo">${doc.tipo || 'Actuación'}</span>
             <span class="alp-doc-fecha">${doc.fecha || 'Fecha no disponible'}</span>
             ${doc.autor ? `<span class="alp-doc-autor">${doc.autor}</span>` : ''}
           </div>
@@ -649,25 +707,69 @@
   }
 
   function selectPriorityDocs() {
-    const PRIORITY_TYPES = ['detención', 'aprehensión', 'indagatoria', 'procesamiento', 'sentencia', 'pericia', 'allanamiento', 'secuestro']
     document.querySelectorAll('.alp-doc-check').forEach((cb) => {
-      const tipo = cb.closest('.alp-doc-item')?.querySelector('.alp-doc-tipo')?.textContent?.toLowerCase() || ''
-      cb.checked = PRIORITY_TYPES.some((p) => tipo.includes(p))
+      const tipo = cb.closest('.alp-doc-item')?.querySelector('.alp-doc-tipo')?.textContent || ''
+      cb.checked = esPrioritaria(tipo)
     })
   }
 
-  function downloadSelected() {
-    const selected = document.querySelectorAll('.alp-doc-check:checked')
-    if (selected.length === 0) return
+  // Trae el texto de las actuaciones tildadas. El MEV no publica PDFs: cada
+  // actuación es una página proveido.asp con el texto adentro, así que se lee
+  // con la sesión del abogado y se adjunta al análisis como texto.
+  async function traerTextoSeleccionado() {
+    const selected = [...document.querySelectorAll('.alp-doc-check:checked')]
+    if (selected.length === 0) return []
 
-    selected.forEach((cb) => {
+    const piezas = []
+    for (const cb of selected) {
       const url = cb.dataset.url
-      if (!url) return
-      const tipo = cb.closest('.alp-doc-item')?.querySelector('.alp-doc-tipo')?.textContent || 'documento'
-      const fecha = cb.closest('.alp-doc-item')?.querySelector('.alp-doc-fecha')?.textContent || ''
-      const filename = `${fecha}_${tipo}`.replace(/[^a-zA-Z0-9\-_]/g, '_').replace(/_+/g, '_') + '.pdf'
-      chrome.downloads?.download({ url, filename }) || window.open(url, '_blank')
-    })
+      if (!url) continue
+      const item = cb.closest('.alp-doc-item')
+      const tipo = item?.querySelector('.alp-doc-tipo')?.textContent || 'actuación'
+      const fecha = item?.querySelector('.alp-doc-fecha')?.textContent || ''
+      try {
+        const resp = await fetch(url, { credentials: 'include' })
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
+        // El MEV sirve windows-1252. Decodificar como UTF-8 rompe todas las
+        // tildes y las ñ, y un texto con tildes rotas no sirve para citar.
+        const html = new TextDecoder('windows-1252').decode(await resp.arrayBuffer())
+        const texto = extraerCuerpoProveido(html)
+        if (texto) piezas.push({ tipo, fecha, texto })
+      } catch (err) {
+        console.warn(`[MEV] No se pudo leer "${tipo}":`, err.message)
+      }
+      // El MEV es un ASP viejo: se lo consulta de a uno y con pausa.
+      await new Promise((r) => setTimeout(r, 400))
+    }
+    return piezas
+  }
+
+  // El propio MEV delimita el texto del proveído con dos líneas marcadoras
+  // ("Para copiar y pegar el texto seleccione desde/hasta aquí"). Cortar por ahí
+  // es exacto: no hay que adivinar qué tabla es el cuerpo.
+  //
+  // ⚠️ Sin esto, cada proveído arrastra ~15.400 caracteres del índice del
+  // expediente, que el MEV repite en TODAS las páginas. Medido el 2026-08-04:
+  // una actuación "PASE A" pesaba 15.372 chars de los cuales 0 eran contenido.
+  const MARCA_DESDE = /-+\s*Para copiar y pegar el texto seleccione desde aqu.{0,40}-+/i
+  const MARCA_HASTA = /-+\s*Para copiar y pegar el texto seleccione hasta aqu.{0,40}-+/i
+
+  function extraerCuerpoProveido(html) {
+    const doc = new DOMParser().parseFromString(html, 'text/html')
+    if (doc.querySelector('input[type=password]')) {
+      throw new Error('sesión del MEV vencida')
+    }
+    const texto = doc.body.textContent || ''
+    const desde = texto.search(MARCA_DESDE)
+    const hasta = texto.search(MARCA_HASTA)
+    // Sin marcadores no devolvemos nada: mejor una actuación ausente que uno
+    // con 15.000 caracteres de índice que el análisis va a tomar por contenido.
+    if (desde === -1 || hasta === -1 || hasta <= desde) return null
+    return texto.slice(desde, hasta)
+      .replace(MARCA_DESDE, '')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim()
   }
 
   // ── Historial ─────────────────────────────────────────────
@@ -788,7 +890,9 @@
       handleMevData(message.data)
     }
     if (message.type === 'TAB_CHANGED') {
-      updateMevStatus({ isMev: message.isMev, isCausa: false, url: message.url })
+      // isCausa venía forzado a false: aunque el abogado entrara al expediente,
+      // el panel seguía diciendo que no había causa hasta que llegara la extracción.
+      updateMevStatus({ isMev: message.isMev, isCausa: message.isCausa, url: message.url })
       if (message.isMev) {
         // Pide extracción en la nueva pestaña
         setTimeout(requestExtraction, 800)

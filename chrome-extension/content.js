@@ -101,7 +101,10 @@
     // Estrategia 1: buscar por labels conocidos del MEV
     const labelMap = {
       caratula: ['carátula', 'caratula', 'causa'],
-      numeroExpediente: ['número', 'nro.', 'expediente n°', 'n° de causa'],
+      // El MEV rotula "Nº de Expediente" con º ordinal. Ninguna de las variantes
+      // anteriores coincidía, así que el número salía del fallback de abajo.
+      numeroExpediente: ['nº de expediente', 'n° de expediente', 'expediente',
+        'número', 'nro.', 'n° de causa'],
       fuero: ['fuero'],
       departamento: ['departamento', 'depto'],
       organismo: ['organismo', 'tribunal', 'juzgado', 'cámara'],
@@ -134,7 +137,9 @@
     // Estrategia 3: buscar en meta o campos ocultos
     const allText = document.body.innerText
     if (!data.numeroExpediente) {
-      const match = allText.match(/(?:N[°º]|Nro\.?|Expediente)\s*:?\s*([\d\-\/]+)/i)
+      // Exige la palabra "Expediente": el patrón viejo aceptaba cualquier "N°" y
+      // se quedaba con el 1 de "JUZGADO DE EJECUCION EN LO PENAL N°1".
+      const match = allText.match(/Expediente\s*(?:N[°º]|Nro\.?)?\s*:?\s*([\d][\d\-/.]*)/i)
       if (match) data.numeroExpediente = match[1]
     }
     if (!data.caratula) {
@@ -147,108 +152,68 @@
 
   // ── Extracción de actuaciones ─────────────────────────────
 
-  function extractActuaciones() {
-    const actuaciones = []
-
-    // Busca tablas que puedan contener actuaciones
-    const tables = document.querySelectorAll('table')
-
-    for (const table of tables) {
-      const headers = Array.from(table.querySelectorAll('th')).map((th) => th.textContent.trim().toLowerCase())
-      const hasActuaciones =
-        headers.some((h) => h.includes('fecha') || h.includes('actuación') || h.includes('tipo') || h.includes('documento'))
-
-      if (!hasActuaciones && table.rows.length < 2) continue
-
-      const rows = table.querySelectorAll('tr')
-      rows.forEach((tr, idx) => {
-        if (idx === 0) return // skip header
-        const cells = Array.from(tr.querySelectorAll('td'))
-        if (cells.length < 2) return
-
-        const pdfLinks = tr.querySelectorAll('a[href*=".pdf"], a[href*="pdf"], a[href*="download"], a[href*="descargar"], a[title*="PDF"], a[title*="pdf"]')
-        const imgLinks = tr.querySelectorAll('img[src*="pdf"], img[alt*="pdf"], img[src*="doc"]')
-
-        const actuacion = {
-          fecha: null,
-          tipo: null,
-          autor: null,
-          descripcion: null,
-          tienePdf: pdfLinks.length > 0 || imgLinks.length > 0,
-          urlPdf: null,
-        }
-
-        // Intenta mapear celdas a campos
-        cells.forEach((cell, i) => {
-          const text = cell.textContent.trim()
-          if (!text) return
-          // Detección por posición típica del MEV
-          if (i === 0 && /\d{2}[\/\-]\d{2}[\/\-]\d{4}/.test(text)) {
-            actuacion.fecha = text
-          } else if (i === 1 || headers[i]?.includes('tipo') || headers[i]?.includes('actuación')) {
-            actuacion.tipo = text
-          } else if (headers[i]?.includes('autor') || headers[i]?.includes('organismo')) {
-            actuacion.autor = text
-          } else if (i === cells.length - 1 && text.length > 5) {
-            actuacion.descripcion = text.substring(0, 150)
-          }
-        })
-
-        // URL del PDF si existe
-        if (pdfLinks.length > 0) {
-          const href = pdfLinks[0].href || pdfLinks[0].getAttribute('href')
-          if (href) actuacion.urlPdf = href
-        }
-
-        if (actuacion.fecha || actuacion.tipo) {
-          actuaciones.push(actuacion)
-        }
-      })
+  // Mapeado contra el DOM real del MEV el 2026-08-04 (procesales.asp, causa penal
+  // de La Plata, 193 actuaciones). Tres supuestos de la versión anterior eran falsos:
+  //   1. No hay <th> en la página — los encabezados son <td class="fondoazul">.
+  //   2. No hay PDFs. Cada actuación es un link a proveido.asp que devuelve TEXTO.
+  //   3. No hay filas ocultas por paginación: las 193 vienen en el DOM de una.
+  function encontrarTablaActuaciones() {
+    for (const table of document.querySelectorAll('table')) {
+      if (table.rows.length < 2) continue
+      const encabezado = Array.from(table.rows[0].cells).map((c) => c.textContent.trim().toLowerCase())
+      if (encabezado.includes('fecha') && encabezado.some((h) => h.startsWith('descripc'))) {
+        return { table, encabezado }
+      }
     }
+    return null
+  }
 
-    // P5: Segundo barrido — capturar links de documentos fuera de tablas
-    // y filas ocultas por paginación ASP (display:none / visibility:hidden).
-    // El MEV clásico oculta filas antiguas en vez de eliminarlas del DOM.
-    const yaRegistrados = new Set(actuaciones.map((a) => a.urlPdf).filter(Boolean))
+  function extractActuaciones() {
+    const hallazgo = encontrarTablaActuaciones()
+    if (!hallazgo) return []
 
-    // Filas de tablas ocultas por ASP
-    document.querySelectorAll('tr').forEach((tr) => {
-      const style = window.getComputedStyle(tr)
-      if (style.display !== 'none' && style.visibility !== 'hidden') return
+    const { table, encabezado } = hallazgo
+    const col = (nombre) => encabezado.findIndex((h) => h.startsWith(nombre))
+    const iFecha = col('fecha')
+    const iFojas = col('foja')
+    const iFirmado = col('firmado')
+    const iDescripcion = col('descripc')
 
-      const cells = Array.from(tr.querySelectorAll('td'))
+    const actuaciones = []
+    const vistos = new Set()
+
+    Array.from(table.rows).slice(1).forEach((tr) => {
+      const cells = Array.from(tr.cells)
       if (cells.length < 2) return
-      const pdfLinks = tr.querySelectorAll('a[href*="pdf" i], a[href*="download" i], a[href*="descargar" i]')
-      const urlPdf = pdfLinks.length > 0 ? (pdfLinks[0].href || null) : null
-      if (urlPdf && yaRegistrados.has(urlPdf)) return
 
-      const fechaCell = cells.find((c) => /\d{2}[\/\-]\d{2}[\/\-]\d{4}/.test(c.textContent))
+      // El link vive en la celda de Descripción y su texto ES el tipo de actuación.
+      const celdaDesc = cells[iDescripcion] || cells[cells.length - 1]
+      const link = celdaDesc?.querySelector('a[href*="proveido" i]') || celdaDesc?.querySelector('a')
+      const tipo = (link?.textContent || celdaDesc?.textContent || '').trim()
+      if (!tipo) return
+
+      const url = link?.href || null
+      if (url && vistos.has(url)) return
+      if (url) vistos.add(url)
+
+      // La celda de fecha trae fecha y hora en dos líneas: "20/07/2026\n17:57:01".
+      const crudoFecha = (cells[iFecha]?.innerText || '').trim()
+      const fecha = crudoFecha.match(/\d{2}[/-]\d{2}[/-]\d{4}/)?.[0] || null
+      const hora = crudoFecha.match(/\d{1,2}:\d{2}(:\d{2})?/)?.[0] || null
+
       actuaciones.push({
-        fecha: fechaCell?.textContent.trim() || null,
-        tipo: cells[1]?.textContent.trim() || 'Documento (paginado)',
+        fecha,
+        hora,
+        tipo,
+        fojas: (cells[iFojas]?.textContent || '').trim() || null,
+        // El ícono de la columna "Firmado" indica firma digital del organismo.
+        firmado: !!cells[iFirmado]?.querySelector('img'),
         autor: null,
         descripcion: null,
-        tienePdf: urlPdf !== null,
-        urlPdf,
-        oculto: true,
+        // El MEV no publica PDFs: el contenido se lee en proveido.asp como texto.
+        tieneDocumento: !!url,
+        urlProveido: url,
       })
-      if (urlPdf) yaRegistrados.add(urlPdf)
-    })
-
-    // Links de documentos en cualquier parte de la página (fuera de tablas)
-    document.querySelectorAll('a').forEach((link) => {
-      const href = link.href || ''
-      const isDoc = /\.(pdf|doc|docx)/i.test(href) || /download|descargar|getdoc/i.test(href)
-      if (!isDoc || yaRegistrados.has(href)) return
-      actuaciones.push({
-        fecha: null,
-        tipo: link.textContent.trim() || link.title || 'Documento',
-        autor: null,
-        descripcion: null,
-        tienePdf: true,
-        urlPdf: href,
-      })
-      yaRegistrados.add(href)
     })
 
     return actuaciones
@@ -286,7 +251,7 @@
         caratula,
         actuaciones,
         totalActuaciones: actuaciones.length,
-        actuacionesConPdf: actuaciones.filter((a) => a.tienePdf).length,
+        actuacionesConDocumento: actuaciones.filter((a) => a.tieneDocumento).length,
         rawPageTitle: document.title,
       }
     }

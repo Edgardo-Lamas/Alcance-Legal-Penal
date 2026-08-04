@@ -37,6 +37,20 @@ const REQUIRE_AUTH = Deno.env.get('REQUIRE_AUTH') === 'true'
 // Umbral mínimo de caracteres para activar extracción con Gemini
 const GEMINI_EXTRACTION_MIN_CHARS = 500
 
+// Tope de documentación del expediente. Subido de 20.000 a 120.000 el 2026-08-04:
+// con 20.000 no entraba UNA sola resolución del MEV (medida: 36.448 caracteres),
+// que es justamente la pieza donde el juez funda lo que hay que impugnar.
+// Un expediente completo de 193 actuaciones ronda los 414.000 caracteres, así que
+// 120.000 sigue exigiendo selección — pero permite mandar las piezas decisivas enteras.
+// Costo de referencia: 120.000 chars ≈ 30.000 tokens ≈ US$0,09 de input con Sonnet.
+const MAX_DOCUMENTACION_CHARS = 120000
+
+// Modelo de la capa de lectura previa. Configurable por env para poder cambiarlo
+// sin redeploy. El default se movió de gemini-2.0-flash el 2026-08-04: medido
+// contra un acta con vicios sembrados, 3.6-flash devolvió 8/8 citas literales
+// exactas (fidelidad 100%) y respaldó cada señalamiento con su transcripción.
+const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.6-flash'
+
 // Límites de tamaño de adjuntos (validados server-side, no solo en el frontend)
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024   // ~6MB por imagen (frontend limita a 4MB)
 const MAX_PDF_BYTES   = 13 * 1024 * 1024  // ~13MB por PDF (frontend limita a 10MB)
@@ -443,34 +457,51 @@ interface CriterioConAnalogia {
 // Reduce hasta 15.000 chars de texto a ~2.000 chars antes de Claude Sonnet.
 // ============================================
 
+interface SenalamientoGemini {
+    observacion: string
+    cita_textual: string
+    ubicacion: string | null
+}
+
 interface ExtraccionGemini {
     hechos_clave: string
     tipo_penal: string | null
     etapa_procesal: string | null
     imputado: string | null
-    actuaciones_resumen: string
-    alertas_preliminares: string
+    senalamientos: SenalamientoGemini[]
 }
 
 async function extraerDatosConGemini(documentacion_caso: string): Promise<ExtraccionGemini | null> {
     if (!GEMINI_API_KEY) return null
 
+    // Gemini NO resume el expediente: lo lee entero y señala dónde mirar, siempre
+    // con la cita textual que respalda cada señalamiento. Un resumen no sostiene
+    // una nulidad; una transcripción literal sí, y además es verificable.
     const prompt =
-        `Sos un asistente jurídico especializado en derecho penal de la Provincia de Buenos Aires.\n\n` +
-        `Analizá el siguiente texto del expediente y extraé los datos estructurados clave.\n\n` +
-        `TEXTO DEL EXPEDIENTE:\n${documentacion_caso.slice(0, 15000)}\n\n` +
+        `Sos un asistente de un abogado defensor penal de la Provincia de Buenos Aires.\n\n` +
+        `Leé el expediente y extraé datos estructurados y los pasajes críticos para la defensa.\n\n` +
+        `REGLA ABSOLUTA: el campo "cita_textual" debe ser una transcripción LITERAL del ` +
+        `expediente, copiada carácter por carácter. No parafrasees, no corrijas, no completes, ` +
+        `no normalices fechas ni horarios. Si no podés respaldar una observación con una cita ` +
+        `literal, NO la incluyas. Es preferible señalar poco y seguro que mucho y dudoso.\n\n` +
+        `Priorizá: fechas y plazos, competencia del órgano, fundamentación de las resoluciones, ` +
+        `intervención de la defensa, notificaciones, y todo incumplimiento de forma.\n\n` +
+        `TEXTO DEL EXPEDIENTE:\n${documentacion_caso}\n\n` +
         `Respondé ÚNICAMENTE con un JSON válido con esta estructura:\n` +
         `{\n` +
-        `  "hechos_clave": "Descripción concisa de los hechos imputados (máx. 500 chars)",\n` +
+        `  "hechos_clave": "Descripción concisa de los hechos (máx. 800 chars)",\n` +
         `  "tipo_penal": "Delito o calificación legal imputada, o null",\n` +
-        `  "etapa_procesal": "IPP | juicio_oral | intermedia | recursos | ejecucion, o null",\n` +
+        `  "etapa_procesal": "IPP | intermedia | juicio_oral | recursos | ejecucion, o null",\n` +
         `  "imputado": "Nombre del imputado o null",\n` +
-        `  "actuaciones_resumen": "Lista cronológica de actuaciones clave (máx. 800 chars)",\n` +
-        `  "alertas_preliminares": "Posibles nulidades o irregularidades visibles (máx. 400 chars)"\n` +
+        `  "senalamientos": [\n` +
+        `    { "observacion": "qué llama la atención y por qué le importa a la defensa",\n` +
+        `      "cita_textual": "transcripción literal del expediente que lo respalda",\n` +
+        `      "ubicacion": "actuación y fecha donde aparece, o null" }\n` +
+        `  ]\n` +
         `}`
 
     const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
         {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -478,8 +509,8 @@ async function extraerDatosConGemini(documentacion_caso: string): Promise<Extrac
                 contents: [{ parts: [{ text: prompt }] }],
                 generationConfig: {
                     responseMimeType: 'application/json',
-                    maxOutputTokens: 1024,
-                    temperature: 0.1
+                    maxOutputTokens: 8192,
+                    temperature: 0
                 }
             })
         }
@@ -887,10 +918,10 @@ serve(async (req: Request) => {
                 fundamento: 'El campo "hechos" supera el límite de 10.000 caracteres.', disclaimer: DISCLAIMER
             }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
         }
-        if ((body.documentacion_caso?.length ?? 0) > 20000) {
+        if ((body.documentacion_caso?.length ?? 0) > MAX_DOCUMENTACION_CHARS) {
             return new Response(JSON.stringify({
                 success: false, fase_rechazo: 'sistema', codigo: 'INPUT_DEMASIADO_GRANDE',
-                fundamento: 'El campo "documentacion_caso" supera el límite de 20.000 caracteres.', disclaimer: DISCLAIMER
+                fundamento: `El campo "documentacion_caso" supera el límite de ${MAX_DOCUMENTACION_CHARS.toLocaleString('es-AR')} caracteres.`, disclaimer: DISCLAIMER
             }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } })
         }
 
@@ -971,14 +1002,24 @@ serve(async (req: Request) => {
                         // al abogado de que los "hechos" fueron extraídos automáticamente.
                         advertenciasPipeline.push('Los "hechos" analizados fueron extraídos automáticamente por IA a partir del texto del expediente (el campo original era breve). Verificá que reflejen fielmente la causa.')
                     }
-                    body.documentacion_caso =
-                        `[RESUMEN AUTOMÁTICO — texto original: ${longitudOriginal} caracteres]\n\n` +
-                        `HECHOS CLAVE: ${extraccion.hechos_clave}\n\n` +
-                        `ACTUACIONES RELEVANTES:\n${extraccion.actuaciones_resumen}` +
-                        (extraccion.alertas_preliminares
-                            ? `\n\nALERTAS PRELIMINARES:\n${extraccion.alertas_preliminares}`
-                            : '')
-                    console.log(`[GEMINI] Extracción OK. ${longitudOriginal} → ${body.documentacion_caso.length} chars`)
+                    // La lectura previa se ANTEPONE al expediente, no lo reemplaza.
+                    // Antes se pisaba documentacion_caso con un resumen de ~2.000 chars
+                    // y Claude razonaba sobre una paráfrasis: los señalamientos quedaban
+                    // sin material que los sostuviera, y lo no resumido se perdía.
+                    const senalados = (extraccion.senalamientos ?? [])
+                        .filter(s => s?.observacion && s?.cita_textual)
+                        .map(s => `• ${s.observacion}\n  Cita textual: "${s.cita_textual}"` +
+                                  (s.ubicacion ? `\n  Ubicación: ${s.ubicacion}` : ''))
+
+                    if (senalados.length > 0) {
+                        body.documentacion_caso =
+                            `[LECTURA PREVIA — puntos a verificar contra el texto, que va completo más abajo]\n` +
+                            `${senalados.join('\n\n')}\n\n` +
+                            `${'='.repeat(60)}\n` +
+                            `TEXTO DEL EXPEDIENTE (${longitudOriginal} caracteres)\n` +
+                            `${'='.repeat(60)}\n\n${body.documentacion_caso}`
+                    }
+                    console.log(`[GEMINI] Lectura previa OK con ${GEMINI_MODEL}: ${senalados.length} señalamientos sobre ${longitudOriginal} chars`)
                 }
             } catch (err) {
                 console.warn('[GEMINI] Extracción fallida, continuando con datos originales:', (err as Error).message)
