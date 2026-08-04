@@ -34,16 +34,26 @@ export function AuthProvider({ children }) {
         return () => subscription.unsubscribe()
     }, [])
 
-    // Fetch profile whenever session changes
+    // Perfil del abogado: hoy es su suscripción (plan + créditos comprados).
+    //
+    // Antes esto llamaba a la RPC `get_my_profile`, que NO existe en este proyecto
+    // Supabase —ni la función ni la tabla `profiles`— y tiraba un error en consola
+    // en cada login. Quedó del proyecto anterior, que se dio de baja.
+    // `suscripciones` (migración 010) sí existe y es lo que define al usuario.
     useEffect(() => {
         if (!session || !supabase) {
             setProfile(null)
             return
         }
         supabase
-            .rpc('get_my_profile')
+            .from('suscripciones')
+            .select('plan, creditos_analisis, creditos_consultas')
+            .eq('user_id', session.user.id)
+            .maybeSingle()
             .then(({ data, error }) => {
-                if (error) console.error('[AuthContext] profile fetch error:', error)
+                // Sin suscripción no es un error: la cuenta simplemente no tiene
+                // plan asignado todavía y el backend la trata con los topes por defecto.
+                if (error) console.error('[AuthContext] no se pudo leer la suscripción:', error.message)
                 setProfile(data ?? null)
             })
     }, [session])
