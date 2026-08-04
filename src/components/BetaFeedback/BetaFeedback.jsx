@@ -32,12 +32,23 @@ function BetaFeedback() {
             ? `[${estrellas}★] ${comentario.trim()}`
             : `[${estrellas}★]`
 
-        await supabase?.from('feedback').insert({
-            user_id: user.id,
-            tipo_analisis: 'beta_general',
-            rating: estrellas >= 3,
-            comentario: textoConRating,
-        }).catch(() => {})
+        // insert() NO rechaza la promesa: devuelve { error }. Con el .catch()
+        // que había acá y sin mirar ese campo, la tabla `feedback` no existía y
+        // TODO el feedback de la beta se perdió en silencio mostrando "enviado".
+        const { error } = await supabase
+            ?.from('feedback')
+            .insert({
+                user_id: user.id,
+                tipo_analisis: 'beta_general',
+                rating: estrellas >= 3,
+                comentario: textoConRating,
+            }) ?? {}
+
+        if (error) {
+            console.error('[BetaFeedback] no se pudo guardar el feedback:', error.message)
+            setEstado('error')
+            return
+        }
 
         setEstado('enviado')
     }
@@ -75,7 +86,17 @@ function BetaFeedback() {
                             </button>
                         </div>
 
-                        {estado === 'enviado' ? (
+                        {estado === 'error' ? (
+                            /* Estado: no se pudo guardar. Antes esto no existía y el
+                               componente agradecía igual, con el dato ya perdido. */
+                            <div className="bf-enviado">
+                                <p className="bf-enviado__titulo">No pudimos guardar tu comentario</p>
+                                <p className="bf-enviado__texto">
+                                    Hubo un problema al enviarlo. Probá de nuevo en un momento.
+                                </p>
+                                <button className="bf-btn-cerrar" onClick={() => setEstado('idle')}>Reintentar</button>
+                            </div>
+                        ) : estado === 'enviado' ? (
                             /* Estado: enviado */
                             <div className="bf-enviado">
                                 <div className="bf-enviado__icono">

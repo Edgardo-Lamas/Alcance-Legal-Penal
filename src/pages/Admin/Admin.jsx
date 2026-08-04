@@ -45,6 +45,7 @@ function Admin() {
     const navigate = useNavigate()
     const [profiles, setProfiles] = useState([])
     const [feedbacks, setFeedbacks] = useState([])
+    const [analisisTotal, setAnalisisTotal] = useState(0)
     const [loadingData, setLoadingData] = useState(true)
     const [error, setError] = useState(null)
 
@@ -55,24 +56,23 @@ function Admin() {
         }
     }, [isAdmin, loading, navigate])
 
-    // Fetch profiles + feedback
+    // Métricas del panel.
+    //
+    // Antes esto consultaba la tabla `profiles`, que NO existe en este proyecto
+    // Supabase (quedó del anterior, dado de baja): la página no cargó nunca.
+    // Ahora sale todo de admin_metricas(), que arma los datos desde auth.users,
+    // suscripciones y analisis — las tablas que sí existen — y valida adentro
+    // que quien pregunta sea admin.
     useEffect(() => {
         if (!isAdmin || !supabase) return
 
-        Promise.all([
-            supabase
-                .from('profiles')
-                .select('id, nombre, email, created_at, analisis_count, is_admin')
-                .order('created_at', { ascending: false }),
-            supabase
-                .from('feedback')
-                .select('id, tipo_analisis, rating, comentario, created_at')
-                .order('created_at', { ascending: false })
-                .limit(50)
-        ]).then(([profRes, fbRes]) => {
-            if (profRes.error) setError(profRes.error.message)
-            else setProfiles(profRes.data || [])
-            setFeedbacks(fbRes.data || [])
+        supabase.rpc('admin_metricas').then(({ data, error }) => {
+            if (error) setError(error.message)
+            else {
+                setProfiles(data?.usuarios || [])
+                setFeedbacks(data?.feedback || [])
+                setAnalisisTotal(data?.analisis_total ?? 0)
+            }
             setLoadingData(false)
         })
     }, [isAdmin])
@@ -101,7 +101,8 @@ function Admin() {
     const stats = {
         total: profiles.length,
         nuevos7dias: profiles.filter(p => new Date(p.created_at) > hace7dias).length,
-        totalAnalisis: profiles.reduce((acc, p) => acc + (p.analisis_count || 0), 0),
+        // Cuenta la tabla `analisis` entera, así no se pierden los de cuentas borradas.
+        totalAnalisis: analisisTotal,
         usuariosActivos: profiles.filter(p => (p.analisis_count || 0) > 0).length,
     }
 

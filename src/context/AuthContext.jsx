@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
         }
         supabase
             .from('suscripciones')
-            .select('plan, creditos_analisis, creditos_consultas')
+            .select('plan, creditos_analisis, creditos_consultas, is_admin')
             .eq('user_id', session.user.id)
             .maybeSingle()
             .then(({ data, error }) => {
