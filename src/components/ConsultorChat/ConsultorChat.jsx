@@ -26,9 +26,20 @@ function ConsultorChat({ contexto }) {
         }
     }, [mensajes, cargando])
 
+    const MIN_PREGUNTA = 10
+
     const enviar = async (texto) => {
         const preguntaLimpia = (texto ?? pregunta).trim()
-        if (preguntaLimpia.length < 10 || cargando) return
+        if (cargando) return
+
+        // Antes esto era un `return` mudo: con menos del mínimo, Enter no hacía
+        // nada y el botón quedaba gris sin explicar por qué. El placeholder que
+        // avisa del mínimo desaparece apenas se empieza a escribir, así que el
+        // abogado se quedaba tocando Enter contra un formulario sin respuesta.
+        if (preguntaLimpia.length < MIN_PREGUNTA) {
+            setError(`Escribí la pregunta con un poco más de detalle: faltan ${MIN_PREGUNTA - preguntaLimpia.length} caracteres.`)
+            return
+        }
 
         setError('')
         setPregunta('')
@@ -135,10 +146,13 @@ function ConsultorChat({ contexto }) {
                     maxLength={1500}
                     disabled={cargando}
                 />
+                {/* Habilitado apenas hay texto: si es demasiado corto, enviar() lo
+                    explica. Deshabilitarlo bajo el mínimo dejaba al abogado sin
+                    ningún camino para enterarse de qué faltaba. */}
                 <button
                     type="submit"
                     className="consultor__enviar"
-                    disabled={cargando || pregunta.trim().length < 10}
+                    disabled={cargando || pregunta.trim().length === 0}
                     aria-label="Enviar pregunta"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
