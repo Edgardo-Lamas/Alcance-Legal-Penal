@@ -11,7 +11,8 @@ function BetaFeedback() {
     const [estrellas, setEstrellas] = useState(0)
     const [hoverEstrellas, setHoverEstrellas] = useState(0)
     const [comentario, setComentario] = useState('')
-    const [estado, setEstado] = useState('idle') // idle | enviando | enviado
+    const [estado, setEstado] = useState('idle') // idle | enviando | enviado | error
+    const [aviso, setAviso] = useState('')
 
     if (!user) return null
 
@@ -20,12 +21,23 @@ function BetaFeedback() {
         setEstado('idle')
         setEstrellas(0)
         setComentario('')
+        setAviso('')
     }
 
     const handleCerrar = () => setAbierto(false)
 
     const handleEnviar = async () => {
-        if (!estrellas || estado === 'enviando') return
+        if (estado === 'enviando') return
+
+        // La calificación es obligatoria, pero eso no se decía en ningún lado: el
+        // botón quedaba gris y el abogado escribía el comentario sin entender por
+        // qué no podía enviarlo.
+        if (!estrellas) {
+            setAviso('Elegí una calificación de 1 a 5 estrellas para poder enviar.')
+            return
+        }
+
+        setAviso('')
         setEstado('enviando')
 
         const textoConRating = comentario.trim()
@@ -144,11 +156,17 @@ function BetaFeedback() {
                                     <span className="bf-contador">{comentario.length}/{MAX_CHARS}</span>
                                 </div>
 
-                                {/* Botón enviar */}
+                                {aviso && (
+                                    <p className="bf-aviso" role="alert">{aviso}</p>
+                                )}
+
+                                {/* Botón enviar — habilitado siempre que no esté enviando:
+                                    si falta la calificación, handleEnviar lo explica en vez
+                                    de dejar el botón muerto sin decir por qué. */}
                                 <button
                                     className="bf-btn-enviar"
                                     onClick={handleEnviar}
-                                    disabled={!estrellas || estado === 'enviando'}
+                                    disabled={estado === 'enviando'}
                                 >
                                     {estado === 'enviando' ? 'Enviando...' : 'Enviar feedback'}
                                 </button>

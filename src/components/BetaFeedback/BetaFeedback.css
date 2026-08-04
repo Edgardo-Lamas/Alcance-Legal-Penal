@@ -220,6 +220,18 @@
     pointer-events: none;
 }
 
+/* Aviso de validación (ej: falta elegir la calificación) */
+.bf-aviso {
+    margin: 0 0 10px;
+    padding: 8px 10px;
+    border-left: 3px solid #C9A227;
+    background: rgba(201, 162, 39, 0.1);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #E2B94A;
+}
+
 /* Botón enviar */
 .bf-btn-enviar {
     width: 100%;
