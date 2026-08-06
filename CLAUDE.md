@@ -317,6 +317,26 @@ Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
 4. **Exportar análisis a Word** — skill `docx`, escritos editables desde el informe
 5. **Corpus juridico RAG** — ampliar `criterios_juridicos` con más jurisprudencia SCBA/CSJN
 
+### 🔜 Tema abierto para la próxima sesión (2026-08-06)
+
+**Leer `docs/arquitectura/claude_for_legal_referencia.md` antes de empezar.** Es el análisis
+de la suite oficial de plugins jurídicos de Anthropic (jurisdicción EE.UU., sin fuero penal:
+su contenido no sirve, su arquitectura sí). Trae 8 patrones mapeados contra este código.
+
+Los dos primeros a atacar, en orden:
+
+1. **Revisión tabular con cita textual por fila** (§4.3 del doc) — triar las 193 actuaciones
+   de un expediente del MEV con criterio en vez del regex `PRIORITY_TYPES` de
+   `chrome-extension/sidepanel.js`, que contra el expediente real **acertó 1 de 42 tipos**.
+   Fase previa a FASE 1.5, sobre Gemini Flash por costo.
+2. **Perfil de práctica persistente** (§4.1) — hoy no guardamos nada del abogado entre
+   análisis (departamento judicial, etapa que más trabaja, juzgados, estilo de redacción).
+   Es la causa del output correcto pero impersonal, y es prerrequisito del multi-fuero.
+
+⚠️ **Bloqueante detectado para las verticales gemelas** (§4.2): `criterios_juridicos` no
+discrimina fuero. Hay que decidir columna `fuero` + filtro en `buscar_criterios` **o** base
+separada por vertical, **antes** de abrir civil/comercial/familia.
+
 ---
 
 ## Comandos útiles
