@@ -381,6 +381,46 @@ texto solo y avisa si va a analizar únicamente el índice.
 - [ ] **Republicar la extensión**: la de la Web Store (`gojomc…`) está inservible y
       `manifest.json` sigue en `1.1.0` → subir a `1.2.0`. **No entregarla a ningún abogado antes.**
 
+### 🔴 Dos temas de fondo abiertos (2026-08-07) — no son bugs, son decisiones de producto
+
+**1. El sistema responde con material insuficiente y lo rotula "APROBADO".**
+
+`ALC-PENAL-PBA-2026-000006` y `000007` corrieron con el índice de actuaciones y **sin una sola
+línea del expediente**. Los dos salieron con el sello **INFORME APROBADO**, y adentro
+propusieron prescripción de la acción sobre una condena firme. La sección "LIMITACIONES"
+avisaba, pero el encabezado decía aprobado: el informe se contradice a sí mismo y el abogado
+lee el sello.
+
+Por qué pasa: hay dos controles y **ninguno mira la materia prima**.
+- FASE 1 (`checkAdmissibility`) valida que la consulta sea **penal PBA con hechos mínimos**.
+  Con la carátula alcanza: nunca pregunta si hay expediente.
+- `validatePenalOutput` (`index.ts:758`) decide `approved`/`limited` sobre **el texto de
+  salida** — sesgo acusatorio, certeza excesiva. Un informe vacío pero bien redactado y
+  prudente **pasa**.
+
+Falta un tercer control, de **suficiencia del insumo**: si `documentacion_caso` es sólo el
+índice, el informe no puede salir `approved`. Discutir si corresponde `limited` con
+advertencia en el encabezado, o directamente rechazar. ⚠️ Sostener el principio del proyecto:
+*el rechazo fundado es un output válido; nunca improvisar*. Hoy improvisa.
+El aviso que se agregó el 2026-08-07 está en el panel de la extensión, **no en el informe**.
+
+**2. Confidencialidad: por dónde circulan los datos del expediente.**
+
+Cada análisis manda texto íntegro de actuaciones judiciales a **terceros fuera del país**:
+Gemini (Google) en FASE 1.5, Claude (Anthropic) en el razonamiento, y OpenAI en los embeddings
+del RAG. El caso de prueba del 2026-08-07 era una causa **real** por abuso sexual agravado con
+corrupción de menores: datos personalísimos del imputado **y de la víctima**, que no consintió
+nada.
+
+A resolver antes de vender esto a estudios:
+- Retención de cada proveedor: confirmar **zero data retention** donde exista, y dejarlo escrito.
+- Qué se le informa al abogado, y dónde. Hoy el aviso legal no dice que el expediente sale
+  hacia proveedores de IA.
+- Si conviene **seudonimizar** antes de enviar (nombres → iniciales). Tensión real: las citas
+  textuales son el valor del sistema y los nombres aparecen dentro de esas citas.
+- Encuadre: secreto profesional del abogado + **Ley 25.326** (datos sensibles). ⚠️ Esto lo tiene
+  que revisar un abogado; no resolverlo por criterio técnico.
+
 ### 🔜 Tema abierto para la próxima sesión (2026-08-06)
 
 **Leer `docs/arquitectura/claude_for_legal_referencia.md` antes de empezar.** Es el análisis
