@@ -354,8 +354,30 @@ texto solo y avisa si va a analizar únicamente el índice.
 - [ ] Verificar que la web **salta sola** al resultado por Realtime (único tramo sin ver funcionar).
 - [ ] Corrida de validación de los 5 fixes (recargar extensión + **re-login en Config**: las
       sesiones viejas no tienen `refresh_token`).
-- [ ] Web: la **barra de progreso del pipeline nunca avanza** y el paso **"Abrí el MEV" nunca
-      se tilda** (`src/pages/Capacidades/Analizar/Analizar.jsx`).
+- [ ] **Deuda de UX del flujo MEV** — los tres son del mismo problema: *la interfaz no enseña
+      el camino*. Relevados con Edgardo usando el sistema como lo usaría un abogado:
+  1. **El panel no dice en ningún lado que hay que ir a `Documentos`, tildar actuaciones y
+     traer el texto.** Es el más grave: el abogado se conecta, ve "Causa detectada" y aprieta
+     Analizar. El arreglo de hoy tapa el agujero (trae solo lo tildado), pero por defecto vienen
+     tildadas **2 de 12** y nada le sugiere que puede o debe marcar más. Tampoco se entiende
+     qué hace el botón "Traer texto de seleccionadas" ni por qué importa.
+  2. `Analizar.jsx` — el paso **"Abrí el MEV y navegá a tu causa"** y el paso 3 están
+     **hardcodeados** como pendientes (líneas ~577-590): no existe estado que refleje si hay
+     una causa abierta. Habría que hacer que `detector.js` publique en el DOM el estado de la
+     causa, como ya hace con `data-alp-mev-installed`, y que la web lo lea.
+  3. `Analizar.jsx` — los **5 pasos del pipeline nunca avanzan** en el flujo MEV. `pipelineFases`
+     sólo se anima en el camino del formulario manual (~línea 359); cuando el análisis entra por
+     Realtime nadie mueve ese estado.
+- [ ] **Las tres capacidades que siguen al análisis, NUNCA probadas sobre un caso del MEV.**
+      Se probaron sueltas, con carga manual; lo que no se probó es el encadenado, que es
+      justamente donde vive la precarga de `src/utils/precargaAnalisis.js` (transporta
+      `_hechos` / `_tipo_penal` / `_etapa_procesal` desde Resultado paso 2):
+  - [ ] **Auditar Estrategia** desde el botón del análisis.
+  - [ ] **Redactar Escrito** desde el botón del análisis.
+  - [ ] **Consultor del caso** (`ConsultorChat`): iterar preguntas sobre un análisis del MEV.
+        Verificado el 2026-08-03 pero sobre carga manual. ⚠️ Latencia ~18-20 s con Opus 5:
+        parece colgado. ⚠️ La precarga parsea la carátula del **formato fijo de la extensión**,
+        que hoy trae campos nuevos (organismo, fuero, imputado) — hay que ver que siga parseando.
 - [ ] **Republicar la extensión**: la de la Web Store (`gojomc…`) está inservible y
       `manifest.json` sigue en `1.1.0` → subir a `1.2.0`. **No entregarla a ningún abogado antes.**
 
