@@ -12,7 +12,8 @@
   "host_permissions": [
     "https://mev.scba.gov.ar/*",
     "https://alcance-legal-penal.vercel.app/*",
-    "http://localhost:5173/*"
+    "http://localhost:5173/*",
+    "https://nclpzmyjjmglpjalmrri.supabase.co/*"
   ],
   "background": {
     "service_worker": "background.js"

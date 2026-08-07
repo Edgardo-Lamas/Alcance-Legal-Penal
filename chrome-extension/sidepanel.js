@@ -158,8 +158,14 @@
 
       const data = await response.json()
       
+      // Supabase devuelve access_token (vence en 1 hora), refresh_token y
+      // expires_in. Antes se guardaba SOLO el access_token: pasada la hora todo
+      // respondía 401 mientras Config seguía diciendo "Cuenta conectada", porque
+      // para darse por logueado alcanzaba con que el token existiera.
       state.session = {
         access_token: data.access_token,
+        refresh_token: data.refresh_token || null,
+        expires_at: Date.now() + (data.expires_in ?? 3600) * 1000,
         email: data.user?.email || email,
         user_id: data.user?.id
       }
@@ -176,6 +182,45 @@
     } finally {
       btnLogin.disabled = false
       btnLogin.textContent = 'Ingresar'
+    }
+  }
+
+  // Devuelve un access_token vigente, renovándolo si está por vencer. Null si la
+  // sesión ya no sirve y hay que volver a entrar. Se renueva un minuto antes del
+  // vencimiento: un análisis tarda hasta 45 s y no puede vencer a mitad de camino.
+  const MARGEN_RENOVACION_MS = 60000
+
+  async function getAccessTokenValido() {
+    if (!state.session?.access_token) return null
+
+    const vence = state.session.expires_at ?? 0
+    if (vence - Date.now() > MARGEN_RENOVACION_MS) return state.session.access_token
+
+    // Sesión guardada por la versión que descartaba el refresh_token: no hay con
+    // qué renovarla ni cómo saber si sigue viva. Se pide entrar de nuevo, que es
+    // un mensaje entendible, en vez de mandarla y cosechar un 401 mudo.
+    if (!state.session.refresh_token) return null
+
+    try {
+      const resp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_ANON_KEY },
+        body: JSON.stringify({ refresh_token: state.session.refresh_token }),
+      })
+      if (!resp.ok) throw new Error(`refresh ${resp.status}`)
+      const data = await resp.json()
+
+      state.session = {
+        ...state.session,
+        access_token: data.access_token,
+        refresh_token: data.refresh_token || state.session.refresh_token,
+        expires_at: Date.now() + (data.expires_in ?? 3600) * 1000,
+      }
+      await new Promise((r) => chrome.storage.local.set({ alpSession: state.session }, r))
+      return state.session.access_token
+    } catch (err) {
+      console.warn('[ALP] No se pudo renovar la sesión:', err.message)
+      return null
     }
   }
 
@@ -230,15 +275,33 @@
     state.isMev = isMev || false
     state.isCausa = isCausa || false
 
+    // Estar parado en una causa manda: re-extrae siempre, así cambiar de
+    // expediente actualiza la vista en vez de dejar la anterior pegada.
+    if (isMev && isCausa) {
+      setStatus('connected', 'Causa detectada ✓')
+      requestExtraction()
+      return
+    }
+
+    // El side panel es UNO solo por ventana de Chrome. Al pasar a cualquier otra
+    // pestaña —la web de Alcance, sin ir más lejos— llega isMev:false y antes se
+    // escondía la sección de la causa, con el botón de analizar adentro, aunque el
+    // expediente siguiera extraído en memoria. Al abogado le pasa siempre, porque
+    // lo natural es mirar la web mientras espera el resultado. Los datos no se
+    // habían perdido: sólo estaban ocultos.
+    if (state.mevData) {
+      const n = state.mevData.actuaciones?.length || 0
+      setStatus('connected', `Causa detectada · ${n} actuaciones`)
+      showSection('causa-detectada')
+      return
+    }
+
     if (!isMev) {
       setStatus('disconnected', 'Navegá al MEV para comenzar')
       showSection('no-mev')
-    } else if (!isCausa) {
+    } else {
       setStatus('connected', 'MEV detectado ✓')
       showSection('mev-sin-causa')
-    } else {
-      setStatus('connected', 'Causa detectada ✓')
-      requestExtraction()
     }
   }
 
@@ -378,6 +441,16 @@
       switchTab('config')
       return
     }
+    // Se renueva ANTES de empezar: leer el expediente y analizarlo puede llevar
+    // más de un minuto, y un token que vence a mitad de camino devuelve 401
+    // cuando ya se hizo todo el trabajo.
+    if (!(await getAccessTokenValido())) {
+      state.session = null
+      chrome.storage.local.remove(['alpSession'], applySessionToUI)
+      showError('Tu sesión de Alcance Legal venció. Volvé a ingresar en la pestaña Config.')
+      switchTab('config')
+      return
+    }
     if (!state.mevData) {
       showError('No hay datos del expediente. Re-extraé primero.')
       return
@@ -392,6 +465,29 @@
     try {
       const c = state.mevData.caratula || {}
       const acts = state.mevData.actuaciones || []
+
+      // Tildar los checkboxes NO traía el texto: para eso había que apretar
+      // además "Traer texto de seleccionadas", un paso que la interfaz no pedía
+      // en ninguna parte. El análisis salía con el índice pelado y el informe
+      // razonaba sobre el listado como si fuera el expediente. Medido el
+      // 2026-08-07 con una causa real: sin contenido dio por vicio principal una
+      // "paralización de 38 meses" y propuso prescripción de la acción sobre una
+      // condena firme; con el contenido encontró tres errores concretos y
+      // citables del propio texto. El informe vacío no es flojo: es peligroso.
+      const tildadas = document.querySelectorAll('.alp-doc-check:checked').length
+      if (tildadas > 0 && (state.textosProveidos || []).length === 0) {
+        setLoadingMsg(`Leyendo ${tildadas} actuación(es) del MEV...`)
+        state.textosProveidos = await traerTextoSeleccionado()
+      }
+
+      // Sin contenido no se aborta: con el índice solo todavía se puede razonar
+      // la secuencia procesal. Pero el informe tiene que saber sobre qué trabajó
+      // en vez de dejar creer que leyó el expediente.
+      const consultables = acts.filter((a) => a.tieneDocumento).length
+      const sinContenido = (state.textosProveidos || []).length === 0
+      if (sinContenido && consultables > 0) {
+        showError(`Se va a analizar SOLO el índice: ninguna de las ${consultables} actuaciones consultables aportó texto. Tildalas en la pestaña "Documentos" para un análisis de fondo.`)
+      }
 
       // Hechos para admisibilidad (mínimo 20 caracteres)
       const hechos = `Causa penal: "${c.caratula || 'Sin carátula'}" (Expediente Nro: ${c.numeroExpediente || 'No especificado'}). Imputado/a: ${c.imputado || 'No especificado'}. Delito investigado: ${c.delito || 'No especificado'}. Etapa: ${c.etapaProcesal || 'IPP'}. Cautelar: ${c.cautelar || 'No especificada'}.`

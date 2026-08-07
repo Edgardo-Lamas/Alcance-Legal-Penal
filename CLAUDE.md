@@ -228,7 +228,9 @@ chrome-extension/
 └── README.md
 ```
 
-**Estado actual:** funcional, pendiente de prueba real en MEV.
+**Estado actual (2026-08-07):** probada dos veces contra el MEV real. Anda **cargada
+descomprimida** desde `chrome-extension/`; la publicada en la Web Store (`gojomc…`, v1.1.0)
+quedó **inservible** y debe seguir desactivada — ver "Estado del flujo MEV" más arriba.
 **Autenticación:** ✅ ya migrada — `sidepanel.js` usa **login Supabase (email/password)** y
 el `access_token` del abogado. Solo embebe la `SUPABASE_ANON_KEY` (pública por diseño).
 **NO** hay API keys de Anthropic/OpenAI embebidas. (El `README.md` de la extensión todavía
@@ -316,6 +318,46 @@ Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
 3. **Chrome Web Store (unlisted)** — distribución a abogados beta
 4. **Exportar análisis a Word** — skill `docx`, escritos editables desde el informe
 5. **Corpus juridico RAG** — ampliar `criterios_juridicos` con más jurisprudencia SCBA/CSJN
+
+### 🔴 Estado del flujo MEV tras la prueba real del 2026-08-07 — LEER ANTES DE TOCAR LA EXTENSIÓN
+
+Segunda prueba contra el MEV real (incidente de ejecución `INC-5354-EJEC`, Tribunal en lo
+Criminal N°1 La Plata, 12 actuaciones). **El tramo extensión → backend nunca había
+funcionado**: cinco defectos encadenados, ninguno visible sin sesión real del MEV.
+
+Ya corregido y en este commit:
+
+1. `content.js` — el MEV maqueta con **tablas anidadas**, así que la celda exterior contiene
+   el texto de toda la página: buscar "la primera celda que menciona el label" devolvía un
+   contenedor gigante. Ahora sólo se miran **celdas hoja** y se parsea `Label: valor` dentro
+   de la misma celda. ⚠️ El MEV mezcla `º` (ordinal) con `°` (grado) y separa con **NBSP**.
+   ⚠️ El nº de expediente **no siempre es numérico**: acá era `INC - 5354 - EJEC`.
+2. `sidepanel.js` — al pasar a otra pestaña llegaba `isMev:false` y se **escondía** la sección
+   de la causa, con el botón de analizar adentro. Los datos nunca se perdían.
+3. `manifest.json` — faltaba `host_permissions` para Supabase ⇒ **"Failed to fetch"** en todo
+   análisis lanzado desde el panel. **Resuelto por host permission, no por lista de orígenes
+   en el backend: funciona con cualquier ID de extensión y republicar no exige tocar el server.**
+4. Login del panel — descartaba el `refresh_token`. Con `jwt_exp = 3600`, a la hora exacta
+   todo daba **401** mientras Config seguía mostrando "Cuenta conectada". Ahora renueva.
+5. `analisis` **no estaba publicada en Realtime** → migración **012**. Sin eso la web queda en
+   "Escuchando resultados…" para siempre, sin error en ningún lado.
+
+⛔ **La regla que no hay que olvidar:** tildar los checkboxes de "Documentos" **no traía el
+texto**; hacía falta apretar además "Traer texto de seleccionadas", paso que la interfaz no
+pedía. Medido sobre la misma causa: **sin contenido el sistema no se abstiene, completa** —
+dio por vicio principal una "paralización de 38 meses" y propuso **prescripción de la acción
+sobre una condena firme**. Con el texto real encontró tres errores concretos y citables, dos
+de ellos verificados palabra por palabra contra el expediente. `runAnalysis()` ahora trae el
+texto solo y avisa si va a analizar únicamente el índice.
+
+**Pendientes en este orden:**
+- [ ] Verificar que la web **salta sola** al resultado por Realtime (único tramo sin ver funcionar).
+- [ ] Corrida de validación de los 5 fixes (recargar extensión + **re-login en Config**: las
+      sesiones viejas no tienen `refresh_token`).
+- [ ] Web: la **barra de progreso del pipeline nunca avanza** y el paso **"Abrí el MEV" nunca
+      se tilda** (`src/pages/Capacidades/Analizar/Analizar.jsx`).
+- [ ] **Republicar la extensión**: la de la Web Store (`gojomc…`) está inservible y
+      `manifest.json` sigue en `1.1.0` → subir a `1.2.0`. **No entregarla a ningún abogado antes.**
 
 ### 🔜 Tema abierto para la próxima sesión (2026-08-06)
 

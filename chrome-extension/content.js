@@ -18,22 +18,26 @@
     return el ? el.textContent.trim() : null
   }
 
-  function getTextByLabel(labelText, context = document) {
-    // Busca celdas de tabla donde el texto de la celda anterior matchea el label
-    const cells = context.querySelectorAll('td, th, span, label, b, strong')
-    for (const cell of cells) {
-      const text = cell.textContent.trim()
-      if (text.toLowerCase().includes(labelText.toLowerCase())) {
-        // Intenta el siguiente hermano o la siguiente celda
-        const next = cell.nextElementSibling || cell.parentElement?.nextElementSibling?.querySelector('td')
-        if (next) return next.textContent.trim()
-        // O busca el texto después de los dos puntos
-        const full = cell.parentElement?.textContent?.trim()
-        if (full) {
-          const parts = full.split(':')
-          if (parts.length > 1) return parts.slice(1).join(':').trim()
-        }
-      }
+  // El MEV maqueta con tablas ANIDADAS: la celda exterior contiene el texto de toda
+  // la página, así que "la primera celda que menciona el label" es casi siempre un
+  // contenedor gigante y devuelve basura. Sólo miramos celdas hoja (sin <td> adentro).
+  function celdasHoja(context = document) {
+    return Array.from(context.querySelectorAll('td, th')).filter((c) => !c.querySelector('td, th'))
+  }
+
+  // Los datos del expediente vienen como "Label: valor" DENTRO de la misma celda,
+  // no en la celda siguiente. Ojo: el MEV mezcla º (ordinal) y ° (grado) en los
+  // rótulos y separa el valor con NBSP (carácter 160), que no siempre cae dentro
+  // de \s: por eso se normaliza a espacio común antes de aplicar el patrón.
+  function normalizarEspacios(texto) {
+    return texto.replace(/[\u00a0\u2007\u202f]/g, ' ').replace(/\s+/g, ' ').trim()
+  }
+  function valorDeCampo(patronLabel, context = document) {
+    const re = new RegExp('^\\s*' + patronLabel + '\\s*:\\s*(.+)$', 'i')
+    for (const celda of celdasHoja(context)) {
+      const texto = normalizarEspacios(celda.innerText)
+      const m = texto.match(re)
+      if (m && m[1].trim()) return m[1].trim()
     }
     return null
   }
@@ -98,52 +102,44 @@
       cautelar: null,
     }
 
-    // Estrategia 1: buscar por labels conocidos del MEV
-    const labelMap = {
-      caratula: ['carátula', 'caratula', 'causa'],
-      // El MEV rotula "Nº de Expediente" con º ordinal. Ninguna de las variantes
-      // anteriores coincidía, así que el número salía del fallback de abajo.
-      numeroExpediente: ['nº de expediente', 'n° de expediente', 'expediente',
-        'número', 'nro.', 'n° de causa'],
-      fuero: ['fuero'],
-      departamento: ['departamento', 'depto'],
-      organismo: ['organismo', 'tribunal', 'juzgado', 'cámara'],
-      juez: ['juez', 'jueza', 'magistrado'],
-      fiscal: ['fiscal', 'ministerio público'],
-      defensor: ['defensor', 'defensora', 'defensa'],
-      imputado: ['imputado', 'imputada', 'acusado', 'procesado'],
-      delito: ['delito', 'figura', 'calificación', 'hecho'],
-      etapaProcesal: ['etapa', 'instancia', 'estado'],
-      situacion: ['situación', 'situacion procesal', 'libertad', 'detenido'],
-      cautelar: ['cautelar', 'prisión preventiva', 'excarcelación'],
-    }
+    // ── Bloque "Datos del Expediente" ───────────────────────
+    // Son cuatro celdas con formato "Label: valor". Es lo único que el MEV
+    // publica de la causa: juez, fiscal, defensor y situación NO figuran acá.
+    data.caratula = valorDeCampo('Car[áa]tula')
+    data.numeroExpediente = valorDeCampo('N[°º]\\s*de\\s*Expediente')
+    // "Estado" es lo más cerca de etapa procesal que da el MEV:
+    // "En Letra", "Fuera del Organismo - En Cámara", "A Despacho"…
+    data.etapaProcesal = valorDeCampo('Estado')
 
-    for (const [key, labels] of Object.entries(labelMap)) {
-      for (const label of labels) {
-        const value = getTextByLabel(label)
-        if (value && value.length > 1 && value.length < 200) {
-          data[key] = value
-          break
-        }
+    // ── Encabezado gris: organismo y departamento - fuero ───
+    for (const celda of celdasHoja()) {
+      const texto = normalizarEspacios(celda.innerText)
+      if (texto.length > 120) continue
+      if (!data.organismo && /^(juzgado|tribunal|c[áa]mara|sala|fiscal[íi]a|defensor[íi]a|unidad|secretar[íi]a)\b/i.test(texto)) {
+        data.organismo = texto
+      }
+      // Formato "La Plata - Penal"
+      const m = texto.match(/^([A-Za-zÁÉÍÓÚÑáéíóúñ.\s/-]{3,40})\s+-\s+(Penal|Civil|Familia|Laboral|Comercial|Contencioso[\w\s]*|Paz)$/i)
+      if (m && !data.departamento) {
+        data.departamento = m[1].trim()
+        data.fuero = m[2].trim()
       }
     }
 
-    // Estrategia 2: buscar en el título de la página
-    const titleEl = document.querySelector('h1, h2, .titulo, .caratula, #caratula, .title')
-    if (titleEl && !data.caratula) {
-      data.caratula = titleEl.textContent.trim()
+    // ── Derivados de la carátula ────────────────────────────
+    // Formato del MEV: "APELLIDO NOMBRE S/DELITO ..." — antes de S/ va el
+    // imputado, después la calificación legal por la que viene rotulada la causa.
+    if (data.caratula) {
+      const m = data.caratula.match(/^(.+?)\s+S\/\s*(.+)$/i)
+      if (m) {
+        data.imputado = m[1].trim()
+        data.delito = m[2].trim()
+      }
     }
 
-    // Estrategia 3: buscar en meta o campos ocultos
-    const allText = document.body.innerText
-    if (!data.numeroExpediente) {
-      // Exige la palabra "Expediente": el patrón viejo aceptaba cualquier "N°" y
-      // se quedaba con el 1 de "JUZGADO DE EJECUCION EN LO PENAL N°1".
-      const match = allText.match(/Expediente\s*(?:N[°º]|Nro\.?)?\s*:?\s*([\d][\d\-/.]*)/i)
-      if (match) data.numeroExpediente = match[1]
-    }
+    // Último recurso para la carátula si el bloque cambió de forma.
     if (!data.caratula) {
-      const match = allText.match(/Carátula\s*:?\s*([^\n]+)/i)
+      const match = document.body.innerText.match(/Car[áa]tula\s*:?\s*([^\n]+)/i)
       if (match) data.caratula = match[1].trim()
     }
 
