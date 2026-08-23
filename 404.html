@@ -1,27 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
-    <title>Alcance Legal Penal</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alcance Legal Penal — Defensa CPP PBA</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://alcance-legal-penal.vercel.app/" />
+    <meta http-equiv="refresh" content="0; url=https://alcance-legal-penal.vercel.app/" />
     <script>
-      /**
-       * SPA redirect para GitHub Pages.
-       * Cuando GitHub Pages no encuentra la ruta (ej: /Alcance-Legal-Penal/analizar),
-       * sirve este 404.html, que codifica la ruta como query param y redirige a index.html.
-       * El script en index.html luego restaura la URL original.
-       *
-       * segmentCount = 1 porque el sitio está en /Alcance-Legal-Penal/ (1 segmento de base).
-       */
-      var segmentCount = 1
-      var l = window.location
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      )
+      location.replace('https://alcance-legal-penal.vercel.app/' + location.hash);
     </script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f8f9fa; color: #1a1a2e; line-height: 1.7;
+        display: grid; place-items: center; min-height: 100vh;
+        margin: 0; padding: 1.5rem; text-align: center;
+      }
+      a { color: #1a1a2e; }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <h1>Alcance Legal Penal</h1>
+      <p>El sistema está en otra dirección. Si no te redirige solo:</p>
+      <p><a href="https://alcance-legal-penal.vercel.app/">alcance-legal-penal.vercel.app</a></p>
+    </main>
+  </body>
 </html>
