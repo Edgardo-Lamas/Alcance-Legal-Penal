@@ -480,13 +480,15 @@
         state.textosProveidos = await traerTextoSeleccionado()
       }
 
-      // Sin contenido no se aborta: con el índice solo todavía se puede razonar
-      // la secuencia procesal. Pero el informe tiene que saber sobre qué trabajó
-      // en vez de dejar creer que leyó el expediente.
+      // Desde 2026-08-26 el backend RECHAZA el análisis sin materia prima (gate de
+      // suficiencia del insumo, _shared/suficiencia.ts): con el índice pelado ya no
+      // sale un informe. Se avisa acá para no gastarle un viaje al servidor y, sobre
+      // todo, para que el abogado lea qué le falta hacer antes del error.
       const consultables = acts.filter((a) => a.tieneDocumento).length
       const sinContenido = (state.textosProveidos || []).length === 0
       if (sinContenido && consultables > 0) {
-        showError(`Se va a analizar SOLO el índice: ninguna de las ${consultables} actuaciones consultables aportó texto. Tildalas en la pestaña "Documentos" para un análisis de fondo.`)
+        showError(`Falta el texto del expediente: ninguna de las ${consultables} actuaciones consultables fue traída. Andá a la pestaña "Documentos", tildá las actuaciones que importan y usá "Traer texto de seleccionadas". Sin eso el análisis se rechaza.`)
+        return
       }
 
       // Hechos para admisibilidad (mínimo 20 caracteres)

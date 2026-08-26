@@ -108,10 +108,19 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 ## Arquitectura del pipeline (5 fases)
 
 ```
-Entrada → FASE 1 Admisibilidad → FASE 2 RAG → FASE 3 Razonamiento LIS → FASE 4 Validación → FASE 5 Informe
+Entrada → FASE 1 Admisibilidad → FASE 1.2 Suficiencia del insumo → FASE 1.5 Lectura previa (Gemini)
+        → FASE 2 RAG → FASE 2.5 Analogía fáctica → FASE 3 Razonamiento LIS → FASE 4 Validación → FASE 5 Informe
 ```
 
 Cada fase puede rechazar. El rechazo fundado es un output válido. **Nunca improvisar.**
+
+Las tres preguntas que hacen las capas de control son distintas y por eso hacen falta las tres:
+
+| Capa | Pregunta |
+|---|---|
+| FASE 1 `checkAdmissibility` | ¿Esta consulta es de mi competencia? (penal, PBA, hechos mínimos) |
+| **FASE 1.2 `evaluarSuficienciaInsumo`** | **¿Hay con qué? ¿Llegó materia prima o sólo metadato?** |
+| FASE 4 `validateOutput` | ¿El texto que salió tiene sesgo acusatorio o certeza excesiva? |
 
 ---
 
@@ -143,7 +152,10 @@ supabase/functions/
 ├── redactar-escrito/index.ts    ← POST /redactar-escrito (borradores de escritos judiciales)
 ├── consultor-caso/index.ts      ← POST /consultor-caso (chat anclado a un análisis previo)
 ├── mcp-server/index.ts          ← MCP Server: POST /mcp-server (JSON-RPC 2.0)
-└── _shared/profile-config.ts    ← System prompt + config del perfil penal (compartido)
+└── _shared/
+    ├── profile-config.ts        ← System prompt + config del perfil penal (compartido)
+    ├── cuotas.ts                ← Cliente de consumir_cuota() (migración 010)
+    └── suficiencia.ts           ← FASE 1.2: gate de suficiencia del insumo (+ .test.ts)
 ```
 
 > **Son 5 Edge Functions**. `analizar-caso` incluye la capa de extracción/validación
@@ -381,30 +393,75 @@ texto solo y avisa si va a analizar únicamente el índice.
 - [ ] **Republicar la extensión**: la de la Web Store (`gojomc…`) está inservible y
       `manifest.json` sigue en `1.1.0` → subir a `1.2.0`. **No entregarla a ningún abogado antes.**
 
-### 🔴 Dos temas de fondo abiertos (2026-08-07) — no son bugs, son decisiones de producto
+### ✅ Tema de fondo CERRADO (2026-08-26) — gate de suficiencia del insumo
 
-**1. El sistema responde con material insuficiente y lo rotula "APROBADO".**
-
-`ALC-PENAL-PBA-2026-000006` y `000007` corrieron con el índice de actuaciones y **sin una sola
-línea del expediente**. Los dos salieron con el sello **INFORME APROBADO**, y adentro
+**Era:** `ALC-PENAL-PBA-2026-000006` y `000007` corrieron con el índice de actuaciones y **sin
+una sola línea del expediente**. Los dos salieron con el sello **INFORME APROBADO**, y adentro
 propusieron prescripción de la acción sobre una condena firme. La sección "LIMITACIONES"
-avisaba, pero el encabezado decía aprobado: el informe se contradice a sí mismo y el abogado
-lee el sello.
+avisaba, pero el encabezado decía aprobado: el abogado lee el sello.
 
-Por qué pasa: hay dos controles y **ninguno mira la materia prima**.
-- FASE 1 (`checkAdmissibility`) valida que la consulta sea **penal PBA con hechos mínimos**.
-  Con la carátula alcanza: nunca pregunta si hay expediente.
-- `validatePenalOutput` (`index.ts:758`) decide `approved`/`limited` sobre **el texto de
-  salida** — sesgo acusatorio, certeza excesiva. Un informe vacío pero bien redactado y
-  prudente **pasa**.
+**Por qué pasaba:** había dos controles y ninguno miraba la materia prima. `checkAdmissibility`
+pregunta *"¿es de mi competencia?"* (penal, PBA, hechos mínimos) — con la carátula alcanza.
+`validateOutput` juzga **el texto de salida** (sesgo acusatorio, certeza excesiva) — un informe
+vacío pero bien redactado y prudente pasa.
 
-Falta un tercer control, de **suficiencia del insumo**: si `documentacion_caso` es sólo el
-índice, el informe no puede salir `approved`. Discutir si corresponde `limited` con
-advertencia en el encabezado, o directamente rechazar. ⚠️ Sostener el principio del proyecto:
-*el rechazo fundado es un output válido; nunca improvisar*. Hoy improvisa.
-El aviso que se agregó el 2026-08-07 está en el panel de la extensión, **no en el informe**.
+**Ahora hay un tercer control**, `supabase/functions/_shared/suficiencia.ts`, que corre como
+**FASE 1.2**: después de admisibilidad y **antes de la cuota y de Gemini**, para que un rechazo
+por falta de material no le descuente análisis al abogado ni gaste un peso en los proveedores.
 
-**2. Confidencialidad: por dónde circulan los datos del expediente.**
+Mide **materia prima**, que no es lo mismo que caracteres recibidos. Descuenta dos cosas que
+parecen expediente y no lo son:
+
+| Se descuenta | Por qué |
+|---|---|
+| El **índice de actuaciones** | Dice QUÉ actuaciones hay, no qué DICEN. No sostiene una nulidad. |
+| La **carátula autogenerada** por la extensión | ~250 chars de metadato del MEV que no escribió nadie. Contarlos como relato del abogado era justamente lo que dejaba pasar a `000006`. |
+
+Un relato de hechos **escrito por una persona** sí cuenta, y los PDF/imágenes adjuntos también
+(el modelo los lee enteros): a quien adjuntó el expediente no se le devuelve el trabajo.
+
+**Decisión de Edgardo (2026-08-26): mixto, rechazo o límite según el caso.**
+
+| Nivel | Cuándo | Qué hace |
+|---|---|---|
+| `insuficiente` | sustancia < `MIN_SUSTANCIA_CHARS` | **422 `RECHAZADA_INSUMO_INSUFICIENTE`**, `fase_rechazo: 'insumo'`. No consume cuota, no llama a nadie. El fundamento enseña el camino. |
+| `parcial` | vino del MEV y el cuerpo < `CUERPO_SUFICIENTE_CHARS` | Sale como **`limited`** y —esto es lo importante— se inyecta una **constancia obligatoria en el prompt**, no sólo en el encabezado. |
+| `suficiente` | resto | Igual que antes. |
+
+**Umbrales por env, calibrados contra los dos extremos reales — no elegidos de arriba:**
+- `MIN_SUSTANCIA_CHARS` (default **400**): `000006` con la carátula y el índice descontados
+  deja ~60 chars de sustancia; un relato manual serio de un abogado (delito, fecha, lugar,
+  prueba de cargo, teoría del caso) mide ~725. 400 cae en el medio con margen para los dos
+  lados. ⚠️ Subirlo le rebota trabajo legítimo a quien carga a mano, que es **peor** que dejar
+  pasar un análisis flojo: el rechazo indebido lo hace desconfiar del sistema.
+- `CUERPO_SUFICIENTE_CHARS` (default **2000**): una actuación real del MEV promedia 1.900–2.050
+  caracteres. Menos que eso sobre un expediente entero es secuencia procesal, no fondo.
+
+**La constancia va DENTRO del informe.** Es la corrección al parche del 2026-08-07, que sólo
+avisaba en el panel de la extensión. Con `parcial`, el prompt le ordena al modelo: (1) no
+afirmar como ocurrido nada que no esté en el material; (2) abrir "limitaciones" declarando
+sobre qué trabajó, con números; (3) **no proponer una vía procesal cuyo presupuesto fáctico no
+pueda verificar** — el punto 3 es el que hubiera frenado la prescripción sobre la condena firme.
+
+**Tests:** `deno test --allow-env supabase/functions/_shared/suficiencia.test.ts` — 11 casos,
+con fixtures que reproducen el formato exacto de `sidepanel.js → runAnalysis()`. Incluye el
+falso positivo que más caro sale: **prosa judicial con fechas adentro no se confunde con un
+índice**. ⚠️ Si cambia el formato del índice en la extensión, estos tests cambian con él: el
+gate reconoce el índice por ese formato.
+
+**La extensión ya no manda el análisis sin texto**: `runAnalysis()` corta antes y explica qué
+falta hacer, en vez de decir "se va a analizar SOLO el índice" (que ahora sería falso).
+
+🔴 **Hallazgo abierto de la misma sesión, NO tocado — `index.ts:1144`:** el prompt manda
+`body.documentacion_caso.slice(0, 20000)`, y ese es el **único** camino por el que el expediente
+llega a Claude. Pero el backend acepta `MAX_DOCUMENTACION_CHARS = 120.000` y la extensión
+presupuesta 110.000. **De un expediente de 110.000 caracteres el modelo ve el 18%**, y encima
+la lectura previa que Gemini antepone come de esos mismos 20.000. Es el mismo defecto de fondo
+—firmar un informe sin haber leído el material— por otra vía. Subirlo cuesta plata real
+(120.000 chars ≈ 30.000 tokens ≈ US$0,09 de input por análisis contra ~US$0,015 hoy): decisión
+de Edgardo, no técnica.
+
+### 🔴 Tema de fondo ABIERTO (2026-08-07) — confidencialidad: por dónde circulan los datos del expediente
 
 Cada análisis manda texto íntegro de actuaciones judiciales a **terceros fuera del país**:
 Gemini (Google) en FASE 1.5, Claude (Anthropic) en el razonamiento, y OpenAI en los embeddings

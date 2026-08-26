@@ -13,6 +13,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { PROFILE_PENAL_PBA_CONFIG } from '../_shared/profile-config.ts'
 import { consumirCuota, esCuentaDeAbogado, mensajeCuotaAgotada } from '../_shared/cuotas.ts'
+import { evaluarSuficienciaInsumo } from '../_shared/suficiencia.ts'
 
 // Tipo del cliente Supabase con schema explícito ('public') para que .rpc()/.from()
 // tipen correctamente (ReturnType<typeof createClient> resuelve el schema a `never`).
@@ -209,7 +210,7 @@ interface AnalizarCasoResponse {
 
 interface RechazoResponse {
     success: false
-    fase_rechazo: 'admisibilidad' | 'rag' | 'validacion' | 'sistema'
+    fase_rechazo: 'admisibilidad' | 'insumo' | 'rag' | 'validacion' | 'sistema'
     codigo: string
     fundamento: string
     recomendacion?: string
@@ -961,6 +962,36 @@ serve(async (req: Request) => {
         }
 
         // ==========================================
+        // FASE 1.2: SUFICIENCIA DEL INSUMO
+        // Va antes de la cuota y antes de Gemini a propósito: un rechazo por
+        // falta de materia prima no le descuenta análisis al abogado ni gasta
+        // un peso en los tres proveedores.
+        // ==========================================
+        const insumo = evaluarSuficienciaInsumo(body)
+        console.log(`[INSUMO] nivel=${insumo.nivel} cuerpo=${insumo.charsCuerpo} indice=${insumo.charsIndice} (${insumo.actuacionesIndice} act.) relato=${insumo.charsRelato}`)
+
+        if (insumo.nivel === 'insuficiente') {
+            const rechazo: RechazoResponse = {
+                success: false,
+                fase_rechazo: 'insumo',
+                codigo: 'RECHAZADA_INSUMO_INSUFICIENTE',
+                fundamento: insumo.fundamento,
+                recomendacion: insumo.recomendacion,
+                disclaimer: DISCLAIMER
+            }
+            return new Response(JSON.stringify(rechazo), {
+                status: 422,
+                headers: { ...cors, 'Content-Type': 'application/json' }
+            })
+        }
+
+        if (insumo.nivel === 'parcial') {
+            advertenciasPipeline.push(
+                `Análisis con material parcial: ${insumo.fundamento} ${insumo.recomendacion}`
+            )
+        }
+
+        // ==========================================
         // CUOTA DEL PLAN (migración 010)
         // Va acá a propósito: después de admisibilidad —un rechazo por
         // inadmisible no le descuenta análisis al abogado— y antes de Gemini,
@@ -1090,6 +1121,20 @@ serve(async (req: Request) => {
         const imagenesCount = body.imagenes?.length ?? 0
         const pdfCount = body.documentos_pdf?.length ?? 0
 
+        // Constancia de la materia prima, DENTRO del prompt y no sólo en el
+        // encabezado del informe. En 000006 la sección "limitaciones" avisaba y
+        // el encabezado igual decía APROBADO: el abogado lee el cuerpo, no el
+        // cartel. El punto 3 es el que hubiera frenado la prescripción de la
+        // acción propuesta sobre una condena firme.
+        const constanciaInsumo = insumo.nivel === 'parcial'
+            ? `## MATERIA PRIMA DE ESTE ANÁLISIS — CONSTANCIA OBLIGATORIA\n` +
+              `Este análisis NO cuenta con el expediente completo. ${insumo.fundamento}\n` +
+              `En consecuencia:\n` +
+              `1. No afirmes como ocurrido nada que no esté en el material transcripto arriba. Si un vicio depende de una pieza que no fue aportada, decilo con esas palabras: no puede verificarse con el material disponible.\n` +
+              `2. La sección "limitaciones" DEBE abrir declarando sobre qué material se trabajó: ${insumo.actuacionesIndice} actuación/es listadas en el índice y ${insumo.charsCuerpo.toLocaleString('es-AR')} caracteres de texto efectivamente leídos.\n` +
+              `3. No propongas una vía procesal cuyo presupuesto fáctico no puedas verificar en el material aportado.\n\n`
+            : ''
+
         const contextReasoning =
             `## HECHOS IMPUTADOS\n${body.hechos}\n\n` +
             (body.tipo_penal ? `## TIPO PENAL APLICADO POR LA ACUSACIÓN\n${body.tipo_penal}\n\n` : '') +
@@ -1111,6 +1156,7 @@ serve(async (req: Request) => {
                           : `- Metadatos: No disponibles\nALERTA: Sin metadatos EXIF. Posible captura de pantalla o imagen editada. Requiere pericia informática (art. 244 CPP PBA).`)
                   ).join('\n\n') + '\n\n'
                 : '') +
+            constanciaInsumo +
             `## CRITERIOS PENALES APLICABLES (CPP PBA / CP)\n${criteriosTexto}\n\n` +
             `## PATRONES PROCESALES — DETECCIÓN OBLIGATORIA\n` +
             `Además del análisis principal, evaluá cada uno de estos 8 patrones procesales:\n${PATRONES_PROCESALES_DESCRIPCION}\n\n` +
