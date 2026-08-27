@@ -97,9 +97,13 @@ El sistema opera **exclusivamente desde la perspectiva defensiva** (in dubio pro
 - **Frontend**: React 19 + Vite 7 + React Router 7
 - **Backend**: Supabase Edge Functions (Deno) — `supabase/functions/analizar-caso/`
 - **DB**: Supabase PostgreSQL + pgvector (tabla `criterios_juridicos`)
-- **Embeddings**: OpenAI `text-embedding-ada-002`
-- **LLM primario**: Claude (Anthropic) — ver `guidedPenalReasoning.ts`
-- **LLM fallback**: GPT-4 Turbo (OpenAI)
+- **Embeddings**: OpenAI `text-embedding-ada-002` — **único uso de OpenAI en el sistema**
+  (3 call sites: `analizar-caso`, `consultor-caso`, `mcp-server`). No redacta nada.
+- **LLM primario**: Claude (Anthropic) — `claude-sonnet-4-6` en el razonamiento (FASE 3)
+- **LLM de lectura previa y analogía**: Gemini (Google) — FASE 1.5 y FASE 2.5
+- ⚠️ **NO existe fallback a GPT-4 Turbo.** Lo decía esta guía y era falso: no hay una sola
+  referencia a `gpt-4` en `src/` ni en `supabase/`. El único fallback real es el de FASE 2.5,
+  que cae de Gemini a `claude-haiku-4-5` si falta `GEMINI_API_KEY`. (Corregido 2026-08-27.)
 - **Extensión Chrome**: `chrome-extension/` — MEV Navigator (Manifest V3)
 - **MCP Server**: `supabase/functions/mcp-server/` — integración con Claude Cowork
 
@@ -173,8 +177,10 @@ supabase/functions/
   ⚠️ Opus 5 razona antes de responder y ese razonamiento sale del mismo `max_tokens` que
   la respuesta: por eso `MAX_TOKENS_RESPUESTA` es 4000 aunque el prompt pida ≤300 palabras.
   Medido: el pensamiento se lleva ~65% de los tokens de salida. Latencia ~18s por pregunta.
-- Rate limit persistente: 10/min + techo diario 40 (freno anti-abuso). El límite del
-  **plan** es mensual y vive aparte — ver "Cuotas por plan".
+- Rate limit: **20/min** (`RATE_LIMIT_MAX`, es conversacional) + techo diario 40
+  (`RATE_DIARIO_MAX`). ⚠️ Esta guía decía **10/min** y era falso — corregido 2026-08-27 contra
+  `consultor-caso/index.ts:97-99`. El límite del **plan** es mensual y vive aparte — ver
+  "Cuotas por plan".
 - System prompt propio (el del perfil exige JSON — acá es conversacional, texto plano, ≤300 palabras).
 
 ### Cuotas por plan (migración 010, 2026-08-03)
@@ -206,6 +212,57 @@ pasarela de pago la llama el webhook). Cliente compartido en `_shared/cuotas.ts`
 4. ⚠️ **El camino MCP (service role) NO consume cuota** — `esCuentaDeAbogado()` solo cobra a
    UUIDs reales. Está bien para uso propio; si se le da el MCP a un abogado, queda sin tope.
 
+🔴 **HALLAZGO 2026-08-27 — `redactar-escrito` y `auditar-estrategia` quedaron FUERA de todo
+esto, y también fuera de `REQUIRE_AUTH`.** Verificado leyendo las dos funciones enteras.
+**La mitad de autenticación ya está CORREGIDA** (ver abajo); la de cuota sigue abierta.
+
+| | `analizar-caso` | `consultor-caso` | `redactar-escrito` | `auditar-estrategia` |
+|---|---|---|---|---|
+| Verifica el JWT del abogado | ✅ | ✅ | ❌ | ❌ |
+| Descuenta cuota del plan | ✅ | ✅ | ❌ | ❌ |
+| Rate limit | 10/min | 20/min + 40/día | 10/min por IP | 10/min por IP |
+| `max_tokens` por llamada | — | 4000 | **5000** | **3000** |
+
+Las dos van del rate limit por IP **directo** a la llamada a Anthropic: no importan
+`_shared/cuotas.ts`, no llaman a `verificarUsuario()` y ni siquiera crean cliente de Supabase.
+Lo único que las cubre es la verificación de JWT del **gateway** de Supabase, que se satisface
+con la **anon key** — pública por diseño y embebida en la web y en la extensión.
+
+⚠️ Ojo con la nota vieja del 2026-07-18 que dice *"con `REQUIRE_AUTH=true` los 3 endpoints daban
+401"*: eso describía el síntoma en la web, no que las 3 validen. **Sólo 2 validan.**
+
+**Consecuencia práctica:** un abogado del plan Básico puede generar escritos y auditorías sin
+tope, y cada uno es una llamada a Sonnet. Es el mismo agujero que la migración 010 vino a tapar,
+sin aplicar a la mitad del producto.
+
+#### ✅ Mitad 1 CERRADA (2026-08-27) — autenticación
+
+Nuevo módulo **`_shared/auth.ts`** (`verificarUsuario` + `requiereAuth`), importado por
+`redactar-escrito` y `auditar-estrategia`. Rechazan `401 NO_AUTENTICADO` con `REQUIRE_AUTH=true`
+y loguean `user=… ip=… auth=…` como hace `analizar-caso`.
+
+Verificado antes de tocar nada, para no repetir el bug del 2026-07-18:
+- ✅ `src/services/api.js` **ya mandaba** `Bearer ${await getAuthToken()}` a los dos endpoints
+  (líneas 322 y 359). Un abogado logueado manda su `access_token` y pasa; sin sesión cae al
+  anon key y ahora corta. **No rompe la web.**
+- ✅ Ni la extensión ni el `mcp-server` llaman a estos dos endpoints → sin impacto.
+- ✅ `deno check` OK en las 5 funciones · `npm run lint` 0 errores.
+
+⚠️ `analizar-caso` y `consultor-caso` conservan su copia inline de `verificarUsuario`. No se
+tocaron a propósito: es código de producción verificado y unificarlo no arregla nada hoy.
+Deuda menor.
+
+#### ⬜ Mitad 2 ABIERTA — cuota
+
+Falta que consuman cuota. **Decisión de Edgardo pendiente: qué recurso.** Recomendación dada
+el 27/8: **recurso nuevo** en `planes` (no `analisis`, que haría competir redactar contra
+analizar casos nuevos; no `consultas`, que fue dimensionado para chat y perdería visibilidad).
+Dimensionado sugerido ~1,5× los análisis (Básico 30 · Profesional 90 · Estudio 225) para
+respetar la regla "lo incluido cuesta ≈25% del precio".
+⚠️ **Ese número es estimación sobre `max_tokens`, NO medición.** Antes de fijarlo, correr 2-3
+escritos reales y mirar el gasto — como se hizo con los umbrales de suficiencia. `planes` es
+editable por SQL, así que errarle no cuesta redeploy.
+
 ⛔ **Decisión comercial de Edgardo: la calidad del análisis es IGUAL en los tres planes.**
 Nunca diferenciar planes por modelo (Sonnet abajo / Opus arriba). Lo que varía es el volumen
 de uso y algunas funciones. Es una herramienta de defensa penal: el que paga las consecuencias
@@ -217,7 +274,9 @@ de un análisis más flojo no es el abogado, es su cliente detenido.
 el anon key → con `REQUIRE_AUTH=true` los 3 endpoints daban 401 desde la web.
 
 **MCP Server URL:** `https://nclpzmyjjmglpjalmrri.supabase.co/functions/v1/mcp-server`
-**Tools expuestas:** `analizar_caso`, `buscar_jurisprudencia`
+**Tools expuestas: son 4**, no 2 como decía esta guía (corregido 2026-08-27 contra
+`mcp-server/index.ts`): `analizar_caso`, `buscar_jurisprudencia`, `guardar_brief_expediente`,
+`obtener_brief_expediente`.
 **Config local:** `~/.claude.json` → `mcpServers.alcance-legal-penal`
 
 Para deployar cambios al MCP:
@@ -322,6 +381,15 @@ Versionado `v1.2-penal` en `buildPenalReport.ts`. Para actualizarlo:
 ## Deuda técnica conocida
 
 - **Imágenes en base64**: actualmente se envían como base64 en el JSON body (+33% tamaño). Migrar a `multipart/form-data` cuando el volumen de abogados justifique el refactor (rompe la API actual).
+- ~~**`GEMINI_MODEL` gobierna sólo la mitad**~~ — ✅ **CORREGIDO 2026-08-27.** FASE 2.5 tenía
+  `gemini-2.0-flash` escrito fijo dentro de la URL, así que "cambiar el modelo sin redeploy"
+  era cierto sólo para la lectura previa. Ahora hay una segunda env, **`GEMINI_MODEL_ANALOGIA`**
+  (default `gemini-2.0-flash`), y los dos call sites arman la URL por constante.
+  ⚠️ **Se dejaron separadas a propósito, no unificadas:** son dos trabajos distintos. La lectura
+  previa exige **citas literales exactas** (por eso se pagó el salto a 3.6-flash, medido 8/8);
+  la analogía sólo etiqueta cada criterio en una de cuatro categorías y corre sobre N criterios,
+  donde el modelo barato alcanza. Meter las dos en `GEMINI_MODEL` habría cambiado el modelo de
+  producción de FASE 2.5 en silencio, con su costo. `deno check` OK.
 
 ## Roadmap acordado (próximas tareas)
 

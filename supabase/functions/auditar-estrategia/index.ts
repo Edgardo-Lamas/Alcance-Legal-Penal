@@ -12,6 +12,7 @@
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+import { verificarUsuario, requiereAuth } from '../_shared/auth.ts'
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
@@ -154,6 +155,19 @@ serve(async (req: Request) => {
             fundamento: 'Límite de solicitudes alcanzado. Máximo 10 por minuto.'
         }), { status: 429, headers: { ...cors, 'Content-Type': 'application/json' } })
     }
+
+    // Identidad del abogado. Hasta el 2026-08-27 esta función no verificaba nada:
+    // el anon key —público— alcanzaba para llegar hasta Anthropic.
+    const { userId: userIdVerificado, autenticado } = await verificarUsuario(req)
+    if (requiereAuth() && !autenticado) {
+        return new Response(JSON.stringify({
+            success: false,
+            codigo: 'NO_AUTENTICADO',
+            fundamento: 'Se requiere iniciar sesión para auditar una estrategia.'
+        }), { status: 401, headers: { ...cors, 'Content-Type': 'application/json' } })
+    }
+    const userId = userIdVerificado ?? 'anonimo'
+    console.log(`[AUDITAR] user=${userId} ip=${clientIp} auth=${autenticado}`)
 
     try {
         if (!ANTHROPIC_API_KEY) {
