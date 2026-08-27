@@ -52,6 +52,14 @@ const MAX_DOCUMENTACION_CHARS = 120000
 // exactas (fidelidad 100%) y respaldó cada señalamiento con su transcripción.
 const GEMINI_MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-3.6-flash'
 
+// Modelo de la capa de analogía fáctica (FASE 2.5). Va aparte de GEMINI_MODEL a propósito:
+// son dos trabajos distintos. La lectura previa tiene que devolver CITAS LITERALES exactas
+// —por eso se pagó el salto a 3.6-flash—, mientras que acá sólo se etiqueta cada criterio en
+// una de cuatro categorías. Un modelo más barato alcanza y esta capa corre sobre N criterios.
+// ⚠️ Hasta el 2026-08-27 este valor estaba escrito fijo DENTRO de la URL: GEMINI_MODEL no lo
+// gobernaba, así que "cambiar el modelo sin redeploy" era cierto sólo para la mitad del pipeline.
+const GEMINI_MODEL_ANALOGIA = Deno.env.get('GEMINI_MODEL_ANALOGIA') ?? 'gemini-2.0-flash'
+
 // Límites de tamaño de adjuntos (validados server-side, no solo en el frontend)
 const MAX_IMAGE_BYTES = 6 * 1024 * 1024   // ~6MB por imagen (frontend limita a 4MB)
 const MAX_PDF_BYTES   = 13 * 1024 * 1024  // ~13MB por PDF (frontend limita a 10MB)
@@ -563,7 +571,7 @@ async function validarAnalogiaFactica(
         if (GEMINI_API_KEY) {
             // Gemini Flash — path primario (más económico que Haiku)
             const resp = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL_ANALOGIA}:generateContent?key=${GEMINI_API_KEY}`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
