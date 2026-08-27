@@ -248,6 +248,23 @@ Verificado antes de tocar nada, para no repetir el bug del 2026-07-18:
 - ✅ Ni la extensión ni el `mcp-server` llaman a estos dos endpoints → sin impacto.
 - ✅ `deno check` OK en las 5 funciones · `npm run lint` 0 errores.
 
+**✅ DEPLOYADO Y VERIFICADO CONTRA PRODUCCIÓN (2026-08-27).** Las tres funciones deployadas
+(`redactar-escrito auditar-estrategia analizar-caso`) — el CLI subió `_shared/auth.ts` junto a
+las dos primeras, confirmando que el módulo compartido se bundlea bien.
+
+| Prueba | Resultado |
+|---|---|
+| `redactar-escrito` con **anon key** | **401 `NO_AUTENTICADO`** ✅ |
+| `auditar-estrategia` con **anon key** | **401 `NO_AUTENTICADO`** ✅ |
+| `redactar-escrito` con **sesión real** | 400 "El nombre del imputado es requerido" → pasó auth ✅ |
+| `auditar-estrategia` con **sesión real** | 400 "Indique el objetivo defensivo" → pasó auth ✅ |
+| `analizar-caso` con **sesión real** | 400 `RECHAZADA_HECHOS_INSUFICIENTES` (FASE 1 sana) ✅ |
+
+🔑 **Por qué el 401 con anon key es la prueba que vale:** el anon key *pasa* el gateway de
+Supabase (es un JWT válido). Que devuelva 401 significa que llegó hasta el código y lo frenó
+`verificarUsuario()`. **Antes de este fix esa misma request llegaba a Anthropic y redactaba un
+escrito.** Ninguna de las 5 pruebas tocó un proveedor de IA: todas cortaron antes.
+
 ⚠️ `analizar-caso` y `consultor-caso` conservan su copia inline de `verificarUsuario`. No se
 tocaron a propósito: es código de producción verificado y unificarlo no arregla nada hoy.
 Deuda menor.
