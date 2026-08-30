@@ -20,6 +20,7 @@ import {
     PageNumber, ShadingType,
     convertMillimetersToTwip,
 } from 'docx'
+import { CONSTANCIA_IA } from '../constants/disclaimer'
 
 // ─── Constantes de página (A4) ────────────────────────────────────────────────
 const MARGIN   = convertMillimetersToTwip(25)   // 2.5 cm en twips
@@ -514,6 +515,28 @@ function renderRedactar(informe) {
     return ch
 }
 
+// ─── Constancia de asistencia de IA ───────────────────────────────────────────
+
+/**
+ * Va SIEMPRE al pie del documento, en los tres tipos de salida. A diferencia
+ * del aviso legal, que depende de que el backend mande `_disclaimer`, esta
+ * constancia no es opcional: el archivo sale del sistema y quien lo lea
+ * después tiene que saber cómo se produjo.
+ */
+function buildConstanciaIA() {
+    return [
+        sep(80),
+        new Paragraph({
+            spacing: { before: 60, after: 60 },
+            children: [run('CONSTANCIA', { bold: true, size: 18, color: C.muted })],
+        }),
+        new Paragraph({
+            spacing: { before: 40, after: 40 },
+            children: [run(CONSTANCIA_IA, { italics: true, size: 18, color: C.muted })],
+        }),
+    ]
+}
+
 // ─── Entry point ──────────────────────────────────────────────────────────────
 
 /**
@@ -530,6 +553,8 @@ export async function generarReporteWord(informe, capacidad) {
         case 'redactar': children = renderRedactar(informe); break
         default:         children = []
     }
+
+    children = [...children, ...buildConstanciaIA()]
 
     const doc = new Document({
         styles: {

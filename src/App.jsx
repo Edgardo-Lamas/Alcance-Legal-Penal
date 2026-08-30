@@ -10,6 +10,7 @@ import ManualPage from './pages/Manual/Manual'
 import Resultado from './pages/Resultado/Resultado'
 import Login from './pages/Login/Login'
 import Precios from './pages/Precios/Precios'
+import Privacidad from './pages/Privacidad/Privacidad'
 import Admin from './pages/Admin/Admin'
 import Historial from './pages/Historial/Historial'
 import ScrollToTop from './components/ScrollToTop'
@@ -95,6 +96,7 @@ function App() {
                 {/* Rutas públicas */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/precios" element={<Precios />} />
+                <Route path="/privacidad" element={<Privacidad />} />
 
                 {/* Rutas protegidas */}
                 <Route path="/" element={

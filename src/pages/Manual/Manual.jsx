@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Manual.css'
 
 const secciones = [
@@ -307,7 +308,8 @@ const secciones = [
                     },
                     {
                         pregunta: '¿Mis consultas son confidenciales?',
-                        respuesta: 'Las consultas se procesan para generar el análisis y no se comparten con terceros. No ingrese datos de identidad del imputado — utilice iniciales o referencias genéricas como "mi cliente" o "el imputado".'
+                        respuesta: 'Sus análisis son privados: sólo su cuenta accede a ellos y ningún otro suscriptor puede verlos. Ahora bien, para producir el informe el sistema necesita enviar el material de la causa a servicios de inteligencia artificial de terceros (Anthropic, Google y OpenAI), radicados en los Estados Unidos. Ninguno lo usa para entrenar sus modelos y todos lo eliminan en plazos acotados, pero el dato sale de su estudio. Si la causa es sensible, cárguela a mano usando iniciales o referencias genéricas — el análisis razona sobre los hechos y el derecho, no sobre identidades. Tenga presente que al traer actuaciones del MEV el texto viaja tal como figura en el expediente.',
+                        enlace: { to: '/privacidad', texto: 'Ver el detalle completo del tratamiento de datos' }
                     },
                 ]
             }
@@ -416,6 +418,11 @@ function Manual() {
                                             <div key={ii} className="manual__faq-item">
                                                 <h4 className="manual__faq-pregunta">{item.pregunta}</h4>
                                                 <p className="manual__faq-respuesta">{item.respuesta}</p>
+                                                {item.enlace && (
+                                                    <Link to={item.enlace.to} className="manual__faq-enlace">
+                                                        {item.enlace.texto} →
+                                                    </Link>
+                                                )}
                                             </div>
                                         ))}
                                     </div>

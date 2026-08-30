@@ -279,11 +279,11 @@ function Login() {
                             {loading ? 'Creando cuenta...' : 'Crear cuenta gratuita'}
                         </button>
                         <p className="login-terms">
-                            Al registrarse acepta los{' '}
-                            <button type="button" className="login-terms-link" onClick={() => navigate('/precios')}>
-                                términos de uso
+                            Al registrarse acepta el{' '}
+                            <button type="button" className="login-terms-link" onClick={() => navigate('/privacidad')}>
+                                tratamiento de datos
                             </button>
-                            {' '}del sistema.
+                            {' '}que realiza el sistema.
                         </p>
                     </form>
                 )}
@@ -292,6 +292,10 @@ function Login() {
                     <p className="login-footer-text">
                         <Link to="/precios" className="login-link">
                             Ver planes de suscripción
+                        </Link>
+                        {' · '}
+                        <Link to="/privacidad" className="login-link">
+                            Tratamiento de datos
                         </Link>
                     </p>
                 </div>

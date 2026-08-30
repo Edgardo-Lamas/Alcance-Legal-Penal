@@ -317,6 +317,20 @@
     line-height: 1.6;
 }
 
+.manual__faq-enlace {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #c9a227;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.manual__faq-enlace:hover {
+    color: #d4b84a;
+    text-decoration: underline;
+}
+
 /* Footer */
 .manual__footer {
     margin-top: 2.5rem;

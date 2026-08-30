@@ -10,6 +10,7 @@
  */
 
 import { jsPDF } from 'jspdf'
+import { CONSTANCIA_IA } from '../constants/disclaimer'
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 const PW = 210, PH = 297
@@ -471,6 +472,25 @@ function renderAdvertencias(advertencias, critica = false) {
     }
 }
 
+/**
+ * Constancia de asistencia de IA — va SIEMPRE, en los tres tipos de salida.
+ * El aviso legal depende de que el backend mande `_disclaimer`; esto no.
+ * El archivo sale del sistema y quien lo lea después tiene que saber cómo
+ * se produjo y que requiere revisión profesional.
+ */
+function drawConstanciaIA() {
+    maybeBreak(26)
+    addY(4)
+    hline(_y, C.border)
+    addY(5)
+    font('bold', 7.5, C.muted)
+    _doc.text('CONSTANCIA', ML, _y)
+    addY(4.5)
+    font('italic', 7.5, C.muted)
+    textBlock(CONSTANCIA_IA, ML, CW, 4)
+    addY(2)
+}
+
 // ─── Entry point ──────────────────────────────────────────────────────────────
 
 /**
@@ -490,6 +510,8 @@ export function generarReportePDF(informe, capacidad) {
         case 'auditar':  renderAuditar(informe);  break
         case 'redactar': renderRedactar(informe); break
     }
+
+    drawConstanciaIA()
 
     drawAllFooters(informe)
 

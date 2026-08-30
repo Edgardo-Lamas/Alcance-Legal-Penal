@@ -201,6 +201,11 @@ function Precios() {
                     <p className="precios-legal">
                         Los precios no incluyen IVA. Acceso sujeto a términos del aviso legal del sistema.
                     </p>
+                    <p className="precios-legal">
+                        <Link to="/privacidad" className="precios-mail">
+                            Cómo se tratan los datos de sus causas
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

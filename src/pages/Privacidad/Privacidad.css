@@ -1,0 +1,294 @@
+/* Tratamiento de datos y confidencialidad — página pública.
+   Sigue el mismo lenguaje visual que Precios: pantalla propia, sin sidebar. */
+
+.privacidad-screen {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0f1e 0%, #0f172a 50%, #1a2744 100%);
+    padding: 2rem 1rem 4rem;
+}
+
+.privacidad-container {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* Header */
+.privacidad-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.privacidad-back {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.85rem;
+    align-self: flex-start;
+    transition: color 0.2s;
+}
+
+.privacidad-back svg { width: 16px; height: 16px; }
+.privacidad-back:hover { color: #c9a227; }
+
+.privacidad-logo {
+    width: 48px;
+    height: 48px;
+    color: #c9a227;
+}
+
+.privacidad-logo svg { width: 100%; height: 100%; }
+
+.privacidad-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.privacidad-subtitle {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Resumen destacado */
+.privacidad-resumen {
+    background: rgba(201, 162, 39, 0.07);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+    border-left: 3px solid #c9a227;
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+}
+
+.privacidad-resumen h2 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #c9a227;
+    margin: 0 0 0.85rem 0;
+}
+
+.privacidad-resumen p {
+    color: #cbd5e1;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin: 0 0 0.85rem 0;
+}
+
+.privacidad-resumen p:last-child { margin-bottom: 0; }
+.privacidad-resumen strong { color: #e2e8f0; }
+
+/* Secciones */
+.privacidad-seccion {
+    background: rgba(10, 21, 37, 0.6);
+    border: 1px solid #1e3a5f;
+    border-radius: 10px;
+    padding: 1.75rem;
+}
+
+.privacidad-seccion--destacada {
+    border-color: rgba(56, 189, 248, 0.35);
+    background: rgba(56, 189, 248, 0.05);
+}
+
+.privacidad-seccion h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin: 0 0 1rem 0;
+}
+
+.privacidad-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(201, 162, 39, 0.15);
+    border: 1px solid rgba(201, 162, 39, 0.4);
+    color: #c9a227;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.privacidad-seccion p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0 0 0.85rem 0;
+}
+
+.privacidad-seccion p:last-child { margin-bottom: 0; }
+.privacidad-seccion strong { color: #cbd5e1; font-weight: 600; }
+.privacidad-seccion em { color: #cbd5e1; font-style: italic; }
+
+.privacidad-intro { margin-bottom: 1.25rem !important; }
+
+.privacidad-nota {
+    margin-top: 1rem !important;
+    padding-top: 1rem;
+    border-top: 1px solid #152a47;
+    font-size: 0.875rem !important;
+    color: #64748b !important;
+}
+
+/* Listas */
+.privacidad-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.85rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.privacidad-lista li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.privacidad-lista li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c9a227;
+}
+
+.privacidad-lista--no li::before {
+    background: transparent;
+    border: 1.5px solid #64748b;
+    border-radius: 2px;
+    top: 0.5rem;
+}
+
+/* Proveedores */
+.privacidad-proveedores {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.proveedor-card {
+    background: rgba(6, 14, 28, 0.7);
+    border: 1px solid #152a47;
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.proveedor-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #152a47;
+}
+
+.proveedor-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin: 0;
+}
+
+.proveedor-pais {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.proveedor-datos {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 0.6rem 1rem;
+    margin: 0;
+}
+
+.proveedor-datos dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4a6a8a;
+    padding-top: 0.15rem;
+}
+
+.proveedor-datos dd {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #94a3b8;
+}
+
+.proveedor-enlace {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.825rem;
+    color: #38bdf8;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.proveedor-enlace:hover { color: #7dd3fc; text-decoration: underline; }
+
+/* Footer */
+.privacidad-footer {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1rem;
+    border-top: 1px solid #152a47;
+}
+
+.privacidad-footer p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.privacidad-mail { color: #c9a227; text-decoration: none; }
+.privacidad-mail:hover { text-decoration: underline; }
+
+.privacidad-legal { font-size: 0.8rem !important; color: #4a6a8a !important; }
+
+.privacidad-link-precios {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+    text-decoration: none;
+}
+
+.privacidad-link-precios:hover { color: #c9a227; }
+
+/* Mobile */
+@media (max-width: 640px) {
+    .privacidad-seccion { padding: 1.25rem; }
+    .proveedor-datos { grid-template-columns: 1fr; gap: 0.25rem; }
+    .proveedor-datos dt { padding-top: 0.5rem; }
+}

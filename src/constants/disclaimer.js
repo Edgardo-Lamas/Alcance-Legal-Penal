@@ -93,6 +93,19 @@ export const ADVERTENCIAS_OBLIGATORIAS = [
 ]
 
 /**
+ * Constancia de asistencia de IA para los documentos exportados.
+ *
+ * Va al pie del PDF y del Word porque esos archivos salen del sistema: se
+ * adjuntan a un escrito, se mandan por correo, quedan en el legajo. Quien los
+ * lea después tiene que poder saber cómo se produjeron y que un profesional
+ * los revisó. Es el estándar que el propio fuero se está fijando — el
+ * relevamiento del MPF de 2026 puso la intervención humana en cada etapa como
+ * condición, y señaló el análisis de prueba y la redacción de escritos entre
+ * las tareas más delicadas para delegar en IA.
+ */
+export const CONSTANCIA_IA = 'Documento generado con asistencia de sistemas de inteligencia artificial sobre el material aportado por el profesional. Requiere revisión profesional antes de cualquier uso: las citas normativas y jurisprudenciales deben verificarse en su fuente, y los datos de la causa contrastarse con el expediente. La responsabilidad por el contenido presentado es del abogado actuante.'
+
+/**
  * Texto obligatorio que el RAG debe incluir
  */
 export const DISCLAIMER_RAG = 'Los criterios aplicados corresponden a jurisprudencia pública de alcance general. La evaluación particular del caso requiere intervención profesional.'
