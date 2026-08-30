@@ -192,6 +192,12 @@ function DisclaimerAcceptance({ onAccept }) {
                         <p className="da-footer__ayuda">
                             El sistema puede rechazar consultas con fundamento si no cuenta con base jurídica suficiente.
                         </p>
+
+                        {/* Se lee ANTES de aceptar: el abogado tiene que poder saber
+                            adónde va el material de su causa antes de cargar la primera. */}
+                        <a href="/privacidad" className="da-footer__privacidad">
+                            Cómo se tratan los datos de sus causas
+                        </a>
                     </footer>
                 </div>
             </div>

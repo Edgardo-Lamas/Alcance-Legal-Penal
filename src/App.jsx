@@ -56,9 +56,16 @@ function RequireAuth({ children }) {
     return children
 }
 
+// Rutas informativas que se leen ANTES de aceptar nada. La política de datos
+// detrás del gate del aviso legal obligaba a aceptar para poder leer qué se
+// hace con el material de la causa, que es exactamente al revés.
+const RUTAS_ABIERTAS = ['/privacidad', '/precios']
+
 function App() {
     const [disclaimerAccepted, setDisclaimerAccepted] = useState(isDisclaimerAccepted())
     const [showHero, setShowHero] = useState(false)
+    const { pathname } = useLocation()
+    const rutaAbierta = RUTAS_ABIERTAS.includes(pathname)
 
     useEffect(() => {
         const isMobile = window.innerWidth <= 768
@@ -68,8 +75,8 @@ function App() {
         }
     }, [disclaimerAccepted])
 
-    // Disclaimer obligatorio antes de cualquier uso
-    if (!disclaimerAccepted) {
+    // Disclaimer obligatorio antes de cualquier uso, salvo las rutas informativas
+    if (!disclaimerAccepted && !rutaAbierta) {
         return (
             <DisclaimerAcceptance
                 onAccept={() => setDisclaimerAccepted(true)}
@@ -78,7 +85,7 @@ function App() {
     }
 
     // Hero screen para móvil (una vez por sesión)
-    if (showHero) {
+    if (showHero && !rutaAbierta) {
         return (
             <HeroScreen
                 onEnter={() => {

@@ -452,3 +452,17 @@
         display: none;
     }
 }
+
+/* Enlace a la política de datos — visible antes de aceptar el aviso legal */
+.da-footer__privacidad {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #c9a227;
+    text-decoration: none;
+    text-align: center;
+}
+
+.da-footer__privacidad:hover {
+    text-decoration: underline;
+}
