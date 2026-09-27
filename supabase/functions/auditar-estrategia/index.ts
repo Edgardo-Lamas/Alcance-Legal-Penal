@@ -15,6 +15,12 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { verificarUsuario, requiereAuth } from '../_shared/auth.ts'
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
+
+// Modelo y techo por env, como en redactar-escrito: cambiarlos no exige redeploy.
+// Hasta el 2026-09-27 el techo era 3000 con el dictamen entero en JSON: si el modelo lo tocaba,
+// el JSON quedaba sin cerrar y el abogado recibía un 500 sin explicación (lo que le pasó a redactar).
+const AUDITAR_MODEL = Deno.env.get('AUDITAR_MODEL') ?? 'claude-sonnet-4-6'
+const MAX_TOKENS_AUDITORIA = Number(Deno.env.get('AUDITAR_MAX_TOKENS') ?? 6000)
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
@@ -115,7 +121,10 @@ Sé directo. No repitas información. No uses jerga que el abogado no use.`
 
 function parseJsonSafe(raw: string): unknown {
     const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim()
-    return JSON.parse(cleaned)
+    // Tolera texto antes o después del objeto: se queda con el primer '{' y el último '}'.
+    const ini = cleaned.indexOf('{')
+    const fin = cleaned.lastIndexOf('}')
+    return JSON.parse(ini >= 0 && fin > ini ? cleaned.slice(ini, fin + 1) : cleaned)
 }
 
 function generarNumeroAuditoria(): string {
@@ -212,8 +221,8 @@ serve(async (req: Request) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'claude-sonnet-4-6',
-                max_tokens: 3000,
+                model: AUDITAR_MODEL,
+                max_tokens: MAX_TOKENS_AUDITORIA,
                 system: SYSTEM_PROMPT_AUDITOR,
                 messages: [{ role: 'user', content: prompt }]
             }),
@@ -224,7 +233,14 @@ serve(async (req: Request) => {
         }
 
         const llmData = await response.json()
-        const parsed = parseJsonSafe(llmData.content[0].text) as {
+        console.log(`[AUDITAR] model=${AUDITAR_MODEL} out=${llmData.usage?.output_tokens} stop=${llmData.stop_reason}`)
+        if (llmData.stop_reason === 'max_tokens') {
+            throw new Error(`Dictamen cortado por max_tokens (${MAX_TOKENS_AUDITORIA}): subir AUDITAR_MAX_TOKENS`)
+        }
+        const texto = (llmData.content ?? [])
+            .filter((b: { type: string }) => b.type === 'text')
+            .map((b: { text: string }) => b.text).join('')
+        const parsed = parseJsonSafe(texto) as {
             consistencia: { valor: string; explicacion: string; advertencia: string }
             observaciones: Array<{ tipo: string; codigo: string; descripcion: string; impacto: string; severidad: string }>
             recomendaciones: Array<{ prioridad: string; accion: string }>
@@ -240,9 +256,9 @@ serve(async (req: Request) => {
                     year: 'numeric', month: 'long', day: 'numeric'
                 }),
                 estado: 'DICTAMEN DE AUDITORÍA',
-                estado_detalle: parsed.consistencia.valor === 'SÓLIDA'
+                estado_detalle: parsed.consistencia?.valor === 'SÓLIDA'
                     ? 'Estrategia consistente — revisar observaciones menores'
-                    : parsed.consistencia.valor === 'PARCIAL'
+                    : parsed.consistencia?.valor === 'PARCIAL'
                         ? 'Requiere revisión de los puntos señalados'
                         : 'Estrategia requiere reformulación significativa',
                 consistencia: parsed.consistencia,

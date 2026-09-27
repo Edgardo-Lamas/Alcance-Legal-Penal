@@ -18,6 +18,18 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { verificarUsuario, requiereAuth } from '../_shared/auth.ts'
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
+
+// Modelo por env, como CONSULTOR_MODEL: cambiarlo no exige redeploy.
+const REDACTAR_MODEL = Deno.env.get('REDACTAR_MODEL') ?? 'claude-sonnet-4-6'
+
+// Hasta el 2026-09-27 eran 5000 y el escrito venía ENTERO dentro de un JSON: al tocar el techo
+// el JSON quedaba sin cerrar, JSON.parse tiraba y el abogado recibía un 500 a los ~94 s con el
+// escrito perdido. Ahora el escrito sale en texto plano (un corte ya no destruye nada), el prompt
+// fija una extensión y este techo queda como holgura, no como límite esperable.
+const MAX_TOKENS_ESCRITO = Number(Deno.env.get('REDACTAR_MAX_TOKENS') ?? 8000)
+
+// Separa el escrito de la lista de pendientes en la respuesta del modelo.
+const SEPARADOR_PENDIENTES = '===PENDIENTES==='
 const ALLOWED_ORIGIN = Deno.env.get('ALLOWED_ORIGIN') ?? 'http://localhost:5173'
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
@@ -64,9 +76,34 @@ interface RedactarRequest {
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
-function parseJsonSafe(raw: string): unknown {
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim()
-    return JSON.parse(cleaned)
+interface SeccionPendiente { seccion: string; motivo: string; criticidad: string }
+
+// Si la lista del modelo falta o no se puede leer (p. ej. se cortó), los pendientes salen de las
+// marcas [COMPLETAR: ...] del propio escrito: son la fuente de verdad de lo que falta.
+function pendientesDesdeMarcas(contenido: string): SeccionPendiente[] {
+    const vistos = new Set<string>()
+    const out: SeccionPendiente[] = []
+    for (const m of contenido.matchAll(/\[COMPLETAR:?\s*([^\]]*)\]/gi)) {
+        const motivo = m[1].trim() || 'Dato a completar por el letrado'
+        if (vistos.has(motivo.toLowerCase())) continue
+        vistos.add(motivo.toLowerCase())
+        out.push({ seccion: motivo, motivo, criticidad: 'media' })
+    }
+    return out
+}
+
+function separarRespuesta(raw: string): { contenido: string; secciones_pendientes: SeccionPendiente[] } {
+    const idx = raw.indexOf(SEPARADOR_PENDIENTES)
+    const contenido = (idx >= 0 ? raw.slice(0, idx) : raw)
+        .replace(/^```[a-z]*\s*/i, '').replace(/\s*```\s*$/i, '').trim()
+    if (idx >= 0) {
+        try {
+            const lista = JSON.parse(raw.slice(idx + SEPARADOR_PENDIENTES.length)
+                .replace(/```(?:json)?/gi, '').trim())
+            if (Array.isArray(lista)) return { contenido, secciones_pendientes: lista }
+        } catch { /* cae a las marcas */ }
+    }
+    return { contenido, secciones_pendientes: pendientesDesdeMarcas(contenido) }
 }
 
 function generarNumeroRedaccion(): string {
@@ -101,20 +138,17 @@ Usás el lenguaje forense correcto para los tribunales bonaerenses.
 - Las secciones que necesitan datos del caso van como [COMPLETAR: descripción]
 - El escrito debe ser completo y presentable con solo completar los datos faltantes
 
-## FORMATO DE RESPUESTA (JSON obligatorio)
-{
-  "contenido": "texto completo del escrito judicial con saltos de línea \\n",
-  "secciones_pendientes": [
-    {
-      "seccion": "nombre de la sección",
-      "motivo": "qué necesita completar el letrado",
-      "criticidad": "alta|media|baja"
-    }
-  ]
-}
+## EXTENSIÓN
+- La de un escrito real de su tipo ante un tribunal bonaerense: entre 1.200 y 2.000 palabras.
+- Cada argumento se desarrolla una vez. No repitas en DERECHO lo que ya dijiste en HECHOS.
 
-Incluí en secciones_pendientes SOLO las que tienen [COMPLETAR] en el texto.
-El texto debe estar en el campo "contenido" como string con \\n para saltos de línea.`
+## FORMATO DE RESPUESTA
+Primero el escrito completo en texto plano, listo para pegar en un procesador de texto
+(sin markdown, sin asteriscos, sin comentarios antes ni después).
+Después, en una línea sola, exactamente: ${SEPARADOR_PENDIENTES}
+Y debajo, un array JSON con una entrada por cada [COMPLETAR] del escrito:
+[{"seccion": "nombre de la sección", "motivo": "qué necesita completar el letrado", "criticidad": "alta|media|baja"}]
+Si no hay ningún [COMPLETAR], el array va vacío: []`
 
     const especifico: Record<string, string> = {
         excarcelacion: `
@@ -243,7 +277,7 @@ serve(async (req: Request) => {
             `**PRETENSIÓN DEFENSIVA:**\n${body.pretension_defensiva}\n` +
             (body.fundamentos_extra ? `\n**FUNDAMENTOS ADICIONALES A INCLUIR:**\n${body.fundamentos_extra}\n` : '') +
             (body.incluir_citas_scba ? '\n**Incluí jurisprudencia relevante del SCBA y/o CSJN en la sección de DERECHO.**\n' : '') +
-            `\nRespondé SOLO con el JSON especificado. El escrito debe estar listo para editar y presentar.`
+            `\nRespondé con el escrito y la lista de pendientes en el formato indicado. El escrito debe estar listo para editar y presentar.`
 
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
@@ -253,8 +287,8 @@ serve(async (req: Request) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'claude-sonnet-4-6',
-                max_tokens: 5000,
+                model: REDACTAR_MODEL,
+                max_tokens: MAX_TOKENS_ESCRITO,
                 system: getSystemPrompt(body.tipo_escrito),
                 messages: [{ role: 'user', content: prompt }]
             }),
@@ -265,9 +299,15 @@ serve(async (req: Request) => {
         }
 
         const llmData = await response.json()
-        const parsed = parseJsonSafe(llmData.content[0].text) as {
-            contenido: string
-            secciones_pendientes: Array<{ seccion: string; motivo: string; criticidad: string }>
+        const texto = (llmData.content ?? [])
+            .filter((b: { type: string }) => b.type === 'text')
+            .map((b: { text: string }) => b.text).join('')
+        const parsed = separarRespuesta(texto)
+        const cortado = llmData.stop_reason === 'max_tokens'
+        console.log(`[REDACTAR] model=${REDACTAR_MODEL} out=${llmData.usage?.output_tokens} stop=${llmData.stop_reason} chars=${parsed.contenido.length}`)
+
+        if (!parsed.contenido) {
+            throw new Error(`Respuesta sin escrito (stop_reason=${llmData.stop_reason})`)
         }
 
         const numeroInforme = generarNumeroRedaccion()
@@ -287,6 +327,7 @@ serve(async (req: Request) => {
                 advertencias: {
                     principal: 'ADVERTENCIA CRÍTICA: Este documento es un BORRADOR DE TRABAJO generado por asistencia automatizada. Su presentación judicial sin revisión profesional completa del letrado constituye ejercicio inadecuado de la profesión.',
                     items: [
+                        ...(cortado ? ['EL ESCRITO QUEDÓ INCOMPLETO: se cortó por extensión antes del final. Revise especialmente el PETITORIO, o genérelo de nuevo.'] : []),
                         'El letrado firmante asume responsabilidad exclusiva por el contenido presentado.',
                         'Verificar datos del imputado, juzgado y números de expediente antes de cualquier uso.',
                         'Las citas normativas deben validarse contra el CPP PBA y CP vigentes.',
