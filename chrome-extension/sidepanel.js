@@ -38,6 +38,9 @@
   // ── Inicialización ────────────────────────────────────────
 
   async function init() {
+    // La versión sale del manifest: escrita a mano quedó en v1.0.0 dos versiones seguidas
+    $('alp-version').textContent = chrome.runtime.getManifest().version
+
     await loadConfigAndSession()
     await loadHistorial()
     setupTabs()

@@ -47,7 +47,7 @@ Se integra directamente con la Mesa de Entradas Virtual de la Suprema Corte de B
 ✓ Identificar garantías constitucionales aplicables al caso
 ✓ Evaluar la solidez de la prueba de cargo
 ✓ Generar informes defensivos estructurados en 5 fases
-✓ Gestionar y descargar PDFs de las actuaciones del expediente
+✓ Leer el texto de las actuaciones que elijas y citarlo textualmente
 
 El análisis sigue la metodología de un asociado senior de defensa penal:
 • FASE 1 — Encuadre procesal
@@ -58,7 +58,7 @@ El análisis sigue la metodología de un asociado senior de defensa penal:
 
 Desarrollado sobre el sistema Alcance Legal Penal, especializado en defensa penal desde la perspectiva del in dubio pro reo y la presunción de inocencia.
 
-PRIVACIDAD: Los datos del expediente nunca salen de tu dispositivo hacia servidores propios. Las llamadas a la IA se realizan directamente desde tu navegador a la API de Anthropic usando tu propia clave.
+PRIVACIDAD: El texto de las actuaciones que selecciones se envía al servidor de Alcance Legal Penal, que lo procesa con servicios de IA de terceros (Anthropic, Google y OpenAI). Ninguno entrena modelos con ese contenido. El detalle, en la política de privacidad.
 
 IMPORTANTE: Esta herramienta brinda información orientativa basada en criterios jurisprudenciales. No reemplaza el criterio profesional del abogado defensor.
 
@@ -105,7 +105,9 @@ Completar el campo "Permission justification" con:
 | `storage` | Guarda preferencias y historial de análisis localmente |
 | `activeTab` | Lee el contenido de la pestaña activa del MEV para extraer datos del expediente |
 | `scripting` | Inyecta el extractor de datos en páginas de mev.scba.gov.ar |
-| Host: `mev.scba.gov.ar` | La extensión opera exclusivamente en este dominio judicial |
+| Host: `mev.scba.gov.ar` | Lee la causa abierta y el texto de las actuaciones que el abogado selecciona |
+| Host: `nclpzmyjjmglpjalmrri.supabase.co` | Servidor del sistema: inicio de sesión, análisis y guardado del informe |
+| Host: `alcance-legal-penal.vercel.app` | Marca que la extensión está instalada para que la web del sistema lo detecte |
 
 ### Publicar
 - [ ] Revisar todos los campos completados
@@ -144,7 +146,7 @@ Completar el campo "Permission justification" con:
 |---|---|
 | Nombre interno | `legal-intelligence-system` (package.json) |
 | Nombre en Store | `MEV Navigator — Defensa Penal PBA` (sugerido) ó `Alcance Legal Penal — MEV Navigator` |
-| Versión actual | `1.0.0` |
+| Versión actual | `1.2.0` (localhost se quita solo al empaquetar) |
 | Manifest version | MV3 |
 | Host único | `mev.scba.gov.ar` |
 | Permisos | sidePanel, storage, activeTab, scripting |

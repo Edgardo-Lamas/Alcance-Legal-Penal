@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Alcance Legal Penal · Conexión MEV",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Componente MEV de Alcance Legal Penal. Analiza expedientes del MEV (SCBA) con inteligencia jurídica penal — CPP PBA.",
   "permissions": [
     "sidePanel",

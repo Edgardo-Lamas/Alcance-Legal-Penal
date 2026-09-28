@@ -170,6 +170,19 @@ async function main() {
         console.log(`    • ${rel} (${size})`)
     }
 
+    // localhost sirve para desarrollar con la extensión descomprimida; en la Store
+    // es un permiso de más que el revisor de Google tiene que justificar
+    const distManifestPath = path.join(DIST, 'manifest.json')
+    const distManifest = JSON.parse(fs.readFileSync(distManifestPath, 'utf-8'))
+    const esLocal = (m) => /^https?:\/\/localhost[:/]/.test(m)
+    distManifest.host_permissions = (distManifest.host_permissions || []).filter((m) => !esLocal(m))
+    distManifest.content_scripts = (distManifest.content_scripts || []).map((cs) => ({
+        ...cs,
+        matches: cs.matches.filter((m) => !esLocal(m)),
+    }))
+    fs.writeFileSync(distManifestPath, JSON.stringify(distManifest, null, 2) + '\n')
+    ok('localhost quitado del manifest empaquetado')
+
     const totalSize = totalDirSize(DIST)
     log('\n📦', `Tamaño total del paquete: ${humanSize(totalSize)}`)
 
