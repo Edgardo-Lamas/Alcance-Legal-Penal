@@ -12,6 +12,7 @@ const navItems = [
     { path: '/redactar', label: 'Redactar Escrito', icon: 'draft' },
     { path: '/historial', label: 'Historial', icon: 'historial' },
     { path: '/manual', label: 'Manual y Ayuda', icon: 'help' },
+    { path: '/precios', label: 'Mi Plan', icon: 'plan' },
 ]
 
 const icons = {
@@ -64,6 +65,12 @@ const icons = {
             <path d="M12 3v18" />
             <path d="M5 6l7-3 7 3" />
             <path d="M5 6v6a7 7 0 0 0 7 7 7 7 0 0 0 7-7V6" />
+        </svg>
+    ),
+    plan: (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2" />
+            <line x1="2" y1="10" x2="22" y2="10" />
         </svg>
     ),
     historial: (

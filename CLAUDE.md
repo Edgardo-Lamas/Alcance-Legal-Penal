@@ -285,6 +285,33 @@ Nunca diferenciar planes por modelo (Sonnet abajo / Opus arriba). Lo que varía 
 de uso y algunas funciones. Es una herramienta de defensa penal: el que paga las consecuencias
 de un análisis más flojo no es el abogado, es su cliente detenido.
 
+### Cobro con Mercado Pago (migración 013, 2026-10-04) — ⚠️ ESCRITO, SIN DEPLOYAR
+
+Hasta acá el alta era gratis y abierta: cualquiera creaba cuenta y `consumir_cuota()` lo daba
+de alta en Básico sin pagar; "suscribirse" era un `mailto:`. Decisiones de Edgardo (4/10):
+**pesos, suscripción mensual de MP** — Básico $50.000 · Profesional $95.000 · Estudio $160.000;
+cuenta nueva en **prueba con 3 análisis gratis**; ninguna cuenta existente es un abogado real.
+
+| Pieza | Qué hace |
+|---|---|
+| `013_cobro_mercadopago.sql` | `planes.precio_ars` + planes `prueba` (cupo 0, vive de créditos: 3 análisis / 10 consultas) y `cortesia` (nunca la toca el cobro). Tabla `suscripciones_mp` (una fila por preapproval). `recalcular_plan()` y `plan_de_cuenta()`. |
+| `crear-suscripcion` | Crea el preapproval y devuelve el `init_point`. **El monto sale de `planes`, nunca del navegador.** |
+| `mercadopago-webhook` | Firma HMAC (`_shared/firma-mp.ts`, 7 tests) → le pregunta a MP el estado real → upsert en `suscripciones_mp` → `recalcular_plan()`. `verify_jwt = false` en `config.toml`. |
+| `_shared/plan.ts` | Con la cuenta en `prueba`, **redactar-escrito y auditar-estrategia devuelven 402 `REQUIERE_SUSCRIPCION`**: siguen sin cupo propio y con el alta gratis quedaban sin tope. |
+| `/precios` | Precios en pesos, botón a MP, "Tu plan actual", vuelta desde MP (`?suscripcion=volver`). Sin sesión → `/login?volver=/precios`. "Mi Plan" en el menú. |
+
+Portado del SaaS de Criterio Térmico (`WEBS/Criterio Termico/supabase/functions/`), con sus
+lecciones: preapproval **sin** `preapproval_plan_id` (exige `card_token_id`) y con
+`external_reference = "<user_id>|<plan>"`; los dos eventos del webhook; **MP no deja pagar con
+la cuenta dueña de la app** (probar con un comprador de prueba en ventana de incógnito).
+
+**Para ponerlo en marcha (en este orden):** app NUEVA de MP para ALP (no tocar las de CT:
+guardar webhooks regenera la clave) → secrets `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`, `APP_URL`
+→ aplicar 013 **junto** con el deploy de `crear-suscripcion mercadopago-webhook redactar-escrito
+auditar-estrategia` → webhook en MP con los dos eventos → pagar una vez con el comprador de prueba
+(la cuenta de Edgardo, `edgardolamas2000@gmail.com`, queda en `cortesia` dentro de la misma 013).
+El pie "Los precios no incluyen IVA" se queda: lo decidió Edgardo el 4/10.
+
 ### Autenticación del frontend (fix 2026-07-18)
 `src/services/api.js` ahora manda el **access_token de la sesión** del abogado
 (`getAuthToken()`), con fallback al anon key solo sin sesión. Antes mandaba siempre

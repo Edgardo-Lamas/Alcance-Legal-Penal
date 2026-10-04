@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import './Login.css'
 
@@ -75,6 +75,11 @@ function PasswordInput({ id, value, onChange, placeholder, autoComplete }) {
 
 function Login() {
     const { signIn, signUp } = useAuth()
+    // ?volver=/precios: el abogado eligió un plan antes de iniciar sesión.
+    // Sólo rutas internas: un `//otro-sitio` sería una redirección abierta.
+    const [searchParams] = useSearchParams()
+    const volver = searchParams.get('volver')
+    const destino = volver && volver.startsWith('/') && !volver.startsWith('//') ? volver : '/'
     const navigate = useNavigate()
 
     const [mode, setMode] = useState('ingresar') // 'ingresar' | 'registrar'
@@ -102,7 +107,7 @@ function Login() {
             setError(mapError(error.message))
             setLoading(false)
         } else {
-            navigate('/', { replace: true })
+            navigate(destino, { replace: true })
         }
     }
 

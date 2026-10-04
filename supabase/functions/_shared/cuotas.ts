@@ -67,7 +67,33 @@ export function mensajeCuotaAgotada(r: ResultadoCuota, recurso: Recurso): string
     if (r.error) {
         return 'No se pudo verificar tu plan en este momento. Intentá nuevamente en unos minutos.'
     }
+    // La prueba no tiene cupo mensual: vive de los créditos con que nace la
+    // cuenta (migración 013). Decirle "se renueva el día 1" sería falso.
+    if (r.plan === 'prueba') {
+        const unidad = recurso === 'analisis' ? 'análisis' : 'consultas'
+        return `Usaste las ${unidad} de prueba de tu cuenta. ` +
+            'Para seguir trabajando, elegí un plan en la página de Planes.'
+    }
     const unidad = recurso === 'analisis' ? 'análisis' : 'consultas al Consultor'
     return `Alcanzaste el límite de tu plan: ${r.usado} de ${r.limite} ${unidad} este mes. ` +
         `El cupo se renueva el día 1. Si necesitás más para un caso puntual, podés adquirir un paquete adicional.`
+}
+
+/**
+ * Plan vigente de la cuenta, para las funciones que todavía no consumen cupo
+ * (redactar-escrito, auditar-estrategia). Devuelve null si no se pudo leer:
+ * el caller decide fallar cerrado.
+ */
+export async function planDeCuenta(supabase: SupabaseSvc, userId: string): Promise<string | null> {
+    try {
+        const { data, error } = await supabase.rpc('plan_de_cuenta', { p_user_id: userId })
+        if (error || typeof data !== 'string') {
+            console.error('[CUOTA] plan_de_cuenta falló:', error?.message ?? 'sin datos')
+            return null
+        }
+        return data
+    } catch (err) {
+        console.error('[CUOTA] excepción en plan_de_cuenta:', (err as Error).message)
+        return null
+    }
 }

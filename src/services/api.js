@@ -448,6 +448,32 @@ class AlcanceLegalAPI {
     }
 }
 
+/**
+ * Crea la suscripción mensual en Mercado Pago y devuelve el link del checkout.
+ * El precio NO viaja desde acá: la Edge Function lo lee de la tabla `planes`.
+ * @param {'basico'|'profesional'|'estudio'} plan
+ * @returns {Promise<{ init_point?: string, error?: string }>}
+ */
+export async function crearSuscripcion(plan) {
+    if (!SUPABASE_CONFIG.functionsUrl) return { error: 'El cobro no está disponible en este entorno.' }
+    try {
+        const response = await fetch(`${SUPABASE_CONFIG.functionsUrl}/crear-suscripcion`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await getAuthToken()}`,
+                'apikey': SUPABASE_CONFIG.anonKey
+            },
+            body: JSON.stringify({ plan })
+        })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok) return { error: data.error ?? `Error del servidor (${response.status})` }
+        return data
+    } catch (error) {
+        return { error: `Error de red: ${error.message}` }
+    }
+}
+
 // Exportar instancia singleton
 export const api = new AlcanceLegalAPI()
 export default api

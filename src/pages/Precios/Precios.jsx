@@ -1,12 +1,14 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
+import { crearSuscripcion } from '../../services/api'
 import './Precios.css'
 
 const planes = [
     {
         id: 'basico',
         nombre: 'Básico',
-        precio: '29',
-        periodo: 'USD / mes',
+        precio: '50.000',
         descripcion: 'Para el abogado que comienza a integrar IA en su práctica penal.',
         destacado: false,
         features: [
@@ -21,13 +23,11 @@ const planes = [
             'Adjuntar imágenes y pericias',
             'Acceso multi-usuario',
         ],
-        cta: 'Consultar acceso',
     },
     {
         id: 'profesional',
         nombre: 'Profesional',
-        precio: '59',
-        periodo: 'USD / mes',
+        precio: '95.000',
         descripcion: 'El estándar para defensores activos con causas complejas.',
         destacado: true,
         badge: 'Más elegido',
@@ -44,13 +44,11 @@ const planes = [
         noIncluye: [
             'Acceso multi-usuario',
         ],
-        cta: 'Consultar acceso',
     },
     {
         id: 'estudio',
         nombre: 'Estudio',
-        precio: '99',
-        periodo: 'USD / mes',
+        precio: '160.000',
         descripcion: 'Para estudios jurídicos con múltiples defensores activos.',
         destacado: false,
         features: [
@@ -65,7 +63,6 @@ const planes = [
             'Soporte prioritario',
         ],
         noIncluye: [],
-        cta: 'Consultar acceso',
     },
 ]
 
@@ -82,20 +79,54 @@ const iconX = (
     </svg>
 )
 
+// El precio de la tarjeta es sólo texto: lo que se cobra lo lee la Edge
+// Function crear-suscripcion de la tabla `planes` (migración 013).
+const NOMBRE_PLAN = { prueba: 'Prueba', basico: 'Básico', profesional: 'Profesional', estudio: 'Estudio', cortesia: 'Cortesía' }
+
 function Precios() {
-    const mailtoLink = 'mailto:contacto@studiolamas.com?subject=Consulta%20Alcance%20Legal%20Penal%20-%20Suscripci%C3%B3n'
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const { session, profile } = useAuth()
+    const [procesando, setProcesando] = useState(null)
+    const [error, setError] = useState('')
+
+    const planActual = profile?.plan ?? null
+    const volvioDeMP = searchParams.get('suscripcion') === 'volver'
+
+    const suscribirse = async (planId) => {
+        setError('')
+        // Sin sesión no hay a quién activarle el plan: primero entra o crea la cuenta.
+        if (!session) {
+            navigate('/login?volver=/precios')
+            return
+        }
+        setProcesando(planId)
+        const { init_point, error: err } = await crearSuscripcion(planId)
+        if (init_point) {
+            window.location.assign(init_point)
+            return
+        }
+        setError(err ?? 'No se pudo iniciar el pago. Intentá nuevamente.')
+        setProcesando(null)
+    }
+
+    const textoBoton = (planId) => {
+        if (procesando === planId) return 'Abriendo Mercado Pago…'
+        if (planActual === planId) return 'Tu plan actual'
+        return session ? 'Suscribirme' : 'Crear cuenta y suscribirme'
+    }
 
     return (
         <div className="precios-screen">
             <div className="precios-container">
                 {/* Header */}
                 <div className="precios-header">
-                    <Link to="/login" className="precios-back">
+                    <Link to={session ? '/' : '/login'} className="precios-back">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12" />
                             <polyline points="12 19 5 12 12 5" />
                         </svg>
-                        Volver al inicio de sesión
+                        {session ? 'Volver a la consola' : 'Volver al inicio de sesión'}
                     </Link>
 
                     <div className="precios-logo">
@@ -109,14 +140,30 @@ function Precios() {
                     <p className="precios-subtitle">
                         Alcance Legal Penal · Inteligencia Jurídica para Defensa PBA
                     </p>
+
+                    {volvioDeMP && (
+                        <p className="precios-aviso precios-aviso--ok" role="status">
+                            Si el pago se aprobó, tu plan se activa solo en unos instantes.
+                            Recargá esta página para verlo.
+                        </p>
+                    )}
+                    {planActual && (
+                        <p className="precios-aviso" role="status">
+                            Tu plan actual: <strong>{NOMBRE_PLAN[planActual] ?? planActual}</strong>
+                            {planActual === 'prueba' && profile?.creditos_analisis != null &&
+                                ` — te quedan ${profile.creditos_analisis} análisis de prueba.`}
+                        </p>
+                    )}
+                    {error && <p className="precios-aviso precios-aviso--error" role="alert">{error}</p>}
+
                     <p className="precios-note">
                         Todos los planes incluyen acceso completo al corpus CPP PBA (Ley 11.922) y Código Penal,
                         y la <strong>misma calidad de análisis</strong>: lo que varía es el volumen de uso, no la profundidad del trabajo.
-                        El acceso es activado manualmente — recibirá sus credenciales por correo.
+                        Al crear tu cuenta tenés <strong>3 análisis gratis</strong> para probar el sistema con causas reales.
                     </p>
                     <p className="precios-note">
                         Los cupos son <strong>por cuenta</strong> y se renuevan el día 1 de cada mes.
-                        Si una causa puntual exige más volumen, puede adquirir un paquete adicional sin cambiar de plan.
+                        El pago es mensual por Mercado Pago y el plan se activa apenas se aprueba.
                     </p>
                 </div>
 
@@ -134,7 +181,7 @@ function Precios() {
                             <div className="plan-header">
                                 <h2 className="plan-nombre">{plan.nombre}</h2>
                                 <div className="plan-precio-wrap">
-                                    <span className="plan-precio-currency">USD</span>
+                                    <span className="plan-precio-currency">$</span>
                                     <span className="plan-precio">{plan.precio}</span>
                                     <span className="plan-periodo">/ mes</span>
                                 </div>
@@ -158,12 +205,14 @@ function Precios() {
                                 </ul>
                             </div>
 
-                            <a
-                                href={mailtoLink + `%20(Plan%20${plan.nombre})`}
+                            <button
+                                type="button"
+                                onClick={() => suscribirse(plan.id)}
+                                disabled={procesando !== null || planActual === plan.id}
                                 className={`plan-cta ${plan.destacado ? 'plan-cta--destacado' : ''}`}
                             >
-                                {plan.cta}
-                            </a>
+                                {textoBoton(plan.id)}
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -174,15 +223,15 @@ function Precios() {
                     <div className="precios-faq-grid">
                         <div className="faq-item">
                             <h4>¿Cómo obtengo acceso?</h4>
-                            <p>Enviá un correo al botón de consulta del plan elegido. Studio Lamas te confirma y activa las credenciales en menos de 24 horas hábiles.</p>
+                            <p>Creá tu cuenta, probá el sistema con 3 análisis gratis y elegí un plan. El pago se hace en Mercado Pago y el plan se activa solo, apenas se aprueba.</p>
                         </div>
                         <div className="faq-item">
                             <h4>¿Qué métodos de pago aceptan?</h4>
-                            <p>Transferencia bancaria, Mercado Pago o PayPal. Los precios en USD pueden abonarse en ARS al tipo de cambio del día.</p>
+                            <p>Tarjeta de crédito, tarjeta de débito o dinero en cuenta de Mercado Pago. El cobro se repite automáticamente cada mes.</p>
                         </div>
                         <div className="faq-item">
-                            <h4>¿Puedo cambiar de plan?</h4>
-                            <p>Sí. Podés subir o bajar de plan en cualquier momento contactando a Studio Lamas. El ajuste se aplica al próximo ciclo de facturación.</p>
+                            <h4>¿Puedo cambiar o cancelar?</h4>
+                            <p>Sí. Podés cancelar la suscripción en cualquier momento desde tu cuenta de Mercado Pago. Para cambiar de plan, escribinos y te ayudamos.</p>
                         </div>
                         <div className="faq-item">
                             <h4>¿El corpus se actualiza?</h4>

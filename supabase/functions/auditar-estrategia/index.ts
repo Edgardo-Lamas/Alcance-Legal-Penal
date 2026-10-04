@@ -13,6 +13,7 @@
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { verificarUsuario, requiereAuth } from '../_shared/auth.ts'
+import { rechazoSiNoTienePlan } from '../_shared/plan.ts'
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')
 
@@ -177,6 +178,10 @@ serve(async (req: Request) => {
     }
     const userId = userIdVerificado ?? 'anonimo'
     console.log(`[AUDITAR] user=${userId} ip=${clientIp} auth=${autenticado}`)
+
+    // Cuenta en prueba: esta herramienta no entra en la prueba gratuita (migración 013).
+    const rechazoPlan = await rechazoSiNoTienePlan(userIdVerificado, autenticado, cors, 'auditar estrategias')
+    if (rechazoPlan) return rechazoPlan
 
     try {
         if (!ANTHROPIC_API_KEY) {
